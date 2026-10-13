@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工程制图 · 第一章第一节 制图基本知识（国家标准）动画记忆</title>
+<style>
+:root{
+  --bg:#0d1117; --bg2:#161b22; --panel:#1c2128; --line:#30363d;
+  --ink:#e6edf3; --dim:#8b949e; --accent:#58a6ff; --accent2:#f0883e;
+  --good:#3fb950; --bad:#f85149; --warn:#d29922; --purple:#bc8cff;
+  --mono:"Cascadia Mono","Consolas","Courier New",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:radial-gradient(1200px 800px at 20% -10%,#1b2432 0%,var(--bg) 55%) fixed;
+  color:var(--ink);
+  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;
+  overflow:hidden;
+}
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* ========== 顶栏 ========== */
+header{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 18px;background:rgba(22,27,34,.92);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(8px);
+  flex:0 0 auto;z-index:20;
+}
+.brand{font-weight:700;font-size:16px;letter-spacing:.5px;white-space:nowrap}
+.brand span{color:var(--accent)}
+.chapter-tag{
+  font-size:12px;color:var(--dim);border:1px solid var(--line);
+  padding:3px 9px;border-radius:20px;white-space:nowrap;
+}
+.scene-title{font-size:13px;color:var(--accent2);font-weight:600;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar{display:flex;gap:7px;align-items:center;flex-wrap:nowrap}
+button.tb{
+  background:var(--panel);color:var(--ink);border:1px solid var(--line);
+  padding:6px 11px;border-radius:7px;cursor:pointer;font-size:12.5px;
+  font-family:inherit;transition:.16s;white-space:nowrap;
+}
+button.tb:hover{background:#2d333b;border-color:var(--accent);color:var(--accent)}
+button.tb.on{background:var(--accent);color:#04101f;border-color:var(--accent);font-weight:700}
+button.tb:active{transform:scale(.95)}
+
+/* 进度条 */
+#bar{height:3px;background:var(--line);flex:0 0 auto;position:relative}
+#barFill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--purple));
+  transition:width .25s ease}
+
+/* ========== 主体 ========== */
+main{flex:1;display:flex;overflow:hidden;min-height:0}
+#left{
+  width:290px;flex:0 0 auto;border-right:1px solid var(--line);
+  background:rgba(22,27,34,.6);overflow-y:auto;padding:12px;
+}
+#left::-webkit-scrollbar{width:8px}
+#left::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
+.nav-group{font-size:11px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:1px;margin:14px 0 7px;padding-left:4px}
+.nav-group:first-child{margin-top:2px}
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;
+  cursor:pointer;font-size:13px;transition:.15s;border:1px solid transparent;
+  margin-bottom:3px;line-height:1.35;
+}
+.nav-item:hover{background:#21262d}
+.nav-item.active{background:linear-gradient(90deg,rgba(88,166,255,.22),transparent);
+  border-color:var(--accent);color:var(--accent);font-weight:600}
+.nav-item.done .dot{background:var(--good);border-color:var(--good);color:#04101f}
+.dot{
+  width:20px;height:20px;flex:0 0 auto;border-radius:50%;border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:10.5px;
+  color:var(--dim);font-family:var(--mono);transition:.2s;
+}
+.nav-item.active .dot{border-color:var(--accent);color:var(--accent);font-weight:700}
+
+#right{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* 舞台 */
+#stage{
+  flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:20px 26px;
+  scroll-behavior:smooth;
+}
+#stage::-webkit-scrollbar{width:10px}
+#stage::-webkit-scrollbar-thumb{background:#30363d;border-radius:5px}
+.slide{display:none;animation:fadeUp .45s ease both;max-width:1050px;margin:0 auto}
+.slide.show{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+h2.sh{
+  font-size:21px;margin-bottom:6px;display:flex;align-items:center;gap:11px;
+  padding-bottom:11px;border-bottom:2px solid var(--line);
+}
+h2.sh .num{
+  background:linear-gradient(135deg,var(--accent),var(--purple));color:#04101f;
+  width:34px;height:34px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-family:var(--mono);font-size:16px;font-weight:700;flex:0 0 auto;
+}
+.sub{color:var(--dim);font-size:13px;margin-bottom:16px;line-height:1.7}
+.gb{
+  display:inline-block;background:rgba(210,153,34,.14);color:var(--warn);
+  border:1px solid rgba(210,153,34,.4);border-radius:5px;padding:1px 7px;
+  font-size:11.5px;font-family:var(--mono);font-weight:600;
+}
+
+/* 定义卡片 */
+.def{
+  background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:10px;padding:15px 18px;margin:13px 0;position:relative;
+}
+.def .label{
+  position:absolute;top:-9px;left:14px;background:var(--accent);color:#04101f;
+  font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.5px;
+}
+.def p{font-size:14.5px;line-height:2;color:#c9d1d9}
+.def.heat{border-left-color:var(--accent2);box-shadow:0 0 0 1px rgba(240,136,62,.25)}
+.def.heat .label{background:var(--accent2)}
+
+/* 逐字高亮 */
+.w{
+  display:inline-block;opacity:.16;transition:opacity .28s ease,color .28s ease;
+  border-radius:3px;padding:0 1px;
+}
+.w.on{opacity:1;color:#fff}
+.w.key{color:var(--accent2);font-weight:700}
+.w.key.on{
+  color:#04101f;background:var(--accent2);font-weight:700;
+  box-shadow:0 0 14px rgba(240,136,62,.6);
+}
+.w.hit{animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}
+
+/* 数据表 */
+table.dt{
+  width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;
+  background:var(--bg2);border-radius:9px;overflow:hidden;
+}
+table.dt th,table.dt td{border:1px solid var(--line);padding:8px 10px;text-align:center}
+table.dt th{background:#21262d;color:var(--accent);font-weight:600;font-size:12.5px}
+table.dt td{font-family:var(--mono);font-size:13px}
+table.dt tr.blink td{animation:cellGlow 1.1s ease}
+@keyframes cellGlow{
+  0%{background:transparent}
+  35%{background:rgba(240,136,62,.42);color:#fff;font-weight:700}
+  100%{background:transparent}
+}
+table.dt td.hl{color:var(--accent2);font-weight:700}
+
+/* 画布 */
+.stagebox{
+  background:#fbfbf7;border-radius:11px;padding:10px;margin:14px 0;
+  border:1px solid var(--line);position:relative;
+}
+.stagebox.dark{background:#0a0e14}
+canvas{display:block;width:100%;height:auto;border-radius:5px}
+.cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:7px}
+.stagebox .cap{color:#6e7781}
+
+/* 网格 */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{
+  background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+}
+.card h4{font-size:14px;margin-bottom:9px;color:var(--accent);display:flex;gap:7px;align-items:center}
+.card h4 .ic{font-size:15px}
+.card ul{margin-left:17px;font-size:13px;line-height:1.95;color:#adbac7}
+.card ul li{margin-bottom:3px}
+.card ul li b{color:var(--accent2)}
+
+/* 口诀 */
+.mnemonic{
+  background:linear-gradient(135deg,rgba(188,140,255,.15),rgba(88,166,255,.09));
+  border:1px solid rgba(188,140,255,.42);border-radius:11px;padding:15px 18px;margin:14px 0;
+}
+.mnemonic .t{font-size:11.5px;color:var(--purple);font-weight:700;letter-spacing:1.4px;margin-bottom:9px}
+.mnemonic .verse{
+  font-size:17px;line-height:2.05;color:#fff;font-weight:600;letter-spacing:1.6px;
+  font-family:"KaiTi","STKaiti",serif;
+}
+.mnemonic .verse em{color:var(--accent2);font-style:normal;
+  border-bottom:2px solid var(--accent2);padding-bottom:1px}
+.mnemonic .note{font-size:12.5px;color:var(--dim);margin-top:10px;line-height:1.8}
+
+/* 易错对比 */
+.trap{
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:12px 0;
+  background:var(--bg2);
+}
+.trap .th{padding:9px 14px;font-size:13px;font-weight:600;background:#21262d;
+  border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center}
+.trap .tb{display:grid;grid-template-columns:1fr 1fr}
+.trap .side{padding:13px 15px;font-size:13px;line-height:1.85}
+.trap .side.bad{border-right:1px solid var(--line);color:#ffb3ae}
+.trap .side.good{color:#9ae6a0}
+.trap .side .tag{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;
+  display:inline-block;margin-bottom:8px;letter-spacing:.5px}
+.trap .side.bad .tag{background:rgba(248,81,73,.2);color:var(--bad);border:1px solid rgba(248,81,73,.45)}
+.trap .side.good .tag{background:rgba(63,185,80,.18);color:var(--good);border:1px solid rgba(63,185,80,.45)}
+.cross{color:var(--bad);font-weight:700}
+.tick{color:var(--good);font-weight:700}
+
+/* 操作提示 */
+.hint{
+  font-size:12px;color:var(--dim);background:rgba(88,166,255,.07);
+  border:1px dashed rgba(88,166,255,.32);border-radius:8px;padding:9px 13px;margin:12px 0;
+}
+.hint b{color:var(--accent)}
+
+/* 底栏 */
+footer{
+  flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:9px 18px;
+  background:rgba(22,27,34,.94);border-top:1px solid var(--line);z-index:20;
+}
+.btn{
+  padding:9px 17px;border-radius:8px;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);cursor:pointer;font-size:13px;font-family:inherit;transition:.16s;
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:active{transform:scale(.96)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),#3d7dd8);
+  color:#04101f;font-weight:700;border:none}
+.btn.primary:hover{filter:brightness(1.12);color:#04101f}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.foot-info{font-size:12px;color:var(--dim);flex:1;text-align:center;
+  font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-pill{
+  font-size:11.5px;font-family:var(--mono);background:var(--panel);
+  border:1px solid var(--line);padding:4px 11px;border-radius:20px;color:var(--dim);
+  white-space:nowrap;
+}
+.prog-pill b{color:var(--good)}
+
+/* 测验 */
+.quiz{background:var(--bg2);border:1px solid var(--line);border-radius:11px;
+  padding:17px 20px;margin:14px 0}
+.quiz .q{font-size:14.5px;line-height:1.85;margin-bottom:13px;font-weight:600}
+.quiz .q .idx{color:var(--accent2);font-family:var(--mono);margin-right:7px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{
+  padding:11px 15px;border:1px solid var(--line);border-radius:9px;cursor:pointer;
+  font-size:13.5px;transition:.16s;background:#1c2128;display:flex;gap:11px;align-items:flex-start;
+  line-height:1.7;
+}
+.opt:hover{border-color:var(--accent);background:#22272e}
+.opt .letter{
+  width:22px;height:22px;flex:0 0 auto;border-radius:50%;border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:11.5px;
+  font-family:var(--mono);font-weight:700;transition:.2s;
+}
+.opt.right{border-color:var(--good);background:rgba(63,185,80,.14);color:#b7f5bd}
+.opt.right .letter{background:var(--good);color:#04101f;border-color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:rgba(248,81,73,.13);color:#ffb3ae}
+.opt.wrong .letter{background:var(--bad);color:#fff;border-color:var(--bad)}
+.opt.locked{cursor:default;opacity:.75}
+.opt.locked.right,.opt.locked.wrong{opacity:1}
+.explain{
+  margin-top:12px;padding:12px 15px;border-radius:9px;font-size:13px;line-height:1.9;
+  background:rgba(88,166,255,.09);border-left:3px solid var(--accent);display:none;
+  color:#c9d1d9;
+}
+.explain.show{display:block;animation:fadeUp .3s ease both}
+.explain b{color:var(--accent)}
+.score{
+  font-size:15px;text-align:center;padding:17px;border-radius:10px;margin-top:15px;
+  background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.35);line-height:1.9;
+}
+.score b{font-size:26px;color:var(--good);font-family:var(--mono)}
+
+/* 空白自测 */
+.blank{
+  display:inline-block;min-width:74px;border-bottom:2px dashed var(--accent2);
+  text-align:center;cursor:pointer;color:var(--accent2);font-weight:700;
+  padding:0 6px;transition:.2s;
+}
+.blank:hover{background:rgba(240,136,62,.13)}
+.blank.revealed{color:var(--good);border-bottom-color:var(--good);border-bottom-style:solid}
+
+/* 线型样例 */
+.linesamp{margin:9px 0}
+.linesamp .row{display:flex;align-items:center;gap:14px;padding:7px 0;
+  border-bottom:1px dashed #2a3038}
+.linesamp .row:last-child{border-bottom:none}
+.linesamp svg{flex:0 0 190px}
+.linesamp .nm{font-size:13px;font-weight:600;color:var(--accent2);flex:0 0 92px}
+.linesamp .ds{font-size:12.5px;color:#adbac7;line-height:1.65}
+.kbd{
+  font-family:var(--mono);font-size:11px;background:#21262d;border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:1px 6px;color:var(--dim);
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<header>
+  <div class="brand">工程制图 <span>· 动画记忆</span></div>
+  <div class="chapter-tag">第一章 制图基本知识</div>
+  <div class="scene-title" id="sceneTitle">第一节 国家标准《技术制图》的基本规定</div>
+  <div class="toolbar">
+    <button class="tb" id="btnPlay" title="播放/暂停当前场景动画">⏸ 暂停</button>
+    <button class="tb" id="btnReplay" title="重播当前场景">↻ 重播</button>
+    <button class="tb" id="btnSpeed" title="切换动画速度">1.0×</button>
+    <button class="tb" id="btnSpeech" title="开启后逐字朗读定义">🔊 朗读</button>
+    <button class="tb" id="btnMotion" title="减少动画，适合快速阅读">🎞 精简</button>
+  </div>
+</header>
+<div id="bar"><div id="barFill"></div></div>
+
+<main>
+  <nav id="left"></nav>
+  <div id="right">
+    <div id="stage"></div>
+  </div>
+</main>
+
+<footer>
+  <button class="btn" id="btnPrev">← 上一节</button>
+  <div class="foot-info" id="footInfo">—</div>
+  <span class="prog-pill" id="progPill">进度 <b>0</b>/0</span>
+  <button class="btn primary" id="btnNext">下一节 →</button>
+</footer>
+</div>
+
+<script>
+/* =========================================================================
+   工程制图 第一章第一节 —— 国家标准《技术制图》基本规定 · 动画记忆引擎
+   全部内容依据 GB/T 14689-2008（图纸幅面和格式）、GB/T 14690-1993（比例）、
+   GB/T 14691-1993（字体）、GB/T 17450-1998 / GB/T 4457.4-2002（图线）、
+   GB/T 4458.4-2003（尺寸注法）
+   ========================================================================= */
+"use strict";
+
+/* ---------- 全局状态 ---------- */
+const S = {
+  idx: 0,
+  playing: true,
+  speed: 1,
+  speech: false,
+  motion: true,      // false = 精简模式（跳过逐字动画）
+  timers: [],
+  spoken: [],        // 已朗读的文本，避免重复
+  done: new Set(),
+  quizAnswers: {}
+};
+
+/* ---------- 工具 ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+function clearTimers(){
+  S.timers.forEach(t => { clearTimeout(t); clearInterval(t); });
+  S.timers = [];
+}
+function later(fn, ms){
+  const id = setTimeout(fn, ms);
+  S.timers.push(id);
+  return id;
+}
+function every(fn, ms){
+  const id = setInterval(fn, ms);
+  S.timers.push(id);
+  return id;
+}
+function stopSpeech(){
+  if ("speechSynthesis" in window) { try{ speechSynthesis.cancel(); }catch(e){} }
+}
+function speak(text){
+  if (!S.speech || !("speechSynthesis" in window)) return;
+  if (S.spoken.includes(text)) return;
+  S.spoken.push(text);
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN"; u.rate = 0.95; u.pitch = 1;
+  try{ speechSynthesis.speak(u); }catch(e){}
+}
+
+/* =========================================================================
+   通用动画原语
+   ========================================================================= */
+
+/* 逐字高亮：把含 <b> 的 HTML 拆成逐字 span，关键处（<b>）标 .key */
+function buildWords(html){
+  const out = [];
+  // 用占位符保护标签，按「字符」切开，<b> 段标 key
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  (function walk(node, isKey){
+    node.childNodes.forEach(ch => {
+      if (ch.nodeType === 3){
+        for (const c of ch.textContent){
+          out.push({ ch: c, key: isKey });
+        }
+      } else if (ch.nodeType === 1){
+        walk(ch, isKey || ch.tagName === "B");
+      }
+    });
+  })(tmp, false);
+  return out;
+}
+
+/* 给 .def 里的文字逐字上屏 */
+function animateDefinition(el, {delay=0, perChar=34, speakText=null} = {}){
+  const src = el.dataset.raw || el.innerHTML;
+  el.dataset.raw = src;
+  const words = buildWords(src);
+  el.innerHTML = "";
+  const frag = document.createDocumentFragment();
+  const spans = [];
+  words.forEach(w => {
+    if (w.ch === "\n"){ frag.appendChild(document.createElement("br")); return; }
+    const sp = document.createElement("span");
+    sp.className = "w" + (w.key ? " key" : "");
+    sp.textContent = w.ch === " " ? "\u00a0" : w.ch;
+    frag.appendChild(sp);
+    spans.push(sp);
+  });
+  el.appendChild(frag);
+
+  if (!S.motion){ spans.forEach(s => s.classList.add("on")); return spans; }
+
+  spans.forEach((sp, i) => {
+    later(() => {
+      if (!S.playing) return;
+      sp.classList.add("on");
+      if (sp.classList.contains("key")){
+        sp.classList.add("hit");
+        later(() => sp.classList.remove("hit"), 420);
+      }
+      // 每读一小段做一次语音（按句读，避免碎片化）
+      if (i === spans.length - 1 && speakText) speak(speakText);
+    }, delay + i * perChar);
+  });
+  return spans;
+}
+
+/* 数字滚动 */
+function countUp(el, to, {dur=900, delay=0, suffix=""} = {}){
+  later(() => {
+    const t0 = performance.now();
+    const from = 0;
+    function step(t){
+      if (!S.playing) return;
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(from + (to - from) * e) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, delay);
+}
+
+/* 高亮表格列 */
+function glowCell(sel, delay=0){
+  later(() => {
+    if (!S.playing) return;
+    const tr = document.querySelector(sel);
+    if (!tr) return;
+    tr.classList.add("blink");
+    later(() => tr.classList.remove("blink"), 1200);
+  }, delay);
+}
+
+/* =========================================================================
+   画布绘制助手
+   ========================================================================= */
+function setupCanvas(cv, h){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.parentElement.clientWidth - 20;
+  cv.width = w * dpr; cv.height = h * dpr;
+  cv.style.width = w + "px"; cv.style.height = h + "px";
+  const g = cv.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { g, w, h };
+}
+
+/* 通用：按 t (0..1) 生长的多段路径动画
+   segs: [{pts:[[x,y],...], width, color, dash, capStart, capEnd}] */
+function playSegs(cv, h, segs, {dur=1300, delay=0, fill=null, bg=null,
+                                onDone=null, labels=null, anim=true} = {}){
+  const { g, w } = setupCanvas(cv, h);
+  const DPR = window.devicePixelRatio || 1;
+  void DPR;
+
+  function paint(t){
+    g.clearRect(0, 0, w, h);
+    if (bg){ g.fillStyle = bg; g.fillRect(0, 0, w, h); }
+    if (fill){
+      g.beginPath(); fill.pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]));
+      g.closePath();
+      g.fillStyle = fill.color || "rgba(255,214,102,.55)";
+      g.fill();
+    }
+    // 计算总长度
+    let total = 0;
+    const lens = segs.map(s => {
+      let L = 0;
+      for (let i = 1; i < s.pts.length; i++){
+        L += Math.hypot(s.pts[i][0] - s.pts[i-1][0], s.pts[i][1] - s.pts[i-1][1]);
+      }
+      total += L; return L;
+    });
+    let budget = total * t;
+    segs.forEach((s, si) => {
+      const L = lens[si];
+      const draw = Math.max(0, Math.min(L, budget));
+      budget -= L;
+      if (draw <= 0) return;
+      g.save();
+      g.strokeStyle = s.color; g.lineWidth = s.width || 2;
+      g.lineCap = s.cap || "round"; g.lineJoin = "round";
+      if (s.dash) g.setLineDash(s.dash);
+      g.beginPath();
+      let acc = 0, started = false;
+      g.moveTo(s.pts[0][0], s.pts[0][1]);
+      for (let i = 1; i < s.pts.length; i++){
+        const a = s.pts[i-1], b = s.pts[i];
+        const seg = Math.hypot(b[0]-a[0], b[1]-a[1]);
+        if (acc + seg <= draw){
+          g.lineTo(b[0], b[1]); acc += seg; started = true;
+        } else {
+          const r = seg > 0 ? (draw - acc) / seg : 0;
+          g.lineTo(a[0] + (b[0]-a[0])*r, a[1] + (b[1]-a[1])*r);
+          break;
+        }
+      }
+      g.stroke();
+      g.restore();
+      void started;
+    });
+    // 标注
+    if (labels && t > .96){
+      labels.forEach(L => {
+        g.save();
+        g.fillStyle = L.color || "#333";
+        g.font = L.font || "600 13px 'Microsoft YaHei',sans-serif";
+        g.textAlign = L.align || "left";
+        g.textBaseline = L.base || "middle";
+        if (L.bg){
+          const tw = g.measureText(L.text).width;
+          const px = L.align === "center" ? L.x - tw/2 : (L.align === "right" ? L.x - tw : L.x);
+          g.fillStyle = L.bg;
+          g.fillRect(px - 5, L.y - 11, tw + 10, 22);
+          g.fillStyle = L.color || "#333";
+        }
+        g.fillText(L.text, L.x, L.y);
+        g.restore();
+      });
+    }
+  }
+
+  if (!anim){ paint(1); if (onDone) later(onDone, 0); return; }
+
+  later(() => {
+    const t0 = performance.now();
+    const D = dur / S.speed;
+    function frame(now){
+      if (!S.playing) return;
+      const p = Math.min(1, (now - t0) / D);
+      paint(1 - Math.pow(1 - p, 2.2));
+      if (p < 1) requestAnimationFrame(frame);
+      else if (onDone) onDone();
+    }
+    requestAnimationFrame(frame);
+  }, delay);
+}
+
+/* =========================================================================
+   幻灯片内容定义
+   ========================================================================= */
+const SLIDES = [];
+
+/* ---------- 0. 导航总览 ---------- */
+SLIDES.push({
+  id: "overview",
+  nav: "本节总览",
+  group: "开始",
+  title: "第一节 制图基本知识 —— 国家标准《技术制图》基本规定",
+  html: `
+    <h2 class="sh"><span class="num">◎</span>这一节到底在讲什么？</h2>
+    <p class="sub">
+      图样是工程界的<strong>共同语言</strong>。要让人人都看得懂，绘图就必须遵守统一的规定——
+      这就是<span class="gb">国家标准（GB）</span>。本节把「五大基本规定」一次讲清：
+      <strong>图纸幅面与格式、比例、字体、图线、尺寸注法</strong>。
+    </p>
+
+    <div class="def" id="d0">
+      <div class="label">核心定义</div>
+      <b>图样</b>是工程技术部门用来表达设计思想、进行技术交流的重要工具，被称为工程界的
+      <b>技术语言</b>；为使图样成为「通用语言」，必须对图样的<b>画法、内容和格式</b>作出统一规定。
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">📐</span>五大板块 = 本节骨架</h4>
+        <ul>
+          <li><b>① 图纸幅面和格式</b> GB/T 14689</li>
+          <li><b>② 比例</b> GB/T 14690</li>
+          <li><b>③ 字体</b> GB/T 14691</li>
+          <li><b>④ 图线</b> GB/T 17450 / 4457.4</li>
+          <li><b>⑤ 尺寸注法</b> GB/T 4458.4</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">🎯</span>学完你要能做到</h4>
+        <ul>
+          <li>说出 <b>A0–A4</b> 五种基本幅面的尺寸</li>
+          <li>分清 <b>e、c、a</b> 三个留边量各是什么</li>
+          <li>判断比例 <b>2:1 是放大</b>而不是缩小</li>
+          <li>默写汉字字体 <b>长仿宋体</b>、字高不小于 <b>3.5</b></li>
+          <li>背出 <b>尺寸三要素</b>及其规定</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 本节总口诀</div>
+      <div class="verse">幅面比例字与线，尺寸注法记心间；<em>五项规定</em>守到底，图样走遍天下传。</div>
+      <div class="note">用法：每完成一个小节，回头念一遍这句，把新学的重点「挂」到对应位置，形成整节知识树。</div>
+    </div>
+
+    <div class="hint">
+      <b>操作说明：</b>使用底部 <span class="kbd">下一节</span> 或左侧目录推进；
+      <span class="kbd">←</span> <span class="kbd">→</span> 也可翻页，
+      <span class="kbd">空格</span> 播放/暂停。定义卡片会<strong>逐字高亮</strong>，
+      橙色字是必背关键词。右上角 <span class="kbd">🔊朗读</span> 可开语音。
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d0"), { perChar: 30, speakText: "图样是工程技术部门用来表达设计思想、进行技术交流的重要工具，被称为工程界的技术语言。" });
+  }
+});
+
+/* ---------- 1. 图纸幅面 ---------- */
+SLIDES.push({
+  id: "format",
+  nav: "1.1 图纸幅面",
+  group: "一、图纸幅面和格式",
+  title: "1.1 图纸幅面 —— 五种基本幅面 A0～A4",
+  html: `
+    <h2 class="sh"><span class="num">1</span>图纸幅面：图纸有多大？</h2>
+    <p class="sub">
+      <span class="gb">GB/T 14689—2008</span>
+      规定：绘制技术图样时，应<strong>优先采用基本幅面</strong>。基本幅面共五种：A0、A1、A2、A3、A4。
+    </p>
+
+    <div class="def" id="d1">
+      <div class="label">幅面定义</div>
+      图纸幅面由<b>宽度 B × 长度 L</b> 决定。相邻两号幅面中，<b>大一号幅面的面积是小一号的两倍</b>，
+      同号幅面长边与短边之比为 <b>√2 : 1</b>（近似 1.414:1）。
+    </div>
+
+    <div class="stagebox">
+      <canvas id="cvA"></canvas>
+      <div class="cap">A0 → A4 逐级对折关系（每对折一次，面积减半、序号加一）</div>
+    </div>
+
+    <table class="dt" id="tbA">
+      <tr><th>幅面代号</th><th>A0</th><th>A1</th><th>A2</th><th>A3</th><th>A4</th></tr>
+      <tr id="rowBL"><th>B × L</th>
+        <td>841×1189</td><td>594×841</td><td>420×594</td><td>297×420</td><td>210×297</td></tr>
+    </table>
+    <p class="sub" style="margin-top:-4px">单位：mm。记忆锚点：<strong>A4 = 210×297</strong>（就是常见打印纸），往上一号就把 <strong>297 变 420</strong>，依此类推。</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">🔁</span>为什么要用 √2 : 1？</h4>
+        <ul>
+          <li>对折后长宽比<b>保持不变</b>，缩放不会变形</li>
+          <li>相邻幅面面积恰好<b>成倍</b>关系，便于套用</li>
+          <li>所以 A0 对折 4 次 → A4</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">📏</span>快速推算技巧</h4>
+        <ul>
+          <li>小号的长边 = 大号的短边</li>
+          <li>例：A3 短边 297 = A4 长边 297 ✔</li>
+          <li>例：A2 短边 420 = A3 长边 420 ✔</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse">四二幺九五九四，五九四八四幺来；<em>四二乘五九四</em>，二九七配四二零，最后二幺零乘二九七。</div>
+      <div class="note">对应：A2=420×594、A1=594×841、A3=297×420、A4=210×297。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d1"), { perChar: 32, speakText: "图纸幅面由宽度和长度决定，相邻两号幅面中，大一号幅面的面积是小一号的两倍，同号幅面长边与短边之比为根号二比一。" });
+    const cv = $("#cvA"); if (!cv) return;
+    const H = 300, { g, w } = setupCanvas(cv, H);
+    // 画嵌套幅面（等比缩放）
+    const data = [
+      { n: "A0", a: 841, b: 1189, c: "#1f6feb" },
+      { n: "A1", a: 594, b: 841,  c: "#f0883e" },
+      { n: "A2", a: 420, b: 594,  c: "#3fb950" },
+      { n: "A3", a: 297, b: 420,  c: "#bc8cff" },
+      { n: "A4", a: 210, b: 297,  c: "#e5534b" }
+    ];
+    const scale = Math.min((w - 90) / 1189, (H - 60) / 841) ;
+    function draw(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      const cx = w / 2, cy = H / 2;
+      data.forEach((d, i) => {
+        const appear = i / data.length;
+        if (t < appear) return;
+        const W = d.b * scale, Hh = d.a * scale;
+        const x = cx - W / 2, y = cy - Hh / 2;
+        g.save();
+        g.globalAlpha = Math.min(1, (t - appear) * 6);
+        g.strokeStyle = d.c; g.lineWidth = i === data.length - 1 ? 2.4 : 1.9;
+        g.strokeRect(x, y, W, Hh);
+        g.fillStyle = d.c;
+        g.font = "700 13px 'Cascadia Mono',Consolas,monospace";
+        g.textAlign = "left"; g.textBaseline = "top";
+        g.fillText(d.n, x + 6, y + 5);
+        g.font = "500 11px 'Microsoft YaHei',sans-serif";
+        g.fillText(d.b + "×" + d.a, x + 6, y + 21);
+        g.restore();
+      });
+    }
+    if (!S.motion){ draw(1); return; }
+    later(() => {
+      const t0 = performance.now(), D = 1500 / S.speed;
+      (function f(now){
+        if (!S.playing) return;
+        const p = Math.min(1, (now - t0) / D);
+        draw(p);
+        if (p < 1) requestAnimationFrame(f);
+      })(performance.now());
+    }, 200);
+    glowCell("#rowBL td:nth-child(5)", 1500);
+    glowCell("#rowBL td:nth-child(6)", 1900);
+  }
+});
+
+/* ---------- 2. 图框与留边 ---------- */
+SLIDES.push({
+  id: "border",
+  nav: "1.2 图框与留边",
+  group: "一、图纸幅面和格式",
+  title: "1.2 图框格式与留边尺寸 e、c、a",
+  html: `
+    <h2 class="sh"><span class="num">2</span>图框格式：图纸里面怎么排？</h2>
+    <p class="sub">
+      图纸上必须用<strong>粗实线</strong>画出<strong>图框线</strong>，图框与纸边之间留出的空白叫<strong>留边</strong>。
+      留边量有三个符号：<span class="gb">e</span>、<span class="gb">c</span>、<span class="gb">a</span>，这是最容易混的地方。
+    </p>
+
+    <div class="stagebox">
+      <canvas id="cvB"></canvas>
+      <div class="cap">左：需装订的图样（留有装订边 a=25）　右：不需装订的图样（四边等宽 e）</div>
+    </div>
+
+    <div class="def" id="d2">
+      <div class="label">三个留边量</div>
+      <b>不留装订边</b>时，图框线到纸边的距离用 <b>e</b> 表示；<b>留有装订边</b>时，装订边一侧的距离用
+      <b>a</b> 表示（统一为 <b>25mm</b>），其余各边用 <b>c</b> 表示。同一幅面中 <b>e = 2c</b>。
+    </div>
+
+    <table class="dt">
+      <tr><th>幅面代号</th><th>A0</th><th>A1</th><th>A2</th><th>A3</th><th>A4</th></tr>
+      <tr id="rowE"><th>e（不留装订边）</th><td>20</td><td>20</td><td>10</td><td>10</td><td>10</td></tr>
+      <tr id="rowC"><th>c（留装订边时其他边）</th><td>10</td><td>10</td><td>5</td><td>5</td><td>5</td></tr>
+      <tr id="rowA"><th>a（装订边）</th><td colspan="5">25（各号幅面统一）</td></tr>
+    </table>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：e 和 c 到底谁是谁</div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 常见错误</span>
+          「e 是装订边，c 是不装订的边」<br>
+          <span class="cross">错。</span>反了！<br>
+          也常错成：A4 的 e 和 A0 一样是 20。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          <b>e</b> → 不装订时的四边距离<br>
+          <b>c</b> → 装订时非装订边的距离<br>
+          <b>a</b> → 装订边，永远 25<br>
+          且 <b>e = 2c</b>，A0/A1 大，A2–A4 小。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse"><em>装订留 a 二十五</em>，不装订用 e 为主；<em>e 是 c 的两倍</em>数，A3A4 都取十和五。</div>
+      <div class="note">a=25 恒定；A0/A1：e=20、c=10；A2/A3/A4：e=10、c=5。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d2"), { perChar: 30, speakText: "不留装订边时，图框线到纸边的距离用 e 表示；留有装订边时，装订边一侧的距离用 a 表示，统一为二十五毫米，其余各边用 c 表示。" });
+    const cv = $("#cvB"); if (!cv) return;
+    const H = 290, { g, w } = setupCanvas(cv, H);
+    const pad = 26;
+    const halfW = (w - pad * 3) / 2;
+    const paperH = H - 70;
+    const paperY = 30;
+
+    function sheet(x0, title, mode){
+      // 纸
+      g.fillStyle = "#fff"; g.strokeStyle = "#4a4a4a"; g.lineWidth = 1.4;
+      g.strokeRect(x0, paperY, halfW, paperH);
+      // 图框
+      const e = 15, c = 7.5, a = 26;
+      const inner = mode === "bind"
+        ? { x: x0 + a, y: paperY + c, w: halfW - a - c, h: paperH - c * 2 }
+        : { x: x0 + e, y: paperY + e, w: halfW - e * 2, h: paperH - e * 2 };
+      g.strokeStyle = "#111"; g.lineWidth = 2.4;
+      g.strokeRect(inner.x, inner.y, inner.w, inner.h);
+      // 标注
+      g.font = "700 12px 'Cascadia Mono',monospace";
+      g.fillStyle = "#c2410c"; g.textAlign = "center"; g.textBaseline = "middle";
+      if (mode === "bind"){
+        g.fillText("a=25", x0 + a / 2, paperY + paperH / 2);
+        g.fillText("c", x0 + halfW / 2, paperY + c / 2);
+      } else {
+        g.fillText("e", x0 + halfW / 2, paperY + e / 2);
+        g.fillText("e", x0 + halfW / 2, paperY + paperH - e / 2);
+      }
+      g.fillStyle = "#111"; g.font = "600 12.5px 'Microsoft YaHei',sans-serif";
+      g.textAlign = "center"; g.textBaseline = "top";
+      g.fillText(title, x0 + halfW / 2, paperY + paperH + 12);
+      return { inner };
+    }
+
+    function draw(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      if (t > .02) sheet(pad, "需装订的图样", "bind");
+      if (t > .35) sheet(pad * 2 + halfW, "不需装订的图样", "nobind");
+    }
+    if (!S.motion){ draw(1); }
+    else {
+      later(() => {
+        const t0 = performance.now(), D = 1200 / S.speed;
+        (function f(now){
+          if (!S.playing) return;
+          const p = Math.min(1, (now - t0) / D);
+          draw(1 - Math.pow(1 - p, 2)); if (p < 1) requestAnimationFrame(f);
+        })(performance.now());
+      }, 200);
+    }
+    glowCell("#rowE", 1400); glowCell("#rowC", 1750); glowCell("#rowA", 2100);
+  }
+});
+
+/* ---------- 3. 标题栏与看图方向 ---------- */
+SLIDES.push({
+  id: "titlebar",
+  nav: "1.3 标题栏·看图方向",
+  group: "一、图纸幅面和格式",
+  title: "1.3 标题栏、明细栏与看图方向",
+  html: `
+    <h2 class="sh"><span class="num">3</span>每张图纸都必须有的东西</h2>
+
+    <div class="def" id="d3">
+      <div class="label">标题栏规定</div>
+      每张图纸上<b>都必须画出标题栏</b>。标题栏一般应置于图框的<b>右下角</b>，
+      其<b>文字方向</b>即为看图方向。标题栏中的<b>校名、图名、图号、比例、签名及日期</b>
+      等栏目应填写清楚。
+    </div>
+
+    <div class="stagebox">
+      <canvas id="cvC"></canvas>
+      <div class="cap">标题栏位于图框右下角；其长边必须与图框线重合</div>
+    </div>
+
+    <div class="def" id="d3b" style="border-left-color:var(--purple)">
+      <div class="label" style="background:var(--purple)">看图方向的两种情况</div>
+      ① 按<b>标题栏方向</b>看图——以标题栏中文字的方向为看图方向；
+      ② 按<b>方向符号</b>指示的方向看图——令画在图框线<b>对中符号</b>处的
+      <b>等边三角形位于图纸下边</b>，此时以该三角形所指方向为看图方向。
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">📋</span>标题栏（GB/T 10609.1）</h4>
+        <ul>
+          <li>位置：图框<b>右下角</b></li>
+          <li>外框用<b>粗实线</b>，分格线用<b>细实线</b></li>
+          <li>学习阶段常用简化标题栏</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">📑</span>明细栏（GB/T 10609.2）</h4>
+        <ul>
+          <li>用于<b>装配图</b>，列出零件明细</li>
+          <li>位置：标题栏<b>上方</b>，自下而上填写</li>
+          <li>序号、代号、名称、数量、材料…</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：看图方向能不能随便转</div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 错误</span>
+          图纸横放竖放随个人方便，标题栏也可以放左上角，看图方向以图形好看为准。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          标题栏<b>必须</b>在右下角；若要改变看图方向，必须在对中符号处画<b>等边三角形方向符号</b>，把三角形放在图纸下边来指示方向。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse">标题栏在<em>右下角</em>，文字方向定看图；若要<em>转个方向看</em>，对中符号画三角。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d3"), { perChar: 30, speakText: "每张图纸上都必须画出标题栏。标题栏一般应置于图框的右下角，其文字方向即为看图方向。" });
+    animateDefinition($("#d3b"), { perChar: 26, speakText: "看图方向有两种情况，按标题栏方向看图，或按方向符号指示的方向看图。" });
+    const cv = $("#cvC"); if (!cv) return;
+    const H = 260, { g, w } = setupCanvas(cv, H);
+    const pw = Math.min(560, w - 60), ph = H - 60;
+    const px = (w - pw) / 2, py = 22;
+    const e = 18;
+    const ix = px + e, iy = py + e, iw = pw - e * 2, ih = ph - e * 2;
+    const tbh = 54, tbw = Math.min(260, iw * .48);
+
+    function draw(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      g.strokeStyle = "#555"; g.lineWidth = 1.4; g.strokeRect(px, py, pw, ph);
+      if (t > .12){ g.strokeStyle = "#111"; g.lineWidth = 2.4; g.strokeRect(ix, iy, iw, ih); }
+      if (t > .45){
+        const bx = ix + iw - tbw, by = iy + ih - tbh;
+        g.save();
+        g.fillStyle = "rgba(88,166,255,.16)"; g.fillRect(bx, by, tbw, tbh);
+        g.strokeStyle = "#1f6feb"; g.lineWidth = 2.2; g.strokeRect(bx, by, tbw, tbh);
+        g.strokeStyle = "#1f6feb"; g.lineWidth = 1;
+        for (let i = 1; i < 3; i++){
+          g.beginPath(); g.moveTo(bx + tbw * i / 3, by); g.lineTo(bx + tbw * i / 3, by + tbh); g.stroke();
+        }
+        g.beginPath(); g.moveTo(bx, by + tbh / 2); g.lineTo(bx + tbw, by + tbh / 2); g.stroke();
+        g.fillStyle = "#0b3d91"; g.font = "700 13px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "center"; g.textBaseline = "middle";
+        g.fillText("标 题 栏", bx + tbw / 2, by + tbh / 2);
+        g.restore();
+        // 引出说明
+        g.save();
+        g.strokeStyle = "#f0883e"; g.lineWidth = 1.6; g.setLineDash([5,4]);
+        g.beginPath(); g.moveTo(bx, by + tbh / 2); g.lineTo(bx - 70, by - 22); g.stroke();
+        g.fillStyle = "#c2410c"; g.font = "600 12.5px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "right"; g.textBaseline = "middle";
+        g.fillText("右下角，文字方向=看图方向", bx - 74, by - 22);
+        g.restore();
+      }
+      if (t > .78){
+        // 方向符号三角形
+        const cx = ix + iw / 2, cy = iy + ih;
+        g.save();
+        g.fillStyle = "rgba(63,185,80,.9)";
+        g.beginPath();
+        g.moveTo(cx, cy - 15); g.lineTo(cx - 13, cy + 5); g.lineTo(cx + 13, cy + 5);
+        g.closePath(); g.fill();
+        g.fillStyle = "#166534"; g.font = "600 12px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "center"; g.textBaseline = "top";
+        g.fillText("方向符号（等边三角形置于图纸下边）", cx, cy + 10);
+        g.restore();
+      }
+    }
+    if (!S.motion) draw(1);
+    else {
+      later(() => {
+        const t0 = performance.now(), D = 1600 / S.speed;
+        (function f(now){
+          if (!S.playing) return;
+          const p = Math.min(1, (now - t0) / D);
+          draw(1 - Math.pow(1 - p, 2)); if (p < 1) requestAnimationFrame(f);
+        })(performance.now());
+      }, 200);
+    }
+  }
+});
+
+/* ---------- 4. 比例 ---------- */
+SLIDES.push({
+  id: "scale",
+  nav: "2. 比例",
+  group: "二、比例",
+  title: "二、比例 —— 2:1 到底是放大还是缩小？",
+  html: `
+    <h2 class="sh"><span class="num">2</span>比例：图形与实物的倍数关系</h2>
+
+    <div class="def" id="d4">
+      <div class="label">比例的定义</div>
+      <b>比例</b>是指图中<b>图形</b>与其实物相应要素的<b>线性尺寸之比</b>。
+      比值为 <b>1</b> 时称<b>原值比例</b>；比值<b>大于 1</b> 时称<b>放大比例</b>；
+      比值<b>小于 1</b> 时称<b>缩小比例</b>。
+    </div>
+
+    <p class="sub" style="text-align:center;font-size:15px;">
+      <strong>比例 = 图形尺寸 : 实物尺寸</strong>　→　
+      写在前面的数字是「<span style="color:var(--accent2)">图上的</span>」，
+      写在后面的是「<span style="color:var(--accent2)">真实的</span>」
+    </p>
+
+    <div class="stagebox">
+      <canvas id="cvD"></canvas>
+      <div class="cap">同一个零件（实物宽 60mm）在三种比例下的图形大小对比</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">🔍</span>分类</h4>
+        <ul>
+          <li><b>原值比例</b>：1:1（优先采用）</li>
+          <li><b>缩小比例</b>：1:2、1:5、1:10 …（比值&lt;1）</li>
+          <li><b>放大比例</b>：2:1、5:1、10:1 …（比值&gt;1）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">📌</span>绘制时的规定</h4>
+        <ul>
+          <li>同一机件各视图应<b>尽可能采用相同比例</b></li>
+          <li>比例应填在标题栏的<b>比例栏</b>内</li>
+          <li>孔径或薄片厚度<b>≤2mm</b> 时可<b>夸大画出</b></li>
+          <li>标注的尺寸数字永远是<b>实物真实尺寸</b>，与比例无关</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：2:1 是放大还是缩小</div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 错误</span>
+          2:1 是缩小比例（因为「2 变成 1 变小了」）<br>
+          <span class="cross">完全反了。</span><br>
+          也常错：比例变了，图上标注的数字也要跟着变。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          2:1 → 图上量 2，实物是 1 → <b>图比实物大 = 放大</b><br>
+          1:2 → 图上量 1，实物是 2 → <b>图比实物小 = 缩小</b><br>
+          <b>尺寸数字只写真实值</b>，画大画小都不改。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse"><em>前图后物</em>要记牢，比值大于一放大画；<em>尺寸只写真实数</em>，比例再变也不差。</div>
+      <div class="note">「前图后物」= 比例中前一个数指图形，后一个数指实物。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d4"), { perChar: 32, speakText: "比例是指图中图形与其实物相应要素的线性尺寸之比。比值为一时称原值比例，比值大于一时称放大比例，比值小于一时称缩小比例。" });
+    const cv = $("#cvD"); if (!cv) return;
+    const H = 280, { g, w } = setupCanvas(cv, H);
+    const realW = 60;                       // mm
+    const base = Math.min((w - 120) / 180, 3.2);  // px per mm，保证 2:1 放得下
+    const rows = [
+      { label: "1:1", note: "原值比例", mul: 1,    color: "#1f6feb" },
+      { label: "1:2", note: "缩小比例", mul: 0.5,  color: "#bc8cff" },
+      { label: "2:1", note: "放大比例", mul: 2,    color: "#e5534b" }
+    ];
+    function draw(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      const x0 = 96;
+      rows.forEach((r, i) => {
+        const ap = i / rows.length;
+        if (t < ap) return;
+        const y = 52 + i * 74;
+        const W = realW * base * r.mul;
+        g.save();
+        g.globalAlpha = Math.min(1, (t - ap) * 5);
+        // 实物参考（虚线）
+        g.strokeStyle = "#bbb"; g.lineWidth = 1.2; g.setLineDash([6,5]);
+        g.beginPath(); g.moveTo(x0, y - 24); g.lineTo(x0, y + 24); g.stroke();
+        g.beginPath(); g.moveTo(x0 + realW*base, y - 24); g.lineTo(x0 + realW*base, y + 24); g.stroke();
+        g.setLineDash([]);
+        // 图形
+        g.fillStyle = r.color + "33";
+        g.fillRect(x0, y - 18, W, 36);
+        g.strokeStyle = r.color; g.lineWidth = 2.4;
+        g.strokeRect(x0, y - 18, W, 36);
+        // 文字
+        g.fillStyle = "#111"; g.font = "700 15px 'Cascadia Mono',monospace";
+        g.textAlign = "right"; g.textBaseline = "middle";
+        g.fillText(r.label, x0 - 16, y);
+        g.fillStyle = r.color; g.font = "600 11.5px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "left";
+        g.fillText(r.note, x0 + 10, y + 30);
+        // 长度标注
+        g.strokeStyle = "#666"; g.lineWidth = 1;
+        const ly = y + 22;
+        g.beginPath(); g.moveTo(x0, ly); g.lineTo(x0 + W, ly); g.stroke();
+        g.beginPath(); g.moveTo(x0, ly-4); g.lineTo(x0, ly+4); g.stroke();
+        g.beginPath(); g.moveTo(x0+W, ly-4); g.lineTo(x0+W, ly+4); g.stroke();
+        g.fillStyle = "#c2410c"; g.font = "600 11.5px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "center"; g.textBaseline = "top";
+        g.fillText("图上 " + (realW*r.mul).toFixed(0) + "mm（实物恒为 60mm）", x0 + Math.max(W,120)/2 + 30, ly + 6);
+        g.restore();
+      });
+    }
+    if (!S.motion) draw(1);
+    else {
+      later(() => {
+        const t0 = performance.now(), D = 1500 / S.speed;
+        (function f(now){
+          if (!S.playing) return;
+          const p = Math.min(1, (now - t0) / D);
+          draw(1 - Math.pow(1 - p, 2)); if (p < 1) requestAnimationFrame(f);
+        })(performance.now());
+      }, 250);
+    }
+  }
+});
+
+/* ---------- 5. 字体 ---------- */
+SLIDES.push({
+  id: "font",
+  nav: "3. 字体",
+  group: "三、字体",
+  title: "三、字体 —— 长仿宋体与字高规定",
+  html: `
+    <h2 class="sh"><span class="num">3</span>字体：图样上的字必须这么写</h2>
+
+    <div class="def" id="d5">
+      <div class="label">字体规定</div>
+      图样中的字体必须做到：<b>字体工整、笔画清楚、间隔均匀、排列整齐</b>。
+      汉字应写<b>长仿宋体</b>，并应采用国家正式公布的<b>简化字</b>。
+      字体的<b>号数</b>即为字体的<b>高度 h</b>，分为 <b>1.8、2.5、3.5、5、7、10、14、20</b> 八种，
+      汉字的字高<b>不应小于 3.5 号</b>。
+    </div>
+
+    <div class="stagebox">
+      <canvas id="cvE"></canvas>
+      <div class="cap">长仿宋体字形特征：横平竖直、起落有锋、字形瘦长（高:宽 ≈ 1:0.7）</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">✍️</span>汉字（长仿宋体）</h4>
+        <ul>
+          <li>字高 h 不应小于 <b>3.5 号</b></li>
+          <li>字宽 ≈ <b>0.7h</b>（所以叫「长」仿宋）</li>
+          <li>必须写<b>简化字</b>，不用繁体、不写草书</li>
+          <li>要求：工整、清楚、均匀、整齐</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">🔤</span>字母和数字</h4>
+        <ul>
+          <li>分 <b>A 型</b>（笔画宽 h/14）和 <b>B 型</b>（笔画宽 h/10）</li>
+          <li>可写成<b>直体</b>，也可写成<b>斜体</b></li>
+          <li>斜体字字头<b>向右倾斜</b>，与水平线成 <b>75°</b></li>
+          <li>用作指数、分数、极限偏差等时更小一号</li>
+        </ul>
+      </div>
+    </div>
+
+    <table class="dt">
+      <tr><th>字体号数</th><th>1.8</th><th>2.5</th><th>3.5</th><th>5</th><th>7</th><th>10</th><th>14</th><th>20</th></tr>
+      <tr id="rowH"><th>字高 h / mm</th><td>1.8</td><td>2.5</td><td>3.5</td><td>5</td><td>7</td><td>10</td><td>14</td><td>20</td></tr>
+    </table>
+    <p class="sub" style="margin-top:-4px">规律：后一号 ≈ 前一号 × √2（所以常近似取 1.4 倍）。<strong>汉字最小 3.5 号</strong>。</p>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：字高与字宽</div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 错误</span>
+          字号就是字宽；汉字可以写成正方形；为了好看可以用草书或美术字。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          <b>号数 = 字高 h</b>，不是字宽；汉字宽约 <b>0.7h</b>，是瘦长的长方形；必须长仿宋体 + 简化字。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse">汉字要写<em>长仿宋</em>，字高就是字号名；<em>最小三点五号</em>起，宽是高的零点七。</div>
+      <div class="note">「工整、清楚、均匀、整齐」八个字再加一句：斜体七十五度倾。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d5"), { perChar: 28, speakText: "图样中的字体必须做到字体工整、笔画清楚、间隔均匀、排列整齐。汉字应写长仿宋体，并应采用国家正式公布的简化字。字体号数即为字体高度，汉字字高不应小于三点五号。" });
+    const cv = $("#cvE"); if (!cv) return;
+    const H = 240, { g, w } = setupCanvas(cv, H);
+    function draw(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      const samples = [
+        { ch: "工", x: 70,  size: 26, color: "#1f6feb" },
+        { ch: "程", x: 165, size: 26, color: "#1f6feb" },
+        { ch: "制", x: 260, size: 26, color: "#1f6feb" },
+        { ch: "图", x: 355, size: 26, color: "#1f6feb" },
+        { ch: "A", x: 470, size: 26, color: "#e5534b", italic: true },
+        { ch: "4", x: 545, size: 26, color: "#e5534b", italic: true },
+        { ch: "R", x: 620, size: 26, color: "#e5534b", italic: true }
+      ];
+      const cy = 92;
+      samples.forEach((s, i) => {
+        const ap = i / (samples.length + 3);
+        if (t < ap) return;
+        g.save();
+        g.globalAlpha = Math.min(1, (t - ap) * 5);
+        g.font = (s.italic ? "italic " : "") + "600 " + s.size + "px 'KaiTi','STKaiti','Microsoft YaHei',serif";
+        g.fillStyle = s.color; g.textAlign = "center"; g.textBaseline = "middle";
+        g.fillText(s.ch, s.x, cy);
+        // 辅助框：高 = size, 宽 = 0.7size（汉字）
+        g.strokeStyle = s.color + "55"; g.lineWidth = 1; g.setLineDash([4,3]);
+        if (!s.italic){
+          g.strokeRect(s.x - s.size*0.7/2, cy - s.size/2, s.size*0.7, s.size);
+        }
+        g.setLineDash([]);
+        g.restore();
+      });
+      if (t > .72){
+        g.save();
+        g.globalAlpha = Math.min(1, (t - .72) * 4);
+        g.strokeStyle = "#c2410c"; g.lineWidth = 1.4;
+        const x = 470, y0 = cy - 40, y1 = cy + 40;
+        g.beginPath(); g.moveTo(x, y1); g.lineTo(x + 80*Math.tan(15*Math.PI/180), y0); g.stroke();
+        g.setLineDash([4,4]);
+        g.beginPath(); g.moveTo(x, y1); g.lineTo(x, y0); g.stroke();
+        g.setLineDash([]);
+        g.fillStyle = "#c2410c"; g.font = "600 12px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "left"; g.textBaseline = "middle";
+        g.fillText("75°", x + 6, y1 - 34);
+        g.textAlign = "center"; g.textBaseline = "top";
+        g.fillText("字高 h = 字号", 220, cy + 46);
+        g.fillText("字宽 ≈ 0.7h", 220, cy + 68);
+        g.restore();
+      }
+    }
+    if (!S.motion) draw(1);
+    else {
+      later(() => {
+        const t0 = performance.now(), D = 1400 / S.speed;
+        (function f(now){
+          if (!S.playing) return;
+          const p = Math.min(1, (now - t0) / D);
+          draw(1 - Math.pow(1 - p, 2)); if (p < 1) requestAnimationFrame(f);
+        })(performance.now());
+      }, 250);
+    }
+    glowCell("#rowH td:nth-child(4)", 1500);
+  }
+});
+
+/* ---------- 6. 图线 ---------- */
+SLIDES.push({
+  id: "lines",
+  nav: "4. 图线",
+  group: "四、图线",
+  title: "四、图线 —— 线宽、线型与用途",
+  html: `
+    <h2 class="sh"><span class="num">4</span>图线：不同粗细不同样，各有各的用途</h2>
+
+    <div class="def" id="d6">
+      <div class="label">线宽规定</div>
+      图线的宽度 <b>d</b> 应按图样的类型和尺寸大小在下列数系中选取：
+      <b>0.13、0.18、0.25、0.35、0.5、0.7、1、1.4、2（mm）</b>。
+      机械图样中通常采用<b>粗、细两种线宽</b>，其宽度比率为 <b>2:1</b>；
+      其中<b>线型组别 0.5 和 0.7 为优先采用</b>的图线组别。
+      粗线宽度 <b>d</b> 一般取 <b>0.5～2mm</b>，细线宽度为 <b>d/2</b>。
+    </div>
+
+    <div class="def" id="d6b" style="border-left-color:var(--accent2)">
+      <div class="label" style="background:var(--accent2)">图线画法要点</div>
+      ① 同一图样中<b>同类图线的宽度应一致</b>；
+      ② <b>虚线、点画线及双点画线的线段长度和间隔应各自大致相等</b>；
+      ③ 虚线以及各种点画线与其他图线<b>相交时，应交于画线处</b>（不能在线段间的空隙处相交）；
+      ④ 点画线、双点画线的<b>首末两端应是线段而不是点</b>；
+      ⑤ 图线不得与文字、数字或符号重叠、混淆，不可避免时应<b>优先保证文字清晰</b>。
+    </div>
+
+    <div class="stagebox dark">
+      <canvas id="cvF"></canvas>
+      <div class="cap" style="color:#8b949e">常见线型一笔一笔画出（观察线段长度与间隔规律）</div>
+    </div>
+
+    <div class="card">
+      <h4><span class="ic">📊</span>常用线型及用途（机械图样）</h4>
+      <div class="linesamp">
+        <div class="row">
+          <svg width="190" height="16"><line x1="4" y1="8" x2="186" y2="8" stroke="#e6edf3" stroke-width="3.4"/></svg>
+          <div class="nm">粗实线</div>
+          <div class="ds">可见棱边线、可见轮廓线、相贯线、螺纹牙顶线、螺纹长度终止线、齿顶圆线、剖切符号用线</div>
+        </div>
+        <div class="row">
+          <svg width="190" height="16"><line x1="4" y1="8" x2="186" y2="8" stroke="#e6edf3" stroke-width="1.7"/></svg>
+          <div class="nm">细实线</div>
+          <div class="ds">过渡线、尺寸线、尺寸界线、指引线和基准线、剖面线、重合断面的轮廓线、螺纹牙底线、范围线及分界线</div>
+        </div>
+        <div class="row">
+          <svg width="190" height="16"><line x1="4" y1="8" x2="186" y2="8" stroke="#e6edf3" stroke-width="1.7" stroke-dasharray="12 6"/></svg>
+          <div class="nm">细虚线</div>
+          <div class="ds">不可见棱边线、不可见轮廓线</div>
+        </div>
+        <div class="row">
+          <svg width="190" height="16"><line x1="4" y1="8" x2="186" y2="8" stroke="#e6edf3" stroke-width="1.7" stroke-dasharray="18 5 3 5"/></svg>
+          <div class="nm">细点画线</div>
+          <div class="ds">轴线、对称中心线、分度圆线、孔系分布的中心线、剖切线</div>
+        </div>
+        <div class="row">
+          <svg width="190" height="16"><line x1="4" y1="8" x2="186" y2="8" stroke="#e6edf3" stroke-width="1.7" stroke-dasharray="18 5 3 5 3 5"/></svg>
+          <div class="nm">细双点画线</div>
+          <div class="ds">相邻辅助零件的轮廓线、可动零件极限位置的轮廓线、成形前轮廓线、剖切面前的结构轮廓线、轨迹线</div>
+        </div>
+        <div class="row">
+          <svg width="190" height="16" viewBox="0 0 190 16"><path d="M4 8 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0 q5 6 10 0 q5 -6 10 0" fill="none" stroke="#e6edf3" stroke-width="1.7"/></svg>
+          <div class="nm">细波浪线</div>
+          <div class="ds">断裂处的边界线、视图与剖视的分界线</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：<span style="color:#e6edf3">粗实线 vs 细实线 到底画什么</span></div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 错误</span>
+          尺寸线用粗实线（因为要看得清）；轮廓线用细实线；中心线用虚线；虚线可以随便和实线在空隙处交叉。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          <b>粗实线</b>→可见轮廓；<br>
+          <b>细实线</b>→尺寸线、尺寸界线、剖面线；<br>
+          <b>细点画线</b>→轴线、对称中心线；<br>
+          <b>细虚线</b>→不可见轮廓；<br>
+          相交必须<b>交于画线处</b>。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse"><em>粗实看轮廓</em>，细实尺寸剖面线；<em>虚线看不见</em>，点画轴线对称线；<em>双点画假想</em>，波浪一断就分界。</div>
+      <div class="note">线宽记：粗是细的两倍（2:1）；粗线 d 取 0.5～2mm，细线就是 d/2。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d6"), { perChar: 26, speakText: "图线的宽度应按图样的类型和尺寸大小在规定的数系中选取。机械图样中通常采用粗、细两种线宽，其宽度比率为二比一。" });
+    animateDefinition($("#d6b"), { perChar: 22, speakText: "同一图样中同类图线的宽度应一致，虚线、点画线及双点画线的线段长度和间隔应各自大致相等，相交时应交于画线处。" });
+    const cv = $("#cvF"); if (!cv) return;
+    const H = 250, { g, w } = setupCanvas(cv, H);
+    g.fillStyle = "#0a0e14"; g.fillRect(0, 0, w, H);
+
+    const x0 = 118, x1 = w - 30;
+    const rows = [
+      { nm: "粗实线",  wd: 3.4, dash: null,               c: "#e6edf3" },
+      { nm: "细实线",  wd: 1.7, dash: null,               c: "#e6edf3" },
+      { nm: "细虚线",  wd: 1.7, dash: [12, 6],            c: "#e6edf3" },
+      { nm: "细点画线", wd: 1.7, dash: [18, 5, 3, 5],      c: "#e6edf3" },
+      { nm: "细双点画线", wd: 1.7, dash: [18, 5, 3, 5, 3, 5], c: "#e6edf3" }
+    ];
+    function draw(t){
+      g.fillStyle = "#0a0e14"; g.fillRect(0, 0, w, H);
+      rows.forEach((r, i) => {
+        const ap = i / rows.length;
+        if (t < ap) return;
+        const y = 32 + i * 42;
+        const local = Math.min(1, (t - ap) * rows.length * 1.15);
+        g.save();
+        g.globalAlpha = Math.min(1, (t - ap) * 8);
+        g.strokeStyle = r.c; g.lineWidth = r.wd; g.lineCap = "butt";
+        if (r.dash) g.setLineDash(r.dash);
+        g.beginPath(); g.moveTo(x0, y);
+        g.lineTo(x0 + (x1 - x0) * local, y);
+        g.stroke();
+        g.setLineDash([]);
+        // 名称
+        g.fillStyle = "#58a6ff"; g.font = "600 12.5px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "right"; g.textBaseline = "middle";
+        g.fillText(r.nm, x0 - 14, y);
+        // 线宽标记
+        g.fillStyle = "#8b949e"; g.font = "500 10.5px 'Cascadia Mono',monospace";
+        g.textAlign = "left"; g.textBaseline = "top";
+        g.fillText(r.wd >= 3 ? "d" : "d/2", x1 + 6, y - 6);
+        g.restore();
+      });
+      if (t > .9){
+        g.save();
+        g.fillStyle = "#f0883e"; g.font = "600 11.5px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "left"; g.textBaseline = "top";
+        g.fillText("粗:细 = 2:1", x0, 22);
+        g.restore();
+      }
+    }
+    if (!S.motion) draw(1);
+    else {
+      later(() => {
+        const t0 = performance.now(), D = 1800 / S.speed;
+        (function f(now){
+          if (!S.playing) return;
+          const p = Math.min(1, (now - t0) / D);
+          draw(p); if (p < 1) requestAnimationFrame(f);
+        })(performance.now());
+      }, 200);
+    }
+  }
+});
+
+/* ---------- 7. 尺寸注法：三要素 ---------- */
+SLIDES.push({
+  id: "dim",
+  nav: "5.1 尺寸三要素",
+  group: "五、尺寸注法",
+  title: "5.1 尺寸注法 —— 三要素：尺寸界线、尺寸线、尺寸数字",
+  html: `
+    <h2 class="sh"><span class="num">5</span>尺寸注法：一个尺寸由哪三部分组成？</h2>
+
+    <div class="def" id="d7">
+      <div class="label">★ 必背 · 尺寸三要素</div>
+      一个完整的尺寸由 <b>尺寸界线</b>、<b>尺寸线</b> 和 <b>尺寸数字</b> 三个要素组成。
+      其中 <b>尺寸界线</b> 用细实线绘制，并由图形的轮廓线、轴线或对称中心线处引出，
+      也可利用轮廓线、轴线或对称中心线作尺寸界线；<b>尺寸线</b> 用细实线绘制，
+      尺寸线 <b>必须与所标注的线段平行</b>，且尺寸线 <b>不能用其他图线代替</b>，
+      也 <b>不能与其他图线重合或画在其延长线上</b>。
+    </div>
+
+    <div class="stagebox">
+      <canvas id="cvG"></canvas>
+      <div class="cap">点击「↻ 重播」可再看一遍三要素逐个出现的过程</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">①</span>尺寸界线</h4>
+        <ul>
+          <li>用<b>细实线</b>绘制</li>
+          <li>由轮廓线、轴线或对称中心线<b>引出</b></li>
+          <li>也可用这些线<b>直接代替</b></li>
+          <li>一般与尺寸线<b>垂直</b>，必要时允许倾斜</li>
+          <li>超出尺寸线约 <b>2～3mm</b></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">②</span>尺寸线</h4>
+        <ul>
+          <li>用<b>细实线</b>绘制</li>
+          <li>必须与所标注线段<b>平行</b></li>
+          <li><b>不能用其他图线代替</b></li>
+          <li>不能与其他图线<b>重合或画在其延长线上</b></li>
+          <li>终端用<b>箭头</b>（或斜线）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">③</span>尺寸数字</h4>
+        <ul>
+          <li>表示机件的<b>真实大小</b>，与图形比例<b>无关</b></li>
+          <li>默认单位是 <b>mm</b>，图样上<b>不写单位</b></li>
+          <li>尺寸数字 <b>不可被任何图线穿过</b>，否则须断开图线</li>
+          <li>同一图样中数字<b>大小应一致</b></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">🎯</span>线性尺寸数字的注写方向</h4>
+        <ul>
+          <li>水平方向：数字写在尺寸线<b>上方</b>，字头<b>朝上</b></li>
+          <li>竖直方向：数字写在尺寸线<b>左侧</b>，字头<b>朝左</b></li>
+          <li>倾斜方向：字头<b>朝上朝左</b>趋势，避免在图示 <b>30°</b> 斜线范围内标注</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：尺寸线能用轮廓线代替吗</div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 错误</span>
+          尺寸线可以借用轮廓线、中心线来代替，省得再画一条；尺寸数字被中心线穿过也没关系。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          尺寸线<b>只能用细实线单独绘制</b>，不得用其他图线代替、重合或画在延长线上。<br>
+          尺寸数字<b>不可被任何图线穿过</b>，必须把图线断开。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse">尺寸三件套：<em>界线、线、数字</em>；<em>界线可借用</em>，<em>尺寸线不能替</em>；数字写真实，单位毫米记。</div>
+      <div class="note">「界线可借用」= 尺寸界线可以用轮廓线/轴线/中心线代替；「尺寸线不能替」= 尺寸线绝不能被代替。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d7"), { perChar: 20, speakText: "一个完整的尺寸由尺寸界线、尺寸线和尺寸数字三个要素组成。尺寸线和尺寸界线用细实线绘制，尺寸线必须与所标注的线段平行。" });
+    const cv = $("#cvG"); if (!cv) return;
+    const H = 300, { g, w } = setupCanvas(cv, H);
+    const bw = 300, bh = 150;
+    const bx = (w - bw) / 2 - 40, by = 78;
+    const x0 = bx, x1 = bx + bw, y0 = by, y1 = by + bh;
+
+    function paint(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      // 被注对象
+      g.strokeStyle = "#111"; g.lineWidth = 3;
+      g.strokeRect(bx, by, bw, bh);
+      g.fillStyle = "#dbeafe"; g.fillRect(bx, by, bw, bh);
+      g.strokeStyle = "#111"; g.lineWidth = 3; g.strokeRect(bx, by, bw, bh);
+      g.fillStyle = "#334155"; g.font = "600 13px 'Microsoft YaHei',sans-serif";
+      g.textAlign = "center"; g.textBaseline = "middle";
+      g.fillText("被标注的机件", bx + bw/2, by + bh/2);
+
+      const ext = 22, gap = 8, off = 52;
+
+      // ① 尺寸界线
+      if (t > .06){
+        const p = Math.min(1, (t - .06) / .22);
+        g.save();
+        g.strokeStyle = "#1f6feb"; g.lineWidth = 1.6;
+        g.beginPath(); g.moveTo(x0, y1 + gap); g.lineTo(x0, y1 + gap + ext * p); g.stroke();
+        g.beginPath(); g.moveTo(x1, y1 + gap); g.lineTo(x1, y1 + gap + ext * p); g.stroke();
+        g.beginPath(); g.moveTo(x0 - gap, y0); g.lineTo(x0 - gap - ext * p, y0); g.stroke();
+        g.beginPath(); g.moveTo(x0 - gap, y1); g.lineTo(x0 - gap - ext * p, y1); g.stroke();
+        g.restore();
+        if (p >= 1){
+          g.fillStyle = "#1f6feb"; g.font = "700 12px 'Microsoft YaHei',sans-serif";
+          g.textAlign = "center"; g.textBaseline = "top";
+          g.fillText("① 尺寸界线（细实线）", x0 + bw/2, y1 + gap + ext + 8);
+          g.save();
+          g.textAlign = "right"; g.textBaseline = "middle";
+          g.fillText("① 尺寸界线", x0 - gap - ext - 8, (y0+y1)/2);
+          g.restore();
+        }
+      }
+      // ② 尺寸线 + 箭头
+      if (t > .34){
+        const p = Math.min(1, (t - .34) / .26);
+        const yl = y1 + gap + ext + 26;
+        g.save();
+        g.strokeStyle = "#e5534b"; g.lineWidth = 1.6;
+        g.beginPath(); g.moveTo(x0, yl); g.lineTo(x0 + (x1-x0)*p, yl); g.stroke();
+        function arrow(x, dir){
+          g.beginPath();
+          g.moveTo(x, yl); g.lineTo(x - dir*11, yl - 4); g.lineTo(x - dir*11, yl + 4);
+          g.closePath(); g.fillStyle = "#e5534b"; g.fill();
+        }
+        if (p > .02) arrow(x0, -1);
+        if (p > .98) arrow(x1, 1);
+        g.restore();
+        if (p >= 1){
+          g.fillStyle = "#e5534b"; g.font = "700 12px 'Microsoft YaHei',sans-serif";
+          g.textAlign = "center"; g.textBaseline = "top";
+          g.fillText("② 尺寸线（细实线+箭头，与线段平行）", x0 + bw/2, yl + 12);
+        }
+      }
+      // ③ 尺寸数字
+      if (t > .66){
+        g.save();
+        g.globalAlpha = Math.min(1, (t - .66) * 4);
+        const yl = y1 + gap + ext + 26;
+        g.fillStyle = "#fbfbf7";
+        const txt = "300";
+        g.font = "700 17px 'Cascadia Mono',monospace";
+        const tw = g.measureText(txt).width;
+        g.fillRect(x0 + (x1-x0)/2 - tw/2 - 4, yl - 22, tw + 8, 18);
+        g.fillStyle = "#166534"; g.textAlign = "center"; g.textBaseline = "bottom";
+        g.fillText(txt, x0 + (x1-x0)/2, yl - 5);
+        g.fillStyle = "#166534"; g.font = "700 12px 'Microsoft YaHei',sans-serif";
+        g.textBaseline = "top";
+        g.fillText("③ 尺寸数字（真实大小，单位 mm 不写）", x0 + bw/2, yl + 34);
+        g.restore();
+      }
+    }
+    if (!S.motion){ paint(1); return; }
+    later(() => {
+      const t0 = performance.now(), D = 2400 / S.speed;
+      (function f(now){
+        if (!S.playing) return;
+        const p = Math.min(1, (now - t0) / D);
+        paint(p); if (p < 1) requestAnimationFrame(f);
+      })(performance.now());
+    }, 300);
+  }
+});
+
+/* ---------- 8. 尺寸注法：细节规定 ---------- */
+SLIDES.push({
+  id: "dim2",
+  nav: "5.2 尺寸注法细节",
+  group: "五、尺寸注法",
+  title: "5.2 尺寸注法的细节规定与常见注法",
+  html: `
+    <h2 class="sh"><span class="num">5</span>细节规定：这些「不许」要记牢</h2>
+
+    <div class="def" id="d8">
+      <div class="label">尺寸线的排布</div>
+      标注尺寸时，应<b>尽量使用符号和缩写词</b>。同一方向的尺寸线，<b>小尺寸应靠近图形</b>，
+      大尺寸应依次向外排列，以免尺寸线与尺寸界线<b>相交</b>。
+      尺寸线之间以及尺寸线与轮廓线之间的距离<b>不应小于 7mm</b>，
+      平行排列的尺寸线间距宜为 <b>7～10mm</b>。
+    </div>
+
+    <div class="stagebox">
+      <canvas id="cvH"></canvas>
+      <div class="cap">小尺寸在内、大尺寸在外；避免尺寸线与尺寸界线相交</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">🚫</span>尺寸数字的「不许」</h4>
+        <ul>
+          <li>不可被<b>任何图线穿过</b></li>
+          <li>不可避免时应将图线<b>断开</b></li>
+          <li>不得与图线、文字或符号<b>重叠混淆</b></li>
+          <li>同一图样中数字<b>字号一致</b></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">🔢</span>直径、半径、球面的注法</h4>
+        <ul>
+          <li>直径：数字前加 <b>⌀</b></li>
+          <li>半径：数字前加 <b>R</b></li>
+          <li>球面：在 ⌀ 或 R 前再加 <b>S</b>，如 <b>S⌀</b>、<b>SR</b></li>
+          <li>小尺寸无箭头位置时，箭头可<b>画在外面</b>并引出</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">📐</span>角度、弧长、正方形</h4>
+        <ul>
+          <li>角度数字一律<b>水平书写</b></li>
+          <li>弧长在数字左上角加<b>弧长符号 ⌒</b></li>
+          <li>45°倒角用 <b>C</b> 表示，如 C2</li>
+          <li>正方形在边长前加 <b>□</b></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">✂️</span>简化的注法</h4>
+        <ul>
+          <li>对称机件可只画一半，尺寸线略超<b>对称中心线</b></li>
+          <li>同一符号重复时可用<b>数量×尺寸</b>，如 4×⌀8</li>
+          <li>参考尺寸加<b>圆括号</b>，如 (25)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="th">⚠️ 易错对比：尺寸排布的常见错误</div>
+      <div class="tb">
+        <div class="side bad">
+          <span class="tag">✗ 错误</span>
+          大尺寸画在最内圈（离图形近）；尺寸线之间随便挤在一起；尺寸线与尺寸界线相交也没事。
+        </div>
+        <div class="side good">
+          <span class="tag">✓ 正确</span>
+          <b>小尺寸在内、大尺寸在外</b>；尺寸线间距 <b>7～10mm</b>；
+          尺寸线与轮廓线距离 <b>不小于 7mm</b>；避免尺寸线与尺寸界线相交。
+        </div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 口诀</div>
+      <div class="verse"><em>小内大外</em>排尺寸，间距七到十来记；直径加⌀半径 R，<em>球面再加 S</em> 在前头。</div>
+      <div class="note">角度数字水平写，弧长加弯（⌒），倒角写 C，正方形加 □。</div>
+    </div>
+  `,
+  anim(){
+    animateDefinition($("#d8"), { perChar: 24, speakText: "标注尺寸时，应尽量使用符号和缩写词。同一方向的尺寸线，小尺寸应靠近图形，大尺寸应依次向外排列，尺寸线之间以及尺寸线与轮廓线之间的距离不应小于七毫米。" });
+    const cv = $("#cvH"); if (!cv) return;
+    const H = 300, { g, w } = setupCanvas(cv, H);
+    const ow = 260, oh = 130;
+    const ox = 120, oy = 80;
+
+    function paint(t){
+      g.clearRect(0, 0, w, H);
+      g.fillStyle = "#fbfbf7"; g.fillRect(0, 0, w, H);
+      // 机件
+      g.fillStyle = "#dbeafe"; g.fillRect(ox, oy, ow, oh);
+      g.strokeStyle = "#111"; g.lineWidth = 3; g.strokeRect(ox, oy, ow, oh);
+
+      // 三段宽度
+      const segs = [
+        { a: ox, b: ox + 70,       v: "70",  lv: 1 },
+        { a: ox, b: ox + 160,      v: "160", lv: 2 },
+        { a: ox, b: ox + ow,       v: "260", lv: 3 }
+      ];
+      segs.forEach((s, i) => {
+        const ap = i * .26;
+        if (t < ap) return;
+        const p = Math.min(1, (t - ap) / .22);
+        const y = oy + oh + 30 + i * 30;
+        g.save();
+        g.globalAlpha = Math.min(1, (t - ap) * 5);
+        // 界线
+        g.strokeStyle = "#8b949e"; g.lineWidth = 1.2;
+        g.beginPath(); g.moveTo(s.a, oy + oh + 6); g.lineTo(s.a, y + 6); g.stroke();
+        g.beginPath(); g.moveTo(s.b, oy + oh + 6); g.lineTo(s.b, y + 6); g.stroke();
+        // 尺寸线
+        g.strokeStyle = "#1f6feb"; g.lineWidth = 1.5;
+        g.beginPath(); g.moveTo(s.a, y); g.lineTo(s.a + (s.b - s.a) * p, y); g.stroke();
+        const arrow = (x, d) => {
+          g.beginPath(); g.moveTo(x, y); g.lineTo(x - d*9, y - 3.5); g.lineTo(x - d*9, y + 3.5);
+          g.closePath(); g.fillStyle = "#1f6feb"; g.fill();
+        };
+        if (p > .05) arrow(s.a, -1);
+        if (p > .96) arrow(s.b, 1);
+        if (p > .9){
+          g.fillStyle = "#166534"; g.font = "700 13px 'Cascadia Mono',monospace";
+          g.textAlign = "center"; g.textBaseline = "bottom";
+          g.fillText(s.v, (s.a + s.b)/2, y - 3);
+        }
+        g.restore();
+      });
+
+      if (t > .84){
+        g.save();
+        g.globalAlpha = Math.min(1, (t - .84) * 4);
+        // 间距标注
+        const y1 = oy + oh + 30, y2 = oy + oh + 60;
+        g.strokeStyle = "#c2410c"; g.lineWidth = 1.4;
+        g.beginPath(); g.moveTo(ox + ow + 34, y1); g.lineTo(ox + ow + 34, y2); g.stroke();
+        g.fillStyle = "#c2410c"; g.font = "600 11.5px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "left"; g.textBaseline = "middle";
+        g.fillText("间距 7～10mm", ox + ow + 42, (y1+y2)/2);
+
+        g.fillStyle = "#166534"; g.font = "700 13px 'Microsoft YaHei',sans-serif";
+        g.textAlign = "left"; g.textBaseline = "top";
+        g.fillText("✓ 小尺寸在内（70）→ 大尺寸在外（260）", ox, 32);
+        g.restore();
+      }
+    }
+    if (!S.motion){ paint(1); return; }
+    later(() => {
+      const t0 = performance.now(), D = 1900 / S.speed;
+      (function f(now){
+        if (!S.playing) return;
+        const p = Math.min(1, (now - t0) / D);
+        paint(p); if (p < 1) requestAnimationFrame(f);
+      })(performance.now());
+    }, 250);
+  }
+});
+
+/* ---------- 9. 挖空自测 ---------- */
+SLIDES.push({
+  id: "blank",
+  nav: "★ 关键词挖空自测",
+  group: "记忆强化",
+  title: "关键词挖空自测 —— 点空格揭晓答案",
+  html: `
+    <h2 class="sh"><span class="num">★</span>关键词挖空：先回忆，再揭晓</h2>
+    <p class="sub">
+      下面每一条都是本节的<strong>必背定义</strong>，关键词被挖空。
+      请<strong>先在心里默念答案</strong>，再点击 <span style="color:var(--accent2)">橙色空格</span> 揭晓。
+      全部揭晓后回到目录，你会发现自己已经背下来了。
+    </p>
+
+    <div class="def">
+      <div class="label">① 图纸幅面</div>
+      绘制技术图样时，应优先采用<span class="blank" data-a="基本幅面">基本幅面</span>。
+      基本幅面共五种：<span class="blank" data-a="A0、A1、A2、A3、A4">A0、A1、A2、A3、A4</span>；
+      相邻两号幅面中，大一号幅面的面积是小一号的<span class="blank" data-a="2 倍">2 倍</span>，
+      同号幅面长边与短边之比为<span class="blank" data-a="√2 : 1">√2 : 1</span>。
+    </div>
+
+    <div class="def" style="border-left-color:var(--accent2)">
+      <div class="label" style="background:var(--accent2)">② 留边尺寸</div>
+      不留装订边时，图框线到纸边的距离用<span class="blank" data-a="e">e</span>表示；
+      留有装订边时，装订边一侧的距离用<span class="blank" data-a="a">a</span>表示，
+      统一取<span class="blank" data-a="25mm">25mm</span>，其余各边用
+      <span class="blank" data-a="c">c</span>表示，且
+      <span class="blank" data-a="e = 2c">e = 2c</span>。
+    </div>
+
+    <div class="def" style="border-left-color:var(--purple)">
+      <div class="label" style="background:var(--purple)">③ 标题栏</div>
+      每张图纸上都<span class="blank" data-a="必须">必须</span>画出标题栏，
+      一般应置于图框的<span class="blank" data-a="右下角">右下角</span>，
+      其<span class="blank" data-a="文字">文字</span>方向即为看图方向。
+    </div>
+
+    <div class="def">
+      <div class="label">④ 比例</div>
+      <span class="blank" data-a="比例">比例</span>是指图中图形与其实物相应要素的
+      <span class="blank" data-a="线性尺寸之比">线性尺寸之比</span>。
+      比值为 1 时称<span class="blank" data-a="原值比例">原值比例</span>；
+      比值大于 1 时称<span class="blank" data-a="放大比例">放大比例</span>；
+      比值小于 1 时称<span class="blank" data-a="缩小比例">缩小比例</span>。
+    </div>
+
+    <div class="def" style="border-left-color:var(--accent2)">
+      <div class="label" style="background:var(--accent2)">⑤ 字体</div>
+      汉字应写<span class="blank" data-a="长仿宋体">长仿宋体</span>，
+      并应采用国家正式公布的<span class="blank" data-a="简化字">简化字</span>。
+      字体的号数即为字体的<span class="blank" data-a="高度 h">高度 h</span>，
+      汉字的字高不应小于<span class="blank" data-a="3.5 号">3.5 号</span>。
+    </div>
+
+    <div class="def" style="border-left-color:var(--purple)">
+      <div class="label" style="background:var(--purple)">⑥ 图线</div>
+      机械图样中通常采用粗、细两种线宽，其宽度比率为<span class="blank" data-a="2:1">2:1</span>。
+      <span class="blank" data-a="粗实线">粗实线</span>用于可见轮廓线；
+      <span class="blank" data-a="细实线">细实线</span>用于尺寸线、尺寸界线、剖面线；
+      <span class="blank" data-a="细点画线">细点画线</span>用于轴线、对称中心线；
+      <span class="blank" data-a="细虚线">细虚线</span>用于不可见轮廓线。
+    </div>
+
+    <div class="def">
+      <div class="label">⑦ 尺寸三要素</div>
+      一个完整的尺寸由<span class="blank" data-a="尺寸界线">尺寸界线</span>、
+      <span class="blank" data-a="尺寸线">尺寸线</span>和
+      <span class="blank" data-a="尺寸数字">尺寸数字</span>三个要素组成。
+      尺寸界线用<span class="blank" data-a="细实线">细实线</span>绘制，
+      也可用轮廓线、轴线或对称中心线<span class="blank" data-a="代替">代替</span>；
+      尺寸线必须与所标注线段<span class="blank" data-a="平行">平行</span>，
+      且<span class="blank" data-a="不能">不能</span>用其他图线代替。
+    </div>
+
+    <div class="hint">
+      <b>自测建议：</b>先遮住屏幕口头复述一遍，再逐条点开核对。凡是点开后才想起来的，
+      在纸上抄写 3 遍该句关键词。
+    </div>
+  `,
+  anim(){
+    // 挖空卡片无需逐字动画，保持立即可读
+  }
+});
+
+/* ---------- 10. 章末自测 ---------- */
+const QUIZ = [
+  {
+    q: "A2 图纸的基本幅面尺寸（B×L）是多少？",
+    opts: ["297×420", "420×594", "594×841", "210×297"],
+    a: 1,
+    why: "A2 = 420×594。记忆链：A4 210×297 → A3 297×420 → A2 420×594 → A1 594×841 → A0 841×1189。也可用「小号长边 = 大号短边」验证：A3 长边 420 = A2 短边 420 ✔"
+  },
+  {
+    q: "关于留边尺寸，下列说法正确的是？",
+    opts: [
+      "e 是装订边尺寸，a 是不装订时的边距",
+      "a 是装订边，统一取 25mm；e 是不装订时的边距，且 e = 2c",
+      "A0 的 e 值为 10，A4 的 e 值为 20",
+      "c 永远等于 25mm"
+    ],
+    a: 1,
+    why: "a 为装订边，各号幅面统一 25mm；不留装订边时用 e（A0/A1 为 20，A2–A4 为 10）；留装订边时其余各边用 c，且 e = 2c。"
+  },
+  {
+    q: "比例 2:1 属于哪一类？它表示什么？",
+    opts: [
+      "缩小比例，图上 2mm 代表实物 1mm",
+      "放大比例，图上 2mm 代表实物 1mm",
+      "放大比例，图上 1mm 代表实物 2mm",
+      "原值比例，图形与实物一样大"
+    ],
+    a: 1,
+    why: "比例 = 图形尺寸 : 实物尺寸。2:1 比值大于 1，是放大比例，即图上量到 2mm 对应实物 1mm，图形比实物大。切记：图上标注的数字永远是实物真实尺寸，与比例无关。"
+  },
+  {
+    q: "按国标规定，图样中汉字的字高最小不应小于多少？",
+    opts: ["1.8 号", "2.5 号", "3.5 号", "5 号"],
+    a: 2,
+    why: "字体号数即为字体高度 h，共八种：1.8、2.5、3.5、5、7、10、14、20。其中汉字的字高不应小于 3.5 号；字宽约等于 0.7h，所以是「长」仿宋体。"
+  },
+  {
+    q: "图样中可见轮廓线、尺寸线、对称中心线分别应采用什么图线？",
+    opts: [
+      "粗实线、粗实线、细虚线",
+      "粗实线、细实线、细点画线",
+      "细实线、细实线、细虚线",
+      "粗实线、细点画线、细双点画线"
+    ],
+    a: 1,
+    why: "可见轮廓线用粗实线；尺寸线、尺寸界线、剖面线用细实线；轴线、对称中心线用细点画线；不可见轮廓线用细虚线；假想轮廓（如可动零件极限位置）用细双点画线。"
+  },
+  {
+    q: "一个完整的尺寸由哪三个要素组成？",
+    opts: [
+      "箭头、数字、单位",
+      "尺寸界线、尺寸线、尺寸数字",
+      "轮廓线、中心线、尺寸线",
+      "尺寸界线、箭头、比例"
+    ],
+    a: 1,
+    why: "尺寸三要素 = 尺寸界线 + 尺寸线 + 尺寸数字。这是本节最核心的必背点。注意：尺寸界线可以用轮廓线、轴线或对称中心线代替，但尺寸线绝不能用其他图线代替。"
+  },
+  {
+    q: "关于尺寸线和尺寸数字，下列哪项违反国标？",
+    opts: [
+      "尺寸界线用细实线绘制",
+      "尺寸线用轮廓线的延长线代替",
+      "尺寸数字写在尺寸线上方，字头朝上",
+      "同一方向的尺寸按小尺寸在内、大尺寸在外排列"
+    ],
+    a: 1,
+    why: "尺寸线必须单独用细实线绘制，不能与其他图线重合、也不能画在其延长线上，更不能用其他图线代替。此外尺寸数字不可被任何图线穿过，不可避免时应将图线断开。"
+  },
+  {
+    q: "下列关于字体的说法，错误的是？",
+    opts: [
+      "汉字应写长仿宋体，并采用简化字",
+      "字母可写成直体或斜体，斜体字头向右倾斜约 75°",
+      "字体号数指的是字体的宽度",
+      "字体要求：工整、清楚、均匀、整齐"
+    ],
+    a: 2,
+    why: "字体号数指的是字体的高度 h，不是宽度。汉字字宽约 0.7h，所以字形是瘦长的长方形；斜体字头向右倾斜与水平线成 75°。"
+  }
+];
+
+SLIDES.push({
+  id: "quiz",
+  nav: "★ 章末自测题",
+  group: "记忆强化",
+  title: "章末自测 —— 8 题检验记忆效果",
+  html: `
+    <h2 class="sh"><span class="num">★</span>章末自测：做错自动回看要点</h2>
+    <p class="sub">共 8 题，点击选项即时判定。答错的题目会给出<strong>详细解析</strong>，请对照解析回到对应小节重看动画。</p>
+    <div id="quizBox"></div>
+    <div class="score" id="quizScore" style="display:none"></div>
+    <div class="hint" style="margin-top:14px">
+      <b>提示：</b>点击 <span class="kbd">↻ 重播</span> 可重做本页（清空作答）。
+    </div>
+  `,
+  anim(){
+    const box = $("#quizBox");
+    if (!box) return;
+    box.innerHTML = "";
+    S.quizAnswers = {};
+    const letters = ["A","B","C","D"];
+
+    QUIZ.forEach((item, qi) => {
+      const wrap = document.createElement("div");
+      wrap.className = "quiz";
+      wrap.style.opacity = "0";
+      wrap.innerHTML = `<div class="q"><span class="idx">Q${qi+1}</span>${item.q}</div>
+        <div class="opts">${item.opts.map((o, oi) =>
+          `<div class="opt" data-q="${qi}" data-o="${oi}">
+             <span class="letter">${letters[oi]}</span><span>${o}</span>
+           </div>`).join("")}</div>
+        <div class="explain" id="ex${qi}"><b>解析：</b>${item.why}</div>`;
+      box.appendChild(wrap);
+      later(() => { wrap.style.transition = "opacity .4s, transform .4s";
+                    wrap.style.opacity = "1"; }, S.motion ? qi * 90 : 0);
+    });
+
+    box.addEventListener("click", e => {
+      const opt = e.target.closest(".opt");
+      if (!opt) return;
+      const qi = +opt.dataset.q, oi = +opt.dataset.o;
+      if (S.quizAnswers[qi] !== undefined) return;   // 已答
+      S.quizAnswers[qi] = oi;
+      const correct = QUIZ[qi].a;
+      const card = opt.closest(".quiz");
+      card.querySelectorAll(".opt").forEach(o => o.classList.add("locked"));
+      opt.classList.add(oi === correct ? "right" : "wrong");
+      if (oi !== correct){
+        card.querySelector(`.opt[data-o="${correct}"]`).classList.add("right");
+      }
+      card.querySelector(".explain").classList.add("show");
+
+      // 计分
+      const answered = Object.keys(S.quizAnswers).length;
+      if (answered === QUIZ.length){
+        const score = QUIZ.reduce((s, it, i) => s + (S.quizAnswers[i] === it.a ? 1 : 0), 0);
+        const sc = $("#quizScore");
+        sc.style.display = "block";
+        let msg;
+        if (score === QUIZ.length) msg = "满分！本节基本定义已牢固掌握，可以直接进入下一节。";
+        else if (score >= QUIZ.length - 2) msg = "很不错！请重点复看错题对应的小节动画，特别是尺寸注法与图线。";
+        else msg = "基础还需巩固：建议回到「图纸幅面」重新播放动画，并把每条口诀抄写一遍。";
+        sc.innerHTML = `得分 <b>${score}</b> / ${QUIZ.length}　—　${msg}`;
+      }
+    });
+  }
+});
+
+/* ---------- 11. 总结 ---------- */
+SLIDES.push({
+  id: "summary",
+  nav: "◎ 一页总结",
+  group: "结束",
+  title: "本节一页总结 —— 五大规定速查",
+  html: `
+    <h2 class="sh"><span class="num">◎</span>一页速查：第一章第一节全部要点</h2>
+
+    <table class="dt" style="font-size:12.5px">
+      <tr>
+        <th style="width:19%">板块</th><th style="width:23%">核心规定</th>
+        <th>必背数字 / 关键词</th>
+      </tr>
+      <tr>
+        <td><b>图纸幅面</b><br><span style="font-size:11px;color:#8b949e">GB/T 14689</span></td>
+        <td>基本幅面优先采用<br>面积成倍、长宽比 √2:1</td>
+        <td style="text-align:left;font-family:inherit">
+          A0 841×1189｜A1 594×841｜A2 420×594｜<span style="color:var(--accent2)">A3 297×420</span>｜<span style="color:var(--accent2)">A4 210×297</span>
+        </td>
+      </tr>
+      <tr>
+        <td><b>图框留边</b></td>
+        <td>装订边 a 恒定<br>不装订用 e，装订时其余边 c</td>
+        <td style="text-align:left;font-family:inherit">
+          <span style="color:var(--accent2)">a = 25</span>｜A0/A1：e=20、c=10｜A2–A4：e=10、c=5｜<b>e = 2c</b>
+        </td>
+      </tr>
+      <tr>
+        <td><b>标题栏</b><br><span style="font-size:11px;color:#8b949e">GB/T 10609.1</span></td>
+        <td>必须画出，置于右下角<br>文字方向 = 看图方向</td>
+        <td style="text-align:left;font-family:inherit">
+          改变方向须画<b>方向符号</b>（等边三角形置于图纸下边）
+        </td>
+      </tr>
+      <tr>
+        <td><b>比例</b><br><span style="font-size:11px;color:#8b949e">GB/T 14690</span></td>
+        <td>图形尺寸 : 实物尺寸<br>前图后物</td>
+        <td style="text-align:left;font-family:inherit">
+          原值 1:1｜缩小 1:2、1:5、1:10｜放大 <span style="color:var(--accent2)">2:1、5:1、10:1</span><br>
+          尺寸数字只写<b>真实值</b>；≤2mm 可夸大画出
+        </td>
+      </tr>
+      <tr>
+        <td><b>字体</b><br><span style="font-size:11px;color:#8b949e">GB/T 14691</span></td>
+        <td>汉字长仿宋体 + 简化字<br>号数 = 字高 h</td>
+        <td style="text-align:left;font-family:inherit">
+          字号 1.8/2.5/<span style="color:var(--accent2)">3.5</span>/5/7/10/14/20｜汉字≥<b>3.5 号</b>｜字宽≈<b>0.7h</b>｜斜体 <b>75°</b>
+        </td>
+      </tr>
+      <tr>
+        <td><b>图线</b><br><span style="font-size:11px;color:#8b949e">GB/T 17450<br>GB/T 4457.4</span></td>
+        <td>粗、细两种线宽<br>宽度比率 2:1</td>
+        <td style="text-align:left;font-family:inherit">
+          粗实线→可见轮廓｜细实线→尺寸线/界线/剖面线<br>
+          细虚线→不可见轮廓｜细点画线→轴线/对称中心线<br>
+          细双点画线→假想轮廓｜细波浪线→断裂边界｜相交<b>交于画线处</b>
+        </td>
+      </tr>
+      <tr>
+        <td><b>尺寸注法</b><br><span style="font-size:11px;color:#8b949e">GB/T 4458.4</span></td>
+        <td><span style="color:var(--accent2)">三要素：尺寸界线、尺寸线、尺寸数字</span></td>
+        <td style="text-align:left;font-family:inherit">
+          界线/尺寸线用<b>细实线</b>｜界线<b>可</b>用轮廓线代替，尺寸线<b>不可</b>代替<br>
+          尺寸数字不可被图线穿过｜单位 mm 不写｜小内大外｜间距 7～10mm
+        </td>
+      </tr>
+    </table>
+
+    <div class="mnemonic">
+      <div class="t">⚡ 全节串联口诀（建议背诵）</div>
+      <div class="verse">
+        幅面五号 <em>A0 到 A4</em>，装订留 a 二十五；<br>
+        <em>标题栏在右下角</em>，比例前图后是物；<br>
+        汉字要写<em>长仿宋</em>，字高最小三点五；<br>
+        <em>粗细二比一</em>线宽，轮廓实线中心点；<br>
+        尺寸三件<em>界线线数字</em>，真实毫米记心间。
+      </div>
+      <div class="note">背下这五句，第一章第一节的全部基本定义与数字就都有了落脚点。</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4><span class="ic">🔁</span>复习路径建议</h4>
+        <ul>
+          <li>第 1 遍：按顺序看动画，只看图形和橙色关键词</li>
+          <li>第 2 遍：开 <b>🔊朗读</b>，跟读定义</li>
+          <li>第 3 遍：做<b>挖空自测</b>，点开核对</li>
+          <li>第 4 遍：做<b>章末自测题</b>，错题回看对应动画</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="ic">📅</span>间隔复习安排</h4>
+        <ul>
+          <li>今天：完成 4 遍，确保自测全对</li>
+          <li>第 2 天：只做挖空自测 + 8 道题</li>
+          <li>第 4 天：只看「一页总结」表格</li>
+          <li>第 7 天：默写五句串联口诀</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="hint">
+      <b>说明：</b>本节内容依据现行国家标准 GB/T 14689—2008《技术制图 图纸幅面和格式》、
+      GB/T 14690—1993《技术制图 比例》、GB/T 14691—1993《技术制图 字体》、
+      GB/T 17450—1998《技术制图 图线》、GB/T 4458.4—2003《机械制图 尺寸注法》整理。
+      不同版本教材在小节划分与举例上可能略有差异，请以你所用教材的目录为准。
+    </div>
+  `,
+  anim(){}
+});
+
+/* =========================================================================
+   渲染 / 导航
+   ========================================================================= */
+const navEl = $("#left");
+function buildNav(){
+  navEl.innerHTML = "";
+  let lastGroup = null;
+  SLIDES.forEach((s, i) => {
+    if (s.group !== lastGroup){
+      const g = document.createElement("div");
+      g.className = "nav-group";
+      g.textContent = s.group;
+      navEl.appendChild(g);
+      lastGroup = s.group;
+    }
+    const d = document.createElement("div");
+    d.className = "nav-item";
+    d.dataset.i = i;
+    d.innerHTML = `<span class="dot">${i}</span><span>${s.nav}</span>`;
+    d.addEventListener("click", () => go(i));
+    navEl.appendChild(d);
+  });
+}
+
+const stageEl = $("#stage");
+function renderShell(){
+  stageEl.innerHTML = SLIDES.map((s, i) =>
+    `<section class="slide" id="sl${i}">${s.html}</section>`).join("");
+}
+
+function syncNav(){
+  $$(".nav-item").forEach((el, i) => {
+    el.classList.toggle("active", i === S.idx);
+    el.classList.toggle("done", S.done.has(i) && i !== S.idx);
+  });
+  const on = navEl.querySelector(".nav-item.active");
+  if (on) on.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  $("#progPill").innerHTML = `进度 <b>${S.done.size}</b>/${SLIDES.length}`;
+  $("#sceneTitle").textContent = SLIDES[S.idx].title;
+  $("#footInfo").textContent = `${S.idx + 1} / ${SLIDES.length} · ${SLIDES[S.idx].nav}`;
+  $("#barFill").style.width = ((S.idx + 1) / SLIDES.length * 100) + "%";
+  $("#btnPrev").disabled = S.idx === 0;
+  $("#btnNext").disabled = S.idx === SLIDES.length - 1;
+}
+
+function go(i, {silent=false}={}){
+  if (i < 0 || i >= SLIDES.length) return;
+  clearTimers();
+  stopSpeech();
+  S.spoken = [];
+  S.idx = i;
+  if (!silent) S.done.add(i);
+  $$(".slide").forEach((el, k) => el.classList.toggle("show", k === i));
+  stageEl.scrollTop = 0;
+  syncNav();
+  const s = SLIDES[i];
+  // 等布局完成后再执行动画
+  later(() => { try{ s.anim && s.anim(); }catch(err){ console.warn("anim error", err); } }, 60);
+  bindBlanks();
+}
+
+/* 挖空交互 */
+function bindBlanks(){
+  $$(".blank").forEach(b => {
+    if (b.dataset.bound) return;
+    b.dataset.bound = "1";
+    b.textContent = "？".repeat(Math.max(2, Math.min(6, b.dataset.a.length)));
+    b.addEventListener("click", () => {
+      if (b.classList.contains("revealed")) return;
+      b.textContent = b.dataset.a;
+      b.classList.add("revealed");
+      b.style.animation = "pop .45s ease";
+      later(() => { b.style.animation = ""; }, 500);
+    });
+  });
+}
+
+/* =========================================================================
+   控件事件
+   ========================================================================= */
+$("#btnPrev").addEventListener("click", () => go(S.idx - 1));
+$("#btnNext").addEventListener("click", () => go(S.idx + 1));
+
+$("#btnPlay").addEventListener("click", () => {
+  S.playing = !S.playing;
+  const b = $("#btnPlay");
+  b.textContent = S.playing ? "⏸ 暂停" : "▶ 继续";
+  b.classList.toggle("on", !S.playing);
+  if (S.playing){
+    // 重播当前场景，保证动画连续
+    clearTimers(); stopSpeech(); S.spoken = [];
+    const s = SLIDES[S.idx];
+    later(() => { s.anim && s.anim(); }, 40);
+    bindBlanks();
+  }
+});
+
+$("#btnReplay").addEventListener("click", () => {
+  clearTimers(); stopSpeech(); S.spoken = [];
+  S.playing = true;
+  $("#btnPlay").textContent = "⏸ 暂停";
+  $("#btnPlay").classList.remove("on");
+  const s = SLIDES[S.idx];
+  // 重置已高亮的字
+  $$(".def").forEach(d => {
+    const raw = d.dataset.raw;
+    if (raw){ d.innerHTML = raw; d.dataset.raw = raw; }
+  });
+  later(() => { s.anim && s.anim(); }, 50);
+  bindBlanks();
+});
+
+$("#btnSpeed").addEventListener("click", () => {
+  const opts = [1, 1.5, 2, 0.6];
+  const cur = opts.indexOf(S.speed);
+  S.speed = opts[(cur + 1) % opts.length];
+  $("#btnSpeed").textContent = S.speed.toFixed(1) + "×";
+  $("#btnSpeed").classList.toggle("on", S.speed !== 1);
+});
+
+$("#btnSpeech").addEventListener("click", () => {
+  S.speech = !S.speech;
+  const b = $("#btnSpeech");
+  b.classList.toggle("on", S.speech);
+  b.textContent = S.speech ? "🔊 朗读中" : "🔊 朗读";
+  if (S.speech){
+    speak("朗读已开启");
+    // 立即补读当前页定义
+    S.spoken = [];
+    const s = SLIDES[S.idx];
+    s.anim && s.anim();
+  } else stopSpeech();
+});
+
+$("#btnMotion").addEventListener("click", () => {
+  S.motion = !S.motion;
+  const b = $("#btnMotion");
+  b.classList.toggle("on", !S.motion);
+  b.textContent = S.motion ? "🎞 精简" : "🎞 已精简";
+  clearTimers(); stopSpeech(); S.spoken = [];
+  $$(".def").forEach(d => {
+    const raw = d.dataset.raw;
+    if (raw){ d.innerHTML = raw; d.dataset.raw = raw; }
+  });
+  const s = SLIDES[S.idx];
+  later(() => { s.anim && s.anim(); }, 40);
+  bindBlanks();
+});
+
+/* 键盘 */
+document.addEventListener("keydown", e => {
+  const tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea") return;
+  if (e.key === "ArrowRight" || e.key === "PageDown"){ e.preventDefault(); go(S.idx + 1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); go(S.idx - 1); }
+  else if (e.key === " "){ e.preventDefault(); $("#btnPlay").click(); }
+  else if (e.key === "r" || e.key === "R"){ $("#btnReplay").click(); }
+});
+
+/* 窗口尺寸变化时重绘当前画布 */
+let rzT = null;
+window.addEventListener("resize", () => {
+  clearTimeout(rzT);
+  rzT = setTimeout(() => {
+    if (!S.playing) return;
+    const s = SLIDES[S.idx];
+    clearTimers();
+    $$(".def").forEach(d => {
+      const raw = d.dataset.raw;
+      if (raw){ d.innerHTML = raw; d.dataset.raw = raw; }
+    });
+    s.anim && s.anim();
+    bindBlanks();
+  }, 250);
+});
+
+/* =========================================================================
+   启动
+   ========================================================================= */
+buildNav();
+renderShell();
+go(0);
+</script>
+</body>
+</html>

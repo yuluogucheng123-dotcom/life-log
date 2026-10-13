@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="知识清单">
+<meta name="description" content="做「生活记录」App 所需知识的完整清单：编程、数学、网络协议，按必须懂到了解分级。">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<title>做这个 App 需要什么知识</title>
+<style>
+:root{
+  --bg:#0f1115; --card:#1c2029; --card2:#232833; --line:#2b3140;
+  --text:#eef1f6; --text2:#9aa3b2; --text3:#6b7486;
+  --accent:#4f8cff; --green:#2ecc9b; --red:#ff5c5c; --warn:#ffb020;
+  --p1:#ff5c5c; --p2:#ffb020; --p3:#4f8cff; --p4:#2ecc9b; --p5:#a78bfa;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","SF Pro SC","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
+  padding-bottom:calc(env(safe-area-inset-bottom) + 48px);
+  overscroll-behavior-y:none;
+}
+#wrap{max-width:680px;margin:0 auto;padding:0 16px}
+
+/* ---------- 头部 ---------- */
+header{
+  padding:calc(env(safe-area-inset-top) + 28px) 0 20px;
+  border-bottom:1px solid var(--line);margin-bottom:22px;
+}
+h1{font-size:23px;line-height:1.35;margin:0 0 8px;letter-spacing:-.3px}
+.sub{color:var(--text2);font-size:14px;margin:0}
+.meta{color:var(--text3);font-size:12.5px;margin-top:10px}
+
+/* ---------- 总览卡 ---------- */
+.summary{
+  background:linear-gradient(160deg,var(--card2),var(--card));
+  border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:26px;
+}
+.summary h2{font-size:15px;margin:0 0 12px;color:var(--text2);font-weight:600}
+.bar{display:flex;height:9px;border-radius:5px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block}
+.legend{display:grid;gap:7px;font-size:13.5px}
+.legend div{display:flex;align-items:center;gap:8px;color:var(--text2)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.legend b{color:var(--text);font-weight:600}
+
+/* ---------- 等级分组 ---------- */
+h2.lv{
+  font-size:17px;margin:30px 0 12px;padding-left:11px;
+  border-left:3px solid var(--accent);line-height:1.4;
+}
+h2.lv:first-of-type{margin-top:0}
+h2.lv small{display:block;font-weight:400;font-size:12.5px;color:var(--text3);margin-top:3px}
+
+/* ---------- 知识点卡 ---------- */
+.k{
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  padding:14px 15px;margin-bottom:11px;
+}
+.k h3{
+  font-size:15.5px;margin:0 0 9px;font-weight:600;
+  display:flex;align-items:flex-start;gap:8px;line-height:1.45;
+}
+.tag{
+  font-size:10.5px;padding:2px 7px;border-radius:5px;flex:none;
+  font-weight:600;margin-top:3px;letter-spacing:.3px;
+}
+.t-must{background:rgba(255,92,92,.16);color:var(--p1)}
+.t-should{background:rgba(255,176,32,.16);color:var(--p2)}
+.t-nice{background:rgba(79,140,255,.16);color:var(--p3)}
+.k p{margin:0 0 9px;color:var(--text2);font-size:14.5px}
+.k p:last-child{margin-bottom:0}
+.k ul{margin:0 0 9px;padding-left:19px;color:var(--text2);font-size:14.5px}
+.k li{margin-bottom:5px}
+.k li:last-child{margin-bottom:0}
+.k code{
+  background:#0b0d11;border:1px solid var(--line);border-radius:4px;
+  padding:1px 5px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;
+  color:#9ecbff;word-break:break-all;
+}
+.where{
+  font-size:12.5px;color:var(--text3);border-top:1px dashed var(--line);
+  padding-top:9px;margin-top:11px;
+}
+.where b{color:var(--text2);font-weight:600}
+
+/* ---------- 数学独立块 ---------- */
+.math{
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  padding:15px;margin-bottom:11px;
+}
+.math h3{font-size:15.5px;margin:0 0 10px;font-weight:600;color:var(--text)}
+.formula{
+  background:#0b0d11;border:1px solid var(--line);border-radius:8px;
+  padding:11px 13px;margin:9px 0;font-family:ui-monospace,Consolas,monospace;
+  font-size:13.5px;color:#9ecbff;overflow-x:auto;white-space:nowrap;
+  -webkit-overflow-scrolling:touch;
+}
+.formula em{color:var(--text3);font-style:normal}
+
+/* ---------- 结论框 ---------- */
+.callout{
+  border-radius:13px;padding:15px;margin:22px 0;
+  background:rgba(46,204,155,.08);border:1px solid rgba(46,204,155,.28);
+}
+.callout h3{margin:0 0 9px;font-size:15px;color:var(--green)}
+.callout.warn{background:rgba(255,176,32,.08);border-color:rgba(255,176,32,.28)}
+.callout.warn h3{color:var(--warn)}
+.callout p{margin:0 0 8px;font-size:14.5px;color:var(--text2)}
+.callout p:last-child{margin-bottom:0}
+
+/* ---------- 表格 ---------- */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:400px}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--text2);font-weight:600;font-size:12.5px;white-space:nowrap}
+td{color:var(--text2)}
+td:first-child{color:var(--text)}
+
+/* ---------- 折叠 ---------- */
+details{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  margin-bottom:10px;overflow:hidden;
+}
+summary{
+  padding:13px 15px;cursor:pointer;font-size:14.5px;font-weight:600;
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';color:var(--text3);font-size:19px;font-weight:400;flex:none}
+details[open] summary::after{content:'−'}
+details[open] summary{border-bottom:1px solid var(--line)}
+.body{padding:13px 15px 15px;font-size:14.5px;color:var(--text2)}
+.body ul{padding-left:19px;margin:0}
+.body li{margin-bottom:6px}
+.body li:last-child{margin-bottom:0}
+
+footer{
+  margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  color:var(--text3);font-size:12.5px;text-align:center;line-height:1.8;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+
+<header>
+  <h1>做「生活记录」这个 App<br>需要具备哪些知识</h1>
+  <p class="sub">按「必须懂 → 知道就行」分级，每条都对应项目里的真实代码</p>
+  <p class="meta">基于 life-log 项目实际源码盘点 · 共约 3200 行</p>
+</header>
+
+<!-- ============ 总览 ============ -->
+<div class="summary">
+  <h2>知识构成比例</h2>
+  <div class="bar">
+    <i style="width:34%;background:var(--p1)"></i>
+    <i style="width:24%;background:var(--p2)"></i>
+    <i style="width:20%;background:var(--p3)"></i>
+    <i style="width:14%;background:var(--p4)"></i>
+    <i style="width:8%;background:var(--p5)"></i>
+  </div>
+  <div class="legend">
+    <div><span class="dot" style="background:var(--p1)"></span><b>编程核心</b>　JS 语法、数据操作、异步</div>
+    <div><span class="dot" style="background:var(--p2)"></span><b>Web 基础</b>　HTML / CSS / 浏览器机制</div>
+    <div><span class="dot" style="background:var(--p3)"></span><b>网络与后端</b>　HTTP、认证、数据库</div>
+    <div><span class="dot" style="background:var(--p4)"></span><b>数学</b>　日期运算、统计聚合</div>
+    <div><span class="dot" style="background:var(--p5)"></span><b>工程实践</b>　调试、测试、部署</div>
+  </div>
+</div>
+
+<div class="callout">
+  <h3>先说结论，省得你被吓到</h3>
+  <p><b>这个 App 的数学难度 ≈ 初中水平。</b>没有算法、没有微积分、没有线性代数。真正用到的只有：百分比、平均值、日期加减、集合去重。</p>
+  <p><b>难点不在数学，在于「把一堆零散知识串起来」。</b>每一块单独看都不难，难的是它们要配合工作 —— 这也是为什么我中途踩了三个只有真跑起来才暴露的 bug。</p>
+</div>
+
+<!-- ============ 第一级 ============ -->
+<h2 class="lv">第一级 · 必须懂<small>不懂这些，代码根本写不出来</small></h2>
+
+<div class="k">
+  <h3><span class="tag t-must">必须</span>JavaScript 基础语法</h3>
+  <p>这是唯一的核心语言，全项目 2000 行左右都是它。要掌握：</p>
+  <ul>
+    <li>变量与类型（<code>const</code> / <code>let</code>、字符串、数字、布尔、数组、对象）</li>
+    <li>函数、箭头函数、参数与返回值</li>
+    <li>条件与循环（<code>if</code> / <code>for</code> / <code>for...of</code>）</li>
+    <li><code>Map</code> / <code>Set</code> 这两个数据结构 —— 去重、查表全靠它们</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b>全部文件。<code>data.js</code>、<code>app.js</code>、<code>insight.js</code> 全靠这些基础拼出来。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-must">必须</span>数组操作（最常用的一类）</h3>
+  <p>数据处理 90% 的时间都在跟数组打交道。必须熟练：</p>
+  <ul>
+    <li><code>filter</code> 筛选、<code>map</code> 转换、<code>reduce</code> 归并求和</li>
+    <li><code>sort</code> 排序、<code>find</code> 查找、<code>some</code> / <code>every</code> 判断</li>
+    <li>对象展开 <code>{...a, ...b}</code>、数组展开 <code>[...arr]</code></li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>insight.js</code> 里「最大一笔」就是 <code>reduce</code> 逐个比大小；「按分类汇总」是 <code>filter</code> + <code>reduce</code> 组合。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-must">必须</span>异步编程 <span style="font-size:12px;color:var(--text3)">async / await</span></h3>
+  <p>网络请求不是立刻返回的，代码要能「等」。这是新手最容易卡住的地方。</p>
+  <ul>
+    <li><code>async</code> 函数 + <code>await</code> 等待结果</li>
+    <li><code>Promise</code> 是什么、「还没完成」这个状态怎么表示</li>
+    <li><code>try / catch</code> 捕获失败 —— 网络随时会断</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>sync.js</code> 整个文件都是异步的：登录、上传、下载全部要等网络。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-must">必须</span>DOM 操作</h3>
+  <p>DOM = 浏览器把 HTML 变成的一棵「元素树」。JS 通过它改变页面内容。</p>
+  <ul>
+    <li><code>querySelector</code> 选中元素、<code>addEventListener</code> 绑定点击</li>
+    <li>改文字 <code>textContent</code>、改样式 <code>classList</code></li>
+    <li><b>事件委托</b>：在父元素上监听，处理所有子元素的点击</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>app.js</code> 1035 行里大半在做这件事。删除按钮就是用事件委托，一个监听管所有记录。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-must">必须</span>HTML 与 CSS</h3>
+  <p>页面长什么样、怎么排版，靠这两个。</p>
+  <ul>
+    <li>HTML：标签结构、<code>id</code> / <code>class</code> / <code>data-*</code> 属性</li>
+    <li>CSS：选择器、盒模型、<code>flex</code> 布局</li>
+    <li><b>响应式</b>：<code>media query</code> 让同一套代码适配手机和电脑</li>
+    <li><b>安全区域</b>：<code>env(safe-area-inset-*)</code> 避开 iPhone 刘海和底部横条</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>style.css</code> 835 行、<code>index.html</code> 263 行。深色主题靠 CSS 变量统一管理。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-must">必须</span>数据持久化 <span style="font-size:12px;color:var(--text3)">localStorage</span></h3>
+  <p>浏览器自带的小仓库，关掉页面数据还在。这是本 App「断网也能用」的基础。</p>
+  <ul>
+    <li><code>localStorage.setItem</code> / <code>getItem</code> 存取字符串</li>
+    <li><b><code>JSON.stringify</code> / <code>JSON.parse</code></b> —— 对象和字符串互转，必会</li>
+    <li>容量约 5MB、只能存字符串、清浏览数据会丢</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>data.js</code> 的读写函数、<code>sync.js</code> 的待同步队列，都存在这里。</div>
+</div>
+
+<!-- ============ 第二级 ============ -->
+<h2 class="lv">第二级 · 最好懂<small>不懂也能跑，但做不出「精致」的版本</small></h2>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>HTTP 协议与状态码</h3>
+  <p>前后端对话的语言。不要求背，但要能看懂「服务器在说什么」。</p>
+  <ul>
+    <li><b>请求方法</b>：<code>GET</code> 取数据、<code>POST</code> 新建、<code>PATCH</code> 修改、<code>DELETE</code> 删除</li>
+    <li><b>状态码</b>：<code>200</code> 成功、<code>201</code> 创建成功、<code>401</code> 没登录、<code>403</code> 没权限、<code>409</code> 冲突、<code>500</code> 服务器出错</li>
+    <li><b>请求头</b>：<code>Authorization: Bearer xxx</code> —— 带上身份令牌才能访问数据</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b>我当时就是靠「POST 返回 201 但 upsert 返回 409」这个差异，定位到复合主键配置错误。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>REST 与数据 API</h3>
+  <p>一种「用网址表示数据」的风格。Supabase 自动把数据库变成了这样的接口。</p>
+  <ul>
+    <li>查询参数控制筛选、排序、返回哪些字段</li>
+    <li><b>upsert</b>（有则更新、无则插入）与 <b>主键冲突</b>的关系</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>sync.js</code> 的 <code>onConflict: 'id,user_id'</code> 就是这里的关键 —— 冲突列必须和数据库实际主键完全一致。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>身份认证与会话</h3>
+  <p>「你是谁」这件事怎么证明，以及怎么记住你已登录。</p>
+  <ul>
+    <li>注册 / 登录 / 登出三种流程</li>
+    <li><b>Token</b>（令牌）：登录成功后服务器发的凭证，后续请求都带着它</li>
+    <li><b>会话持久化</b>：关掉浏览器再打开还能免登录</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>sync.js</code> 的 <code>signUp</code> / <code>signIn</code> / <code>getSession</code>。<code>autoRefreshToken</code> 就是令牌过期自动续期。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>数据库与 SQL 基础</h3>
+  <p>数据在服务器上怎么存、怎么保证安全。</p>
+  <ul>
+    <li><b>表、行、列</b>，主键（唯一标识一行）</li>
+    <li><b>复合主键</b>：用两列组合起来当唯一标识 <code>primary key (id, user_id)</code></li>
+    <li><b>索引</b>：加速查询</li>
+    <li><b>级联删除</b>：<code>on delete cascade</code> 用户注销时数据跟着删</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>supabase-schema.sql</code> 82 行，建两张表。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>RLS 行级安全 <span style="font-size:12px;color:var(--text3)">本 App 最关键的安全设计</span></h3>
+  <p>这条不懂，你的 App 就是「任何人都能读所有人的数据」。它是数据库层面的强制隔离，不是前端藏起来。</p>
+  <div class="formula">create policy "own entries select"<br>  on public.entries for select<br>  using (auth.uid() = user_id);</div>
+  <p>翻译：<b>「你只能读到 user_id 等于你自己的那些行。」</b>这条规则对管理员本人也生效。</p>
+  <div class="where"><b>在哪里用到：</b><code>supabase-schema.sql</code> 第 40–76 行。因为有了它，这个 App 才敢公开给朋友用。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>离线优先架构与冲突合并</h3>
+  <p>一个设计思想：<b>本地数据是唯一真相，云端只是备份和同步通道。</b></p>
+  <ul>
+    <li>改动先在本地生效 → 界面永远秒开、断网照常用</li>
+    <li>失败的操作进<b>队列</b>，联网后自动补传</li>
+    <li><b>软删除</b>：不真删，只标记 <code>deleted=true</code>，否则多设备会互相「复活」数据</li>
+    <li><b>last-write-wins</b>：按 <code>updated_at</code> 时间戳比较，谁晚听谁的</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>sync.js</code> 整个文件的设计主线，文件开头注释就写明了。</div>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>Service Worker 与 PWA</h3>
+  <p>让网页变成「能装到手机桌面、能离线打开」的技术。</p>
+  <ul>
+    <li><b>Service Worker</b>：浏览器后台的一个代理，能拦截网络请求、返回缓存</li>
+    <li><b>缓存策略</b>：缓存优先 / 网络优先 / 两者折中</li>
+    <li><b>manifest</b>：告诉系统应用名、图标、启动方式</li>
+    <li><b>版本号与缓存更新</b>：改了代码必须改缓存版本号，否则用户永远拿旧版</li>
+  </ul>
+  <div class="where"><b>在哪里用到：</b><code>sw.js</code> 110 行、<code>manifest.webmanifest</code>。<b>我在这里踩过最大的坑</b> —— 缓存没命中时返回了 <code>undefined</code>，导致首屏整个白屏。</div>
+</div>
+
+<!-- ============ 数学 ============ -->
+<h2 class="lv">第三级 · 数学<small>真的不多，而且都是初中的</small></h2>
+
+<div class="math">
+  <h3>① 百分比 —— 用得最多的一个</h3>
+  <p style="color:var(--text2);margin:0 0 4px;font-size:14.5px">算「比上期涨了多少」「预算用了百分之几」。</p>
+  <div class="formula">涨幅 = (本期 − 上期) ÷ 上期 × 100</div>
+  <p style="color:var(--text2);margin:0;font-size:14.5px">要特别注意<b>除数为 0</b> 的情况 —— 上期没花钱时，百分比没有意义，必须单独判断（我代码里就写了 <code>if (!prev) return null</code>）。</p>
+</div>
+
+<div class="math">
+  <h3>② 平均值</h3>
+  <p style="color:var(--text2);margin:0 0 4px;font-size:14.5px">日均支出、平均每次健身时长。</p>
+  <div class="formula">平均值 = 总和 ÷ 天数</div>
+</div>
+
+<div class="math">
+  <h3>③ 日期运算 <span style="font-size:12px;color:var(--text3)">最容易出隐蔽 bug 的地方</span></h3>
+  <p style="color:var(--text2);margin:0 0 4px;font-size:14.5px">要理解三个概念：</p>
+  <ul style="color:var(--text2);font-size:14.5px;padding-left:19px;margin:8px 0">
+    <li><b>时区</b>：UTC 和中国时间差 8 小时。用 <code>toISOString()</code> 在凌晨会把日期算成前一天</li>
+    <li><b>月份从 0 开始</b>：JS 里 <code>getMonth()</code> 一月返回 0，所以到处要 <code>+1</code> / <code>-1</code></li>
+    <li><b>一周从周日开始</b>：所以要手动推算「本周一」，见下面这段</li>
+  </ul>
+  <div class="formula">// 求所在周的周一<br>const day = d.getDay();  <em>// 0=周日</em><br>const diff = day === 0 ? -6 : 1 - day;</div>
+  <div class="where"><b>在哪里用到：</b><code>data.js</code> 的日期工具函数。我特意没用 <code>toISOString</code>，就是躲时区坑。</div>
+</div>
+
+<div class="math">
+  <h3>④ 集合去重与计数</h3>
+  <p style="color:var(--text2);margin:0 0 4px;font-size:14.5px">「本期有多少天在学习」—— 同一天记三笔只能算一天。</p>
+  <div class="formula">new Set(list.map(e =&gt; e.date)).size</div>
+  <p style="color:var(--text2);margin:0;font-size:14.5px"><code>Set</code> 会自动去掉重复值。这是<b>离散数学</b>里「集合」概念的直接应用，但用起来就一行。</p>
+</div>
+
+<div class="math">
+  <h3>⑤ 连续天数算法 <span style="font-size:12px;color:var(--text3)">本 App 唯一的「算法」</span></h3>
+  <p style="color:var(--text2);margin:0 0 4px;font-size:14.5px">就是「连续打卡多少天」。做法很朴素：</p>
+  <ul style="color:var(--text2);font-size:14.5px;padding-left:19px;margin:8px 0">
+    <li>把所有日期排序，从今天往回数，能连上就 +1，断了就停</li>
+    <li>最长纪录：遍历一遍排序后的日期，看相邻两天是不是差 1 天</li>
+  </ul>
+  <p style="color:var(--text2);margin:0;font-size:14.5px">复杂度是 O(n log n) —— 排序造成。但对个人数据（几百条）完全无感。</p>
+</div>
+
+<div class="math">
+  <h3>⑥ 你不需要的数学</h3>
+  <p style="color:var(--text2);margin:0;font-size:14.5px">微积分、线性代数、概率统计、图论、数值分析 —— <b>一个都没用到。</b>如果要做数据图表（趋势线、饼图圆心角、坐标映射），会用到一点三角函数和线性映射，但也只是套公式。</p>
+</div>
+
+<!-- ============ 网络协议 ============ -->
+<h2 class="lv">第四级 · 网络协议<small>你问的这块，单独说清楚</small></h2>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>HTTPS / TLS</h3>
+  <p>你看到的所有网址前面的 <code>https://</code>。含义是「这条通信被加密了」，中间人看不到内容。</p>
+  <p><b>为什么必须：</b>GitHub Pages 和 Supabase 强制 HTTPS。PWA 也<b>必须</b>在 HTTPS 下才能安装到桌面（<code>localhost</code> 例外）——因为 Service Worker 权限太大，不加密不敢给。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>DNS 与域名</h3>
+  <p>把 <code>yuluogucheng123-dotcom.github.io</code> 这种人类可读的名字，翻译成服务器 IP 地址。</p>
+  <p><b>为什么和你的 App 有关：</b>你说过 <code>supabase.com</code> 能开、<code>supabase.co</code> 不能 —— 这就是 DNS 解析或网络封锁层面的问题，不是代码问题。VPN 能解决，因为它改的是解析和路由路径。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>CORS 跨域</h3>
+  <p>浏览器的安全机制：<b>一个网站默认不能随便访问另一个网站的接口</b>，除非对方明确允许。</p>
+  <p><b>为什么和你的 App 有关：</b>你的页面在 <code>github.io</code>，数据在 <code>supabase.co</code> —— 这是两个不同的域。Supabase 默认允许跨域访问，所以能直接用。如果你以后自建后端，就必须配置 CORS，否则请求会被浏览器拦掉。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>WebSocket</h3>
+  <p>和 HTTP 不同，它建立连接后<b>可以双向持续通信</b>，适合实时推送。</p>
+  <p><b>为什么和你的 App 有关：</b>我当时写自动化测试，就是用 Node 手写了一个极简 WebSocket 客户端去控制无头 Edge 浏览器（CDP 协议走的就是 WebSocket）。<b>不用自己实现协议</b>，但要知道它和 HTTP 的区别 —— HTTP 是你问一次它答一次，WebSocket 是接通后双方随时能说话。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>Token 认证 vs Cookie</h3>
+  <p>两种「证明你已登录」的常见方式。Supabase 用的是 <b>JWT Token</b>：</p>
+  <ul>
+    <li>登录成功后服务器发一串加密字符串（令牌）</li>
+    <li>之后每次请求都放在 <code>Authorization</code> 头里带着</li>
+    <li>令牌有<b>有效期</b>，过期要用 refresh token 换新的</li>
+  </ul>
+  <p><b>publishable 密钥为什么能公开：</b>因为它只是「项目门牌号」，真正的权限由 RLS 和用户令牌决定。而 <code>service_role</code> 密钥<b>能绕过所有 RLS</b>，所以绝对不能泄露。</p>
+</div>
+
+<div class="callout warn">
+  <h3>网络协议这块的实际结论</h3>
+  <p>做这个 App，你<b>不需要背协议细节</b>，但需要建立三个直觉：</p>
+  <p>1. <b>数据在网络上来回跑，随时可能失败</b> → 所以代码必须处理失败（离线队列）。<br>
+  2. <b>浏览器有安全边界</b>（HTTPS、CORS、同源策略）→ 所以有些事必须在服务器做。<br>
+  3. <b>身份靠令牌证明，权限靠服务端强制</b> → 所以前端藏起来的按钮不叫安全，数据库拦截才叫安全。</p>
+</div>
+
+<!-- ============ 第五级 ============ -->
+<h2 class="lv">第五级 · 工程实践<small>不会这些，代码写出来是坏的，但你看不出来</small></h2>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>调试能力 <span style="font-size:12px;color:var(--text3)">比写代码更值钱</span></h3>
+  <ul>
+    <li><b>浏览器开发者工具</b>：Console 看报错、Network 看请求、Application 看存储</li>
+    <li><b>看懂报错堆栈</b>：文件:行号 + 错误类型</li>
+    <li><b>二分定位法</b>：不确定哪出错，就一段段注释掉试</li>
+  </ul>
+  <p style="margin-top:9px">这项目三个致命 bug，<b>没有一个是靠读代码发现的</b>，全是靠实际跑 + 看请求 + 看返回值定位的。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-should">重要</span>自动化测试 <span style="font-size:12px;color:var(--text3)">CDP</span></h3>
+  <p>让程序自己去点按钮、填表单、验结果。我用的是 Chrome DevTools Protocol（CDP）直接控制无头浏览器。</p>
+  <p><b>为什么关键：</b>静态检查（语法）能发现「代码写错了」，但发现不了「代码写对了、逻辑是错的」。比如「上传返回 409」这种事，只有真的发一次请求才知道。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>版本控制 Git</h3>
+  <ul>
+    <li><code>git init</code> / <code>add</code> / <code>commit</code> / <code>push</code> 四个命令覆盖 90% 场景</li>
+    <li>理解「提交」= 给代码存一个档，可以随时回退</li>
+    <li><code>.gitignore</code> 排除不需要上传的文件</li>
+  </ul>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>部署与静态托管</h3>
+  <p>GitHub Pages 把你仓库里的文件变成公开网站。<b>关键认知：</b>这个 App 没有传统后端服务器 —— 它是一堆静态文件 + 一个第三方数据库服务。这种架构叫 <b>Serverless</b>（无服务器）。</p>
+</div>
+
+<div class="k">
+  <h3><span class="tag t-nice">了解</span>命令行 / Shell</h3>
+  <p>用打字代替点击来操作电脑。这个项目用 PowerShell（Windows 上）。</p>
+  <p><b>需要会到什么程度：</b>能看懂 <code>cd</code>、<code>ls</code>、<code>node xxx.js</code> 就行。真正写代码我用的是编辑器，不是命令行。</p>
+</div>
+
+<!-- ============ 学习路径 ============ -->
+<h2 class="lv">如果要从零开始学<small>按这个顺序，别跳</small></h2>
+
+<details open>
+  <summary>第 1 阶段：静态页面（1–2 周）</summary>
+  <div class="body">
+    <ul>
+      <li>HTML 标签 + CSS 选择器 + flex 布局</li>
+      <li>目标：能照着做出「今天」那个页面的样子（先不管功能）</li>
+      <li>关键：<b>不要背标签</b>，用到再查。理解「盒子模型」比记住属性重要</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>第 2 阶段：让它动起来（2–3 周）</summary>
+  <div class="body">
+    <ul>
+      <li>JS 基础语法 → DOM 操作 → 事件监听</li>
+      <li>目标：点按钮能加一条记录，并显示在列表里</li>
+      <li>关键：<b>这个阶段最痛苦</b>，因为要同时理解语法和浏览器。熬过去就好了</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>第 3 阶段：让数据留下来（1 周）</summary>
+  <div class="body">
+    <ul>
+      <li>JSON、localStorage、数组的 filter/map/reduce</li>
+      <li>目标：刷新页面数据还在，周报能算出来</li>
+      <li>关键：<b>把数据操作练熟</b>，这部分占了实际工作量的 40%</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>第 4 阶段：连上云端（2–3 周，最难）</summary>
+  <div class="body">
+    <ul>
+      <li>HTTP、异步 async/await、认证流程、SQL 基础、RLS</li>
+      <li>目标：两台设备登录同一账号能看到同一份数据</li>
+      <li>关键：<b>这一步最容易劝退</b>，因为出错时信息很少。学会看 Network 面板，比什么都重要</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>第 5 阶段：打磨与部署（1 周）</summary>
+  <div class="body">
+    <ul>
+      <li>PWA / Service Worker、Git、GitHub Pages</li>
+      <li>目标：手机能装到桌面、离线能用、有网址能分享</li>
+      <li>关键：<b>缓存版本号</b>这个坑几乎所有人都会踩一次</li>
+    </ul>
+  </div>
+</details>
+
+<!-- ============ 总表 ============ -->
+<h2 class="lv">一页速查表</h2>
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th>知识</th><th>等级</th><th>难度</th><th>本项目占比</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>JS 语法与数组操作</td><td>必须</td><td>中</td><td>35%</td></tr>
+    <tr><td>DOM 操作</td><td>必须</td><td>中</td><td>25%</td></tr>
+    <tr><td>HTML / CSS</td><td>必须</td><td>低</td><td>20%</td></tr>
+    <tr><td>localStorage / JSON</td><td>必须</td><td>低</td><td>5%</td></tr>
+    <tr><td>异步编程</td><td>必须</td><td>高</td><td>贯穿</td></tr>
+    <tr><td>HTTP / 状态码</td><td>重要</td><td>低</td><td>5%</td></tr>
+    <tr><td>认证与会话</td><td>重要</td><td>中</td><td>5%</td></tr>
+    <tr><td>SQL / 数据库</td><td>重要</td><td>中</td><td>3%</td></tr>
+    <tr><td>RLS 安全策略</td><td>重要</td><td>中</td><td>2%</td></tr>
+    <tr><td>Service Worker / PWA</td><td>重要</td><td>高</td><td>3%</td></tr>
+    <tr><td>百分比 / 平均值</td><td>数学</td><td>低</td><td>2%</td></tr>
+    <tr><td>日期运算</td><td>数学</td><td>中</td><td>3%</td></tr>
+    <tr><td>集合去重</td><td>数学</td><td>低</td><td>1%</td></tr>
+    <tr><td>HTTPS / DNS / CORS</td><td>了解</td><td>低</td><td>背景知识</td></tr>
+    <tr><td>Git / 部署</td><td>了解</td><td>低</td><td>工具</td></tr>
+    <tr><td>调试 / 测试</td><td>重要</td><td>高</td><td>决定成败</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <h3>最后一句实话</h3>
+  <p>这个 App 的知识门槛<b>不高，但很宽</b>。它不需要你在任何一项上很深 —— 数学初中水平够用，协议知道概念就行 —— 但需要你能把七八块知识拼起来，并且在拼错的时候有办法查出来。</p>
+  <p><b>真正区分「能做出来」和「做不出来」的，是调试能力，不是写代码能力。</b>三个致命 bug 里，有两个的代码看起来完全正确。</p>
+</div>
+
+<footer>
+  知识清单 · 基于 life-log 项目实际源码盘点<br>
+  源码路径：E:\不好玩的\学习\life-log<br>
+  线上地址：yuluogucheng123-dotcom.github.io/life-log
+</footer>
+
+</div>
+</body>
+</html>

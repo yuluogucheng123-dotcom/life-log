@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="学习专题">
+<meta name="description" content="所有学习专题的总入口，手机可安装为 App。">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<title>学习专题</title>
+<style>
+:root{
+  --bg:#0f1115; --card:#1c2029; --card2:#232833; --line:#2b3140;
+  --text:#eef1f6; --text2:#9aa3b2; --text3:#6b7486;
+  --accent:#4f8cff; --green:#2ecc9b; --warn:#ffb020; --purple:#a78bfa; --red:#ff5c5c;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","SF Pro SC","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  padding-bottom:calc(env(safe-area-inset-bottom) + 32px);
+  overscroll-behavior-y:none;
+}
+#wrap{max-width:640px;margin:0 auto;padding:0 16px}
+
+header{padding:calc(env(safe-area-inset-top) + 30px) 0 18px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.4px;font-weight:700}
+.sub{color:var(--text2);font-size:14px;margin:0}
+
+.stats{display:flex;gap:10px;margin:18px 0 22px}
+.stat{
+  flex:1;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:11px 12px;text-align:center;
+}
+.stat b{display:block;font-size:20px;color:var(--accent);font-weight:700;line-height:1.2}
+.stat span{font-size:11.5px;color:var(--text3)}
+
+h2.sec{
+  font-size:13px;color:var(--text3);font-weight:600;letter-spacing:.6px;
+  margin:26px 0 11px;text-transform:uppercase;
+}
+
+/* 专题卡 */
+.topic{
+  display:block;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:15px;margin-bottom:11px;text-decoration:none;
+  color:inherit;transition:transform .12s ease,border-color .12s ease;
+  position:relative;overflow:hidden;
+}
+.topic:active{transform:scale(.985);border-color:var(--accent)}
+.topic::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--accent);
+}
+.topic.g::before{background:var(--green)}
+.topic.w::before{background:var(--warn)}
+.topic.p::before{background:var(--purple)}
+.topic.r::before{background:var(--red)}
+
+.t-top{display:flex;align-items:flex-start;gap:11px;margin-bottom:7px}
+.t-icon{font-size:23px;line-height:1.15;flex:none}
+.t-name{font-size:16.5px;font-weight:600;margin:0 0 3px;line-height:1.35}
+.t-meta{font-size:12px;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.t-desc{font-size:13.5px;color:var(--text2);margin:0;line-height:1.55}
+.t-arrow{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  color:var(--text3);font-size:19px;
+}
+
+.tag{
+  font-size:10.5px;padding:2px 7px;border-radius:5px;font-weight:600;
+  background:rgba(79,140,255,.15);color:var(--accent);
+}
+.tag.g{background:rgba(46,204,155,.15);color:var(--green)}
+.tag.w{background:rgba(255,176,32,.15);color:var(--warn)}
+.tag.p{background:rgba(167,139,250,.15);color:var(--purple)}
+
+.empty{
+  text-align:center;color:var(--text3);font-size:14px;
+  padding:40px 20px;border:1px dashed var(--line);border-radius:14px;
+}
+
+.howto{
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  padding:15px;margin-top:24px;
+}
+.howto h3{margin:0 0 10px;font-size:14.5px;color:var(--text)}
+.howto ol{margin:0;padding-left:19px;color:var(--text2);font-size:13.5px;line-height:1.75}
+.howto li{margin-bottom:4px}
+.howto code{
+  background:#0b0d11;border:1px solid var(--line);border-radius:4px;
+  padding:1px 5px;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#9ecbff;
+}
+
+footer{
+  margin-top:26px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--text3);font-size:12px;text-align:center;line-height:1.8;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+
+<header>
+  <h1>学习专题</h1>
+  <p class="sub">每次生成的辅助学习内容，都在这里</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b id="cnt">—</b><span>个专题</span></div>
+  <div class="stat"><b id="updated">—</b><span>最近更新</span></div>
+</div>
+
+<h2 class="sec">全部专题</h2>
+<div id="list">
+  <div class="empty">正在加载…</div>
+</div>
+
+<div class="howto">
+  <h3>怎么装到手机桌面</h3>
+  <ol>
+    <li>用 <b>Safari</b> 打开本页（微信里不行）</li>
+    <li>点底部 <b>分享</b> 按钮</li>
+    <li>选 <b>添加到主屏幕</b></li>
+    <li>以后点桌面图标就能直接进来</li>
+  </ol>
+</div>
+
+<footer>
+  学习专题总入口<br>
+  由 skills 生成的辅助学习内容汇总
+</footer>
+
+</div>
+
+<script>
+/* =========================================================
+ * 专题清单
+ * 新增专题时，在这里加一条即可（或运行 新增专题.ps1 自动生成）
+ * ========================================================= */
+const TOPICS = [
+  {
+    id: 'app-knowledge',
+    icon: '🧠',
+    name: '做 App 需要什么知识',
+    desc: '编程、数学、网络协议的完整知识清单，按必须懂到了解分五级。',
+    tags: ['编程', '知识清单'],
+    cls: '',
+    date: '2025-10-13',
+    source: '手动整理'
+  },
+  {
+    id: 'reading-bbc-2025',
+    icon: '📖',
+    name: 'BBC 精读 · 温室气体创新高',
+    desc: '环境类说明文精读：语法、句型、高频词、短语与自测题。约 IELTS 6.5–7。',
+    tags: ['英语', 'readkiller'],
+    cls: 'g',
+    date: '2025-10-13',
+    source: 'readkiller'
+  },
+  {
+    id: 'eng-drawing',
+    icon: '📐',
+    name: '工程制图 · 第一章第一节',
+    desc: '动画记忆：用动态演示理解投影与三视图的基本概念。',
+    tags: ['工程制图', '动画'],
+    cls: 'p',
+    date: '2025-10-09',
+    source: '读书记忆'
+  }
+];
+
+/* ---------- 渲染 ---------- */
+function render() {
+  const list = document.getElementById('list');
+
+  if (!TOPICS.length) {
+    list.innerHTML = '<div class="empty">还没有专题。<br>用 skill 生成学习内容后加进来。</div>';
+    document.getElementById('cnt').textContent = '0';
+    document.getElementById('updated').textContent = '—';
+    return;
+  }
+
+  // 按日期倒序
+  const sorted = [...TOPICS].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+  list.innerHTML = sorted.map(t => `
+    <a class="topic ${t.cls || ''}" href="${t.id}/index.html">
+      <div class="t-top">
+        <div class="t-icon">${t.icon || '📄'}</div>
+        <div style="flex:1;min-width:0">
+          <div class="t-name">${esc(t.name)}</div>
+          <div class="t-meta">
+            ${(t.tags || []).map((tag, i) =>
+              `<span class="tag ${i === 1 ? (t.cls || '') : ''}">${esc(tag)}</span>`
+            ).join('')}
+            <span>${esc(t.date)}</span>
+          </div>
+        </div>
+      </div>
+      <p class="t-desc">${esc(t.desc)}</p>
+    </a>
+  `).join('');
+
+  document.getElementById('cnt').textContent = String(TOPICS.length);
+  const latest = sorted[0].date || '';
+  document.getElementById('updated').textContent = latest.slice(5) || '—';
+}
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+render();
+</script>
+</body>
+</html>

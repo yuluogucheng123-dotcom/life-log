@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Planet-warming gas levels rose more than ever in 2024</title>
+<style>
+:root{
+  --bg:#F2F3F7; --surface:#FFF; --text:#14141A; --muted:#6B6B76;
+  --line:rgba(0,0,0,.09); --shadow:0 4px 20px rgba(20,20,40,.07);
+  --accent:#0077E3;
+  --g-title:linear-gradient(100deg,#5B4BFF,#B84BFF,#0077E3,#5B4BFF);
+  --g-overview:linear-gradient(120deg,#5B4BFF,#B84BFF);
+  --g-grammar:linear-gradient(120deg,#0077E3,#00B4D8);
+  --g-pattern:linear-gradient(120deg,#7C3AED,#DB2777);
+  --g-word:linear-gradient(120deg,#F59E0B,#EF4444);
+  --g-phrase:linear-gradient(120deg,#10B981,#06B6D4);
+  --g-quiz:linear-gradient(120deg,#6366F1,#EC4899);
+  --c-clause:#0077E3; --c-nonfinite:#10B981; --c-subj:#F59E0B;
+  --c-inv:#A855F7; --c-nom:#EF4444;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#08080B; --surface:#17171C; --text:#F4F4F7; --muted:#9C9CA8;
+         --line:rgba(255,255,255,.12); --shadow:none; --accent:#4DA3FF;
+         --c-clause:#4DA3FF; --c-nonfinite:#34D399; --c-subj:#FBBF24;
+         --c-inv:#C084FC; --c-nom:#F87171; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:400 17px/1.65 -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+  background:linear-gradient(90deg,#5B4BFF,#B84BFF,#0077E3,#10B981,#F59E0B,#EF4444);
+  background-size:300% 100%;animation:slide 8s linear infinite}
+@keyframes slide{to{background-position:300% 0}}
+
+/* Hero */
+.hero{position:relative;border-radius:22px;padding:26px 22px;margin-bottom:26px;color:#fff;
+  background:linear-gradient(125deg,#4C3FE0,#8B3FE0 45%,#C43FE0);overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 88% 8%,rgba(255,255,255,.30),transparent 60%);pointer-events:none}
+.hero .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero h1{font-size:30px;line-height:1.22;margin:.3em 0 .2em;font-weight:800;letter-spacing:-.02em}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1}
+.tag{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px)}
+.tag.primary{background:#fff;color:#4C3FE0;border-color:transparent}
+
+/* Nav */
+nav.pills{position:sticky;top:0;z-index:40;display:flex;gap:8px;overflow-x:auto;padding:10px 0;
+  margin:0 -18px 18px;padding-left:18px;padding-right:18px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);
+  scrollbar-width:none}
+nav.pills::-webkit-scrollbar{display:none}
+nav.pills a{flex:0 0 auto;padding:8px 15px;border-radius:999px;font-size:13.5px;font-weight:600;
+  text-decoration:none;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
+nav.pills a:hover{color:var(--text)}
+
+/* Sections */
+.section{margin:40px 0 0;scroll-margin-top:64px}
+h2{font-size:23px;font-weight:700;letter-spacing:-.015em;margin:0 0 4px;display:inline-block;
+  padding-bottom:6px;position:relative}
+h2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px}
+.sec-grammar h2::after{background:var(--g-grammar)}
+.sec-pattern h2::after{background:var(--g-pattern)}
+.sec-word h2::after{background:var(--g-word)}
+.sec-phrase h2::after{background:var(--g-phrase)}
+.sec-quiz h2::after{background:var(--g-quiz)}
+.lead{color:var(--muted);font-size:15px;margin:10px 0 18px}
+.summary{position:relative;background:var(--surface);border-radius:18px;padding:20px;
+  box-shadow:var(--shadow);font-size:16px;border:1px solid var(--line)}
+.summary::before{content:'';position:absolute;left:0;top:16px;bottom:16px;width:4px;
+  border-radius:0 4px 4px 0;background:var(--g-overview)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;padding:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:16px}
+.legend span{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.swatch{font-weight:700;font-size:13.5px}
+
+/* Cards */
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  margin:0 0 12px;box-shadow:var(--shadow);overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;opacity:0;transition:opacity .25s}
+.card.open::before{opacity:1}
+.card[data-kind="grammar"]::before{background:var(--g-grammar)}
+.card[data-kind="pattern"]::before{background:var(--g-pattern)}
+.card[data-kind="word"]::before{background:var(--g-word)}
+.card[data-kind="phrase"]::before{background:var(--g-phrase)}
+.card-head{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;
+  padding:14px 16px;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.card-head:active{background:rgba(127,127,127,.08)}
+.card-idx{flex:0 0 27px;height:27px;border-radius:999px;color:#fff;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+.card[data-kind="grammar"] .card-idx{background:var(--g-grammar)}
+.card[data-kind="pattern"] .card-idx{background:var(--g-pattern)}
+.card[data-kind="word"] .card-idx{background:var(--g-word)}
+.card[data-kind="phrase"] .card-idx{background:var(--g-phrase)}
+.card-title{flex:1;font-weight:650;font-size:15.5px;line-height:1.4}
+.chev{flex:0 0 10px;width:10px;height:10px;border-right:2px solid var(--muted);
+  border-bottom:2px solid var(--muted);transform:rotate(45deg);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.card.open .chev{transform:rotate(-135deg)}
+.card-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1)}
+.card.open .card-body{grid-template-rows:1fr}
+.card-body>.card-inner{overflow:hidden;min-height:0;padding:0 16px}
+.card-inner>*:last-child{margin-bottom:16px}
+.sentence{font:400 17.5px/1.72 Georgia,'Times New Roman',serif;padding:12px 0;
+  border-top:1px solid var(--line)}
+.word-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:12px 0 4px;
+  border-top:1px solid var(--line)}
+.word{font:700 21px/1.3 Georgia,serif}
+.ipa{color:var(--muted);font-size:14.5px}
+.gloss-inline{font-size:14px;color:var(--muted)}
+.band{font-size:11.5px;padding:2px 9px;border-radius:999px;background:var(--bg);
+  border:1px solid var(--line);color:var(--muted);font-weight:600}
+.analysis{padding:4px 0 10px}
+.fld{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;
+  border-top:1px dashed var(--line)}
+.fld-k{color:var(--muted);font-size:12.5px;font-weight:700;padding-top:2px;letter-spacing:.01em}
+.fld-v{font-size:15px;line-height:1.7}
+.fld-v ul{margin:0;padding-left:18px}
+.fld-v li{margin:4px 0}
+.badge-row{display:flex;flex-wrap:wrap;gap:6px}
+.badge{display:inline-block;padding:5px 10px;border-radius:8px;background:var(--bg);
+  border:1px solid var(--line);font-size:12px;color:var(--muted);margin-bottom:8px}
+.badge.warn{color:#B25000;border-color:#F5A623;background:rgba(245,166,35,.10)}
+@media (prefers-color-scheme:dark){.badge.warn{color:#FBBF24}}
+
+/* Grammar marking: color + distinct underline style */
+.g-clause{text-decoration:underline solid var(--c-clause) 2px;text-underline-offset:3px}
+.g-nonfinite{text-decoration:underline dotted var(--c-nonfinite) 2px;text-underline-offset:3px}
+.g-subjunctive{text-decoration:underline dashed var(--c-subj) 2px;text-underline-offset:3px}
+.g-inversion{text-decoration:underline double var(--c-inv) 2px;text-underline-offset:3px}
+.g-nominal{text-decoration:underline wavy var(--c-nom) 2px;text-underline-offset:3px}
+
+/* Quiz */
+.quiz-q{margin:0 0 16px}
+.quiz-stem{font-weight:650;margin:18px 0 10px;font-size:15.5px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 14px;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  color:inherit;font:inherit;font-size:15px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt-k{flex:0 0 24px;height:24px;border-radius:999px;background:var(--bg);border:1px solid var(--line);
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.opt.right{border-color:#10B981;background:rgba(16,185,129,.12)}
+.opt.right .opt-k{background:#10B981;color:#fff;border-color:transparent}
+.opt.wrong{border-color:#EF4444;background:rgba(239,68,68,.12)}
+.opt.wrong .opt-k{background:#EF4444;color:#fff;border-color:transparent}
+.opt[disabled]{cursor:default}
+.quiz-exp{margin-top:10px;padding:12px 14px;background:var(--bg);border-radius:13px;
+  font-size:14px;color:var(--muted);border:1px solid var(--line)}
+.score{position:sticky;top:52px;z-index:5;padding:9px 0;font-size:14px;color:var(--muted);
+  background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px)}
+.score b{color:var(--text);font-size:17px}
+
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer .grad{height:3px;border-radius:2px;margin-bottom:16px;background:var(--g-overview)}
+
+@media (max-width:430px){
+  .hero{border-radius:18px;padding:22px 18px}
+  .hero h1{font-size:25px}
+  .wrap{padding:18px 14px 64px}
+  nav.pills{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+  .fld{grid-template-columns:1fr;gap:1px}
+  .sentence{font-size:16.5px}
+  .card-title{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">readkiller · 英语精读</div>
+    <h1>Planet-warming gas levels rose more than ever in 2024</h1>
+    <div class="meta"><span class="tag primary">环境</span><span class="tag">BBC News</span><span class="tag">2025-01-17</span><span class="tag">约 IELTS 6.5–7 / CEFR B2–C1</span></div>
+  </header>
+  <nav class="pills"><a href="#grammar">语法</a><a href="#pattern">句型</a><a href="#word">单词</a><a href="#phrase">短语</a><a href="#quiz">小测</a></nav>
+  <section class="section">
+    <h2>摘要 · Overview</h2>
+    <div class="summary">科学家称，2024 年大气中主要温室气体的浓度上升速度创下有记录以来最快纪录，使全球气候目标「悬于一线」。文章用**数据 + 专家引语**的结构推进：先给结论，再解释原因（化石燃料排放创高 + 自然碳汇吸收能力下降），最后给出 2025 年预测。&lt;br&gt;&lt;br&gt;考试价值：这是一篇典型的 **环境类说明文**，句式以「主句 + 分词状语」「名词化主语」「引语中的虚拟语气」为主，正是雅思写作 Task 2 环境题与托福阅读的高频语言。</div>
+  </section>
+  <section id="grammar" class="section sec-grammar"><h2>语法 · Grammar</h2><p class="lead">共 18 项，点击展开解析。</p>
+      <div class="legend">
+        <span><b class="swatch g-clause">从句</b>实线</span>
+        <span><b class="swatch g-nonfinite">非谓语</b>点线</span>
+        <span><b class="swatch g-subjunctive">虚拟/情态</b>虚线</span>
+        <span><b class="swatch g-inversion">倒装/强调</b>双线</span>
+        <span><b class="swatch g-nominal">名词化</b>波浪线</span>
+      </div>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">现在分词作结果状语（present participle as result adverbial）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Levels of the most significant planet-warming gas in our atmosphere rose more quickly than ever previously recorded last year, scientists say, leaving a key global climate target hanging by a thread.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：<span class="g-clause" title="从句">Levels ... rose more quickly than ever previously recorded last year</span>；插入语：<span class="g-clause" title="从句">scientists say</span>（报道性插入，表示信息来源）；<span class="g-nonfinite" title="非谓语">leaving a key global climate target hanging by a thread</span> 为现在分词短语作**结果状语**，逻辑主语是前面整个主句所述事件；其内部 <span class="g-nonfinite" title="非谓语">hanging by a thread</span> 又是 leave 的宾语补足语。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">若写成 and this left a key global climate target hanging by a thread，就变成两个并列的独立分句，读者会把「目标悬于一线」当作新信息独立处理。用分词则把它降格为**伴随结果**，语法上依附主句，语气上暗示这是前面事实的**必然后果**而非巧合。同时 scientists say 插在中间，把「结论」和「消息来源」分开，这是新闻英语建立客观性的标准手法。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">中文母语者常犯两个错误：一是把 leaving 误当谓语，写成 The levels rose, leaving... and left...；二是逻辑主语不一致（垂悬分词），例如写成 Leaving a target hanging, scientists say the levels rose——此时 leaving 的逻辑主语被误读为 scientists。分词作状语时，其逻辑主语必须等于主句主语。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">这是雅思写作 Task 2 因果论证的**主力句式**：先说现象，再用 , leaving/creating/making ... 点出后果。建议在环境、教育、科技三类话题中固定使用。注意不要在一段里连用三个分词，会显得结构单一。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Plastic production has doubled in twenty years, leaving marine ecosystems struggling to adapt.（换主语与领域）</li><li>Many graduates now accept jobs unrelated to their degrees, making traditional career planning far less reliable.（改为 making，结果更抽象）</li><li>Artificial intelligence has spread into classrooms faster than any previous technology, raising difficult questions about assessment.（改为 raising，引出问题）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Cities have expanded outward far faster than public transport has kept pace, leaving millions of commuters dependent on private cars.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">过去完成时虚拟语气（subjunctive with would have done）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Limiting global warming to 1.5C would require the CO2 rise to be slowing, but in reality the opposite is happening.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-nominal" title="名词化">Limiting global warming to 1.5C</span> 为动名词短语作主语；<span class="g-subjunctive" title="虚拟语气">would require</span> 表示**与当前事实相反**的假设；<span class="g-nonfinite" title="非谓语">the CO2 rise to be slowing</span> 是 require 的复合结构（require sth to do/be）；后半句用 <span class="g-inversion" title="强调">but in reality the opposite is happening</span> 直接推翻前面的假设。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">这是「**虚拟条件 + 现实反驳**」的经典让步结构。作者不说 If we wanted to limit warming, we would need...，而用动名词主语直接进入假设，句子更紧凑、更书面。would require 是关键：它标记出「这只是一个假设」，读者不会误以为作者在预测。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">学生最常写成 would require the CO2 rise to slow（漏掉 be）。require 此处接 to be doing 表示「需要正在发生的过程」，用 to slow 会变成一次性动作，语义偏移。另外 would 不能换成 will——用了 will 就等于宣称这正在发生，与 but in reality 矛盾。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思口语 Part 3 与写作 Task 2 讨论「理想做法」时极好用：先用动名词主语 + would require 建立假设，再用 but in reality / yet in practice 转入现状。这一组能同时展示**虚拟语气**和**转折**两项得分点。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Reducing traffic congestion would require commuters to be abandoning their cars, but in reality car ownership is still rising.</li><li>Achieving universal literacy would require governments to be investing far more in rural schools, yet such spending has fallen.</li><li>Ending food waste would require retailers to be accepting lower profits, but in reality margins are the priority.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Broadening access to higher education would require universities to be reaching students in remote regions, but in reality enrolment there remains low.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">名词化主语 + 介词宾语从句（nominalization with prepositional clause）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">But the rise varies from year to year, thanks to differences in how the natural world absorbs carbon, as well as fluctuations in humanity&#x27;s emissions.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：But <span class="g-nominal" title="名词化">the rise</span> varies from year to year；原因状语：thanks to 引出两个并列名词短语——differences in <span class="g-clause" title="从句">how the natural world absorbs carbon</span>（how 引导的宾语从句作 in 的宾语）与 fluctuations in humanity&#x27;s emissions，由 as well as 连接（注意：as well as 连接时，谓语与前项一致，此处无影响）。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">thanks to 比 because of 更强调「归因于（往往是好事或中性的事）」，在书面新闻中语气更缓和。differences in how... 把整个「自然界的吸收方式」压缩成一个名词短语，使原因状语能与 fluctuations in... 平行排列，句子结构对称。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">how 引导的从句在这里作**介词 in 的宾语**，学生常误写成 differences in how does the natural world absorb carbon（疑问语序错误）。宾语从句必须用陈述语序。另外 as well as 后接的成分不改变主谓一致。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">在写作中解释「多个原因」时，用 A, as well as B 比 A and B 更正式，且暗示 A 是主因。differences in how / the way in which 是解释「机制差异」的高分表达，适合科技与社会类话题。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Exam results vary widely between regions, thanks to differences in how schools allocate their budgets.</li><li>Life expectancy has risen unevenly, thanks to differences in how health systems reach rural populations.</li><li>Household energy use differs sharply, thanks to differences in how buildings are insulated.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Recovery rates after natural disasters vary enormously between countries, thanks to differences in how quickly relief reaches affected communities.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">be + 过去分词 + 不定式（被动 + 形容词化分词）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Perched high on the side of a volcano in the Pacific Ocean, the station&#x27;s remote location away from major pollution sources makes it ideally suited to monitoring global CO2 levels.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-nonfinite" title="非谓语">Perched high on the side of a volcano in the Pacific Ocean</span> 为过去分词短语作**状语**，逻辑主语是 the station&#x27;s remote location；主句主语：the station&#x27;s remote location away from major pollution sources（<span class="g-nominal" title="名词化">名词化抽象主语</span>）；谓语：makes；宾语：it；宾补：<span class="g-nonfinite" title="非谓语">ideally suited to monitoring global CO2 levels</span>。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">作者本可说 The station is perched high on a volcano, so its remote location makes it suited to...。拆成两句会显得松散；用过去分词前置，把地理描述压缩成背景信息，让「偏远的选址 → 适合监测」这个因果链在一句内完成，信息密度高。suited to doing 用 to 作介词，比 suitable for 更强调「被造就成适合」。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">两个高频错误：一是 suited to **monitoring** 中的 to 是介词，学生常写成 suited to monitor；二是分词状语逻辑主语与主句主语不一致——此处 Perched 的逻辑主语是 location，而主句主语也是 location，若主句主语写成 scientists 就成了垂悬分词。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作 Task 1（地图/流程）和 Task 2 描述地点优势时非常实用：用过去分词开头交代位置或状态，主句再说它的作用。suited to doing / ideally placed to do 都是评价性的高分搭配。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Located at the junction of three motorways, the warehouse is ideally suited to distributing goods nationwide.</li><li>Built on a former industrial site, the campus is well placed to host large-scale public events.</li><li>Set apart from the city centre, the research facility is ideally suited to testing sensitive equipment.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Situated on a sheltered bay, the port is ideally suited to handling vessels that cannot dock in open water.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">as 引导的时间状语从句 + 现在分词（as + clause, with participle）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">These latest results further confirm that we are moving into uncharted territory faster than ever as the rise continues to accelerate.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：These latest results further confirm <span class="g-clause" title="从句">that we are moving into uncharted territory faster than ever</span>（that 引导宾语从句）；<span class="g-clause" title="从句">as the rise continues to accelerate</span> 为 as 引导的时间/伴随状语从句，表示「随着……」；从句内 <span class="g-nonfinite" title="非谓语">to accelerate</span> 是 continue 后的不定式。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">as 在此不是「因为」而是「随着」，把两个同时演进的过程**并行**呈现：我们进入未知领域，同时上升在加速。这种写法让「恶化」具有动态感，比 because the rise is accelerating 更有画面感，也更符合科学报道的语气。further confirm 中的 further 是「进一步」，暗示与先前研究一致。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">as 的多义性是主要陷阱：可表示「当……时」「随着」「因为」。此处若误解为「因为」，整句因果就颠倒了——「上升加速」不是「进入未知领域」的原因，而是并行现象。判断依据是：两个分句描述的是同时推进的趋势。另外 uncharted territory 是固定搭配，不能写成 unchartered。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">描述「趋势同步变化」时，as + 从句 是雅思 Task 1 折线图描述的利器（As the population aged, healthcare spending rose）。写 Task 2 时可用它引出递进论证，避免通篇 because。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Public trust in online news has fallen sharply as social media has become the main source of information.</li><li>Urban air quality has deteriorated as private car ownership has continued to climb.</li><li>Demand for remote work has grown as digital infrastructure has improved.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Average household debt has risen steadily as real wages have continued to stagnate.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">there be 存在句 + 定语从句（existential there + relative clause）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">There were also the effects of the natural El Nino phenomenon - where surface waters in the eastern tropical Pacific Ocean become unusually warm, affecting weather patterns.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">存在句：There were also the effects of the natural El Nino phenomenon；<span class="g-clause" title="从句">where surface waters in the eastern tropical Pacific Ocean become unusually warm</span> 为关系副词 where 引导的**定语从句**，修饰 El Nino phenomenon（表抽象地点/情形）；<span class="g-nonfinite" title="非谓语">affecting weather patterns</span> 为现在分词作结果状语，逻辑主语是前面整个从句所述现象。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">科技新闻必须向普通读者解释术语。作者没有另起一句解释，而是把定义塞进 where 定语从句，使行文不断流。这种「术语 + where 从句即时释义」是外刊解释专业概念的标准做法，既保持专业度又不牺牲可读性。affecting weather patterns 再用分词收尾，指出后果。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">where 的先行词是抽象概念（现象、情形、过程），不是具体地点——学生常以为 where 只能指地点而改用 which，但 which 无法表达「在该现象中」。另外 affecting 的逻辑主语是从句整件事，不能误认为 surface waters。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思阅读中大量术语靠 where/which 定语从句定义，识别这一结构能显著提速。写 Task 2 需要引入专业概念时可仿写：X - where Y happens, leading to Z。注意破折号后接释义在学术写作中属非正式，正式文体建议改用逗号或括号。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The report highlights inflation - where prices across the economy rise faster than wages, eroding purchasing power.</li><li>The study examines urban heat islands, where built-up areas trap heat and push night-time temperatures higher.</li><li>They describe algorithmic bias - where a system reproduces the prejudices present in its training data.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The paper analyses food deserts, where residents lack affordable access to fresh produce and rely on processed food.</div></div></div>
+          <div class="badge-row"><span class="badge">原文此处使用连字符 - 而非破折号，属转载排版差异；正式引用时建议核对其出版版式。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">先行词后置的定语从句 + 同位语（postposed relative clause + appositive）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">This was the ambitious goal agreed by nearly 200 countries at a landmark UN meeting in Paris in 2015, with the hope of avoiding some of the worst impacts of climate change.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：This was the ambitious goal；<span class="g-clause" title="从句">agreed by nearly 200 countries at a landmark UN meeting in Paris in 2015</span> 为**过去分词短语作后置定语**，修饰 goal（等于 which was agreed by...）；<span class="g-nonfinite" title="非谓语">with the hope of avoiding some of the worst impacts of climate change</span> 为 with 复合结构作**伴随状语**，说明签署该目标时的意图。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">作者本可写成 This was the ambitious goal. It was agreed by nearly 200 countries...。用过去分词后置，把「谁在何时何地达成」压缩成一个修饰成分，让主句只说「这就是那个目标」，重量落在后面的 with 状语上。with the hope of doing 是表达「目的/初衷」的高效结构，比 in order to avoid 更书面、更紧凑。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">两个高频错误：一是把 agreed 误当谓语，于是句子出现两个谓语（This was... agreed...）；二是 with 复合结构中的逻辑主语与主句不一致——此处 with the hope 的隐含主语是 nearly 200 countries，若主句主语换成 the goal，语义就会错乱。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作 Task 2 介绍政策或协议背景时非常实用：主句点明性质，分词后置补充来源，with 结构交代目的。一套结构就能把「是什么、谁定的、为何定」三层信息装进一句。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>This was the framework adopted by member states at a landmark summit in 2015, with the aim of preventing another financial crisis.（换领域）</li><li>That was the standard set by international regulators after the 2008 crash, with the hope of making banks more resilient.（换搭配）</li><li>This was the pledge made by major polluters at the climate talks, with the intention of halving emissions by 2035.（换 with 后的名词）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">That was the compromise reached by both sides after months of negotiation, with the hope of averting a prolonged strike.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">it 形式主语 + 被动不定式（anticipatory it + passive infinitive）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Last week it was confirmed that 2024 was the hottest year on record, and the first calendar year in which annual average temperatures were higher than 1.5C above pre-industrial levels.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-inversion" title="强调">it</span> 为**形式主语**，真正主语是后面的 that 从句；<span class="g-subjunctive" title="虚拟语气">was confirmed</span> 用被动语态，刻意隐去确认者；that 从句内部：2024 was the hottest year on record 与 [2024 was] the first calendar year <span class="g-clause" title="从句">in which annual average temperatures were higher than 1.5C above pre-industrial levels</span>（in which 引导定语从句修饰 calendar year，注意 which 前有介词 in）两表语并列。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">科学报道常用 it was confirmed / it has been established / it is estimated 这类被动形式，目的是**把注意力从「谁说的」转移到「事实本身」**，营造客观权威的语气。in which 而非 when，是因为先行词 calendar year 被视为一个时间段容器，「在某一年之内」用 in which 更精确。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">学生常把 the first calendar year when 当成同义写法，但在正式文体中，先行词为 year 且强调「在该年期间发生」时，in which 比 when 更严谨。另外 the first ... in which 后面的从句要用陈述语序，不可倒装。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 引用研究或数据时，用 It has been confirmed/estimated that... 开头比 Studies show that... 更正式。搭配 the first + 名词 + in which 可用来描述「历史上首次出现的现象」，是图表作文和数据论证的高分结构。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>It was established that the policy had reduced emissions more than expected.（换动词）</li><li>It has been estimated that automation will displace a fifth of clerical jobs by 2040.（换时态与领域）</li><li>This was the first decade in which renewable capacity outstripped new fossil capacity.（换名词与从句）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">It has been repeatedly demonstrated that early intervention in childhood education yields the greatest long-term returns.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">介词短语作后置定语 + 插入语（prepositional postmodifier with parenthetical）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Records of the Earth&#x27;s climate in the distant past from ice cores and marine sediments show that CO2 levels are currently at their highest in at least two million years, according to the UN.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句主语：<span class="g-nominal" title="名词化">Records of the Earth&#x27;s climate in the distant past from ice cores and marine sediments</span>——三个介词短语层层后置修饰 Records（of 表内容、in 表时间、from 表来源）；谓语 show；宾语从句：<span class="g-clause" title="从句">that CO2 levels are currently at their highest in at least two million years</span>；<span class="g-inversion" title="强调">according to the UN</span> 为插入语，交代信息来源。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">这个主语极长（三个介词短语串联），但作者不用定语从句，因为从句会显得笨重且重复。介词短语直接堆叠是学术英语的典型特征，信息密度最高。according to the UN 放在句末作补充来源，既满足科学报道的溯源要求，又不打断主句节奏。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">多个介词短语连续后置时，修饰关系容易歧义——in the distant past 修饰 Records 还是 climate？学生写作时应控制后置短语不超过两个，否则读者需要回读。另外 according to 后接机构名，不能接人名的所有格（如 according to the UN&#x27;s report 应改为 according to a UN report）。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思阅读中长主语是提速的主要障碍，训练方法是**先跳过所有介词短语找到谓语动词**。写作时可用两个介词短语后置替代定语从句，但切忌超过两个。according to 是引用来源的基础表达，比 someone says 更正式。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Data on urban air quality from monitoring stations in twelve cities indicate that pollution peaks in winter.（两短语后置）</li><li>Evidence of declining biodiversity in tropical regions from long-term field surveys suggests the trend is accelerating.（保持两短语）</li><li>Figures for household debt in advanced economies show that repayment burdens have risen sharply, according to the central bank.（加来源）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Reviews of published research on sleep and cognition from the past decade indicate that consistent schedules matter more than total hours.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">which 引导的非限制性定语从句（non-restrictive relative clause with which）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The long-term CO2 increase is unquestionably due to human activities, mainly through burning coal, oil and gas, and cutting down forests.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：<span class="g-nominal" title="名词化">The long-term CO2 increase</span> is unquestionably due to human activities；<span class="g-nonfinite" title="非谓语">mainly through burning coal, oil and gas, and cutting down forests</span> 为介词短语作**补充说明状语**，其中 burning 与 cutting 为并列动名词，共同作 through 的宾语。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">be due to 是归因的正式表达，比 because of 更书面。mainly through 引出的不是句子而是**两类人类活动的名词化形式**（burning / cutting），使并列项在语法上完全对称。用动名词而非从句，让「燃烧化石燃料」和「砍伐森林」成为可并列的名词性概念，句子更紧凑。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">due to 与 because of 的用法差异是考点：due to 传统上作表语（is due to），because of 作状语。学生常写 Due to it rained, we...，这是错的。另外 burning 与 cutting 必须同为动名词，不可写成 burning... and to cut...，破坏并列对称。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 归因段的起手式：X is largely due to A, mainly through doing B and doing C。这一句能同时体现归因、限定（long-term）和具体化（through doing），是论证密度很高的写法。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The surge in online shopping is largely due to changing consumer habits, mainly through greater smartphone penetration and faster delivery.（换领域）</li><li>Rising obesity rates are partly due to structural factors, chiefly through cheaper processed food and reduced physical activity.（换 chiefly）</li><li>The fall in youth unemployment is arguably due to demographic change, mainly through a shrinking working-age population.（换 arguably）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The decline in print readership is unquestionably due to shifting habits, mainly through getting news from social platforms and free online sources.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">not... but... 对比结构 + 分词状语（correlative contrast with participle）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">This did not break the Paris goal, which refers to a longer-term average over decades, but continued increases to atmospheric CO2 effectively consign the world to doing so.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">第一分句：This did not break the Paris goal；<span class="g-clause" title="从句">which refers to a longer-term average over decades</span> 为非限制性定语从句补充定义；转折连词 but 连接第二分句：<span class="g-nominal" title="名词化">continued increases to atmospheric CO2</span> 为名词化主语，effectively 为副词状语，consign 为谓语，the world 为宾语，<span class="g-nonfinite" title="非谓语">to doing so</span> 为介词 to + 动名词。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">作者用 not... but... 制造「表面 vs 实质」的对比张力：表面上没违约，实质上已经注定违约。which 从句插在中间解释 Paris goal 的判定标准（长期均值而非单年），这是**预先堵住读者反驳**的论证技巧——正因为目标看的是长期均值，所以单年超标不算违约，但持续上升就意味着终将违约。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">consign sb to doing 中的 to 是介词，必须接动名词，学生常写成 consign the world to do so。另外 doing so 指代前面的 break the Paris goal，指代对象在句中隔了较远距离，写作时若指代不明应改为具体重复。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">这是雅思 Task 2 高级论证的标杆句式：先承认表面事实（did not break），再用 but 指出实质后果（effectively consign）。关键是 effectively 一词——它标记出「法律上/形式上未发生，但实质上等于发生」，是辩证论证的核心副词。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The company has not technically broken the law, which prohibits only deliberate dumping, but its practices effectively amount to the same thing.（换动词短语）</li><li>The university has not formally rejected the applicants, which requires written notice, but continued silence effectively leaves them with no place.（换名词化主语）</li><li>The government has not yet raised taxes, which would require legislation, but inflation effectively reduces household income in the same way.（换副词）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Automation has not formally eliminated these roles, which still appear in official statistics, but it has effectively made them redundant in practice.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">过去分词作定语 + 数量比较结构（past participle modifier + comparative quantity）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Concentrations of carbon dioxide (CO2) are now more than 50% higher than before humans started burning large amounts of fossil fuels.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句主语：<span class="g-nominal" title="名词化">Concentrations of carbon dioxide (CO2)</span>；系动词 are；now 为时间状语；比较结构：more than 50% higher than + 比较基准；<span class="g-clause" title="从句">before humans started burning large amounts of fossil fuels</span> 为 before 引导的时间状语从句作比较基准，从句内 <span class="g-nonfinite" title="非谓语">burning large amounts of fossil fuels</span> 为 start 后的动名词。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">这是典型的**数据前置比较句**：用 X% higher than + 时间点 的方式，把「当前水平」与「工业革命前水平」直接对比，比 It has increased by 50% since... 更有冲击力，因为它给出的是**状态对比**而非增量描述。before humans started doing 用一般过去时，标记出一个明确的历史分界点。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">比较结构中的 than 后不能接完整从句的语序错误——before humans started 是正确语序，学生常误用疑问语序。另外 50% higher than 意为「比……高 50%」，而 50% as high as 意为「是……的 50%」，两者差异极大，是考试高频陷阱。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 1 数据描述的核心句式。记住两组对比：X% higher than（高出 X%）vs X% as high as（是……的 X%）。写作 Task 2 论证变化幅度时，more than double / nearly triple 也是同族表达。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Household energy bills are now nearly 80% higher than before the market was deregulated.（换领域）</li><li>Average commuting times are more than a third longer than before remote work became common.（换比较词）</li><li>Graduate starting salaries are barely 10% higher than a decade ago once inflation is accounted for.（换 barely 表否定强调）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Global shipping volumes are now more than double what they were before the container standard was widely adopted.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">13</span>
+        <span class="card-title">介词 + which/whom 引导的定语从句（preposition + relative pronoun）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The natural world has absorbed roughly half of humanity&#x27;s CO2 emissions, for example through extra plant growth and more of the gas being dissolved in the ocean.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：<span class="g-nominal" title="名词化">The natural world</span> has absorbed roughly half of humanity&#x27;s CO2 emissions；<span class="g-nonfinite" title="非谓语">for example through extra plant growth and more of the gas being dissolved in the ocean</span> 为介词短语作**举例说明状语**，其中 being dissolved 为**被动动名词**（the gas 与 dissolve 之间是被动关系），作 of 的宾语。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">more of the gas being dissolved in the ocean 是一个「名词 + 被动动名词」的复合结构，比 and more of the gas is dissolved in the ocean 更紧凑，且能与前面的 extra plant growth 保持名词性并列。这是学术写作中把「一个完整事件」压缩成「一个名词短语」的典型手法。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">being dissolved 的被动形式是关键：学生常写成 more of the gas dissolving in the ocean，这会把语义变成「气体自己在溶解」，虽然过程上没错，但语法上丢失了被动含义，在学术语境中不够精确。另外 for example 后接名词短语时不用逗号隔开，接完整句子时才需要。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 1 描述流程和 Task 2 解释机制时，用「名词 + being + 过去分词」可以把一个动作变成可并列的名词成分，大幅提升句子密度。考试中若写不出定语从句，这个结构是很好的替代方案。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The scheme succeeded through better teacher training and more of the budget being spent on materials.（换领域）</li><li>Efficiency improved thanks to newer equipment and more of the waste heat being recovered on site.（换被动动名词）</li><li>Costs fell through automation and more of the paperwork being handled digitally.（换并列项）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Traffic congestion eased through higher fuel duties and more of the workforce being allowed to work from home.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">14</span>
+        <span class="card-title">where 引导的地点定语从句作插入语（parenthetical where-clause）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">La Nina conditions - where surface waters in the eastern tropical Pacific Ocean are cooler than normal - have replaced El Nino, which tends to allow the natural world to take up more CO2.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句骨架：La Nina conditions have replaced El Nino；<span class="g-clause" title="从句">where surface waters in the eastern tropical Pacific Ocean are cooler than normal</span> 为关系副词 where 引导的定语从句作**插入语**，用破折号与主句隔开，修饰 La Nina conditions；<span class="g-clause" title="从句">which tends to allow the natural world to take up more CO2</span> 为非限制性定语从句修饰 El Nino，从句内 <span class="g-nonfinite" title="非谓语">to take up more CO2</span> 为 allow 后的不定式作宾补。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">破折号插入语是新闻英语处理定义的标准手段：它让主句的语法框架保持完整（主语 + 谓语 + 宾语），同时塞入一段解释。若改用括号会显得过于技术化，改用从句会打断主句节奏。tends to 是重要的**模糊限制语**，表明这是通常倾向而非绝对规律，体现科学表述的严谨。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">where 在此修饰的是抽象概念（气候条件/现象），不是具体地点，学生常误以为 where 只能指地点而改用 which，但 which 无法表达「在该情形下」。allow sb to do 的 to 是不定式，与前面 consign sb to doing 的介词 to 形成对比，容易混淆。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 引入专业概念时，可用「术语 - where 从句解释 - 主句谓语」的框架，一句完成定义与论述。tends to / is likely to / appears to 这类模糊限制语在学术写作中是得分的，因为它们体现对绝对化的警惕。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Universal basic income - where every citizen receives an unconditional payment - has been trialled in several countries, which tends to reduce administrative costs.（同框架）</li><li>The gig economy - where workers are paid per task rather than per hour - has expanded rapidly, which tends to weaken job security.（换从句内容）</li><li>Carbon trading - where firms buy permits to emit - has been adopted widely, which tends to favour larger polluters.（换领域）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Peer review - where specialists assess a study before publication - remains the standard, which tends to slow but also strengthen research.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">15</span>
+        <span class="card-title">让步从句 + 主句否定（concessive clause with negated main clause）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">But that extra blast of heat from El Nino against the background of climate change meant natural carbon sinks on land did not take up as much CO2 as usual last year.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：<span class="g-nominal" title="名词化">that extra blast of heat from El Nino against the background of climate change</span> 为名词化主语（中心词 blast，后接两个介词短语修饰）；谓语 meant；宾语从句省略 that：natural carbon sinks on land did not take up as much CO2 as usual last year，其中 <span class="g-nonfinite" title="非谓语">not take up as much CO2 as usual</span> 为否定比较结构（not as much... as...）。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">blast of heat 是形象化的名词表达，比 a period of high temperature 更生动且更短。against the background of 是学术写作中的重要框架短语，表示「在……的大背景下」，它把厄尔尼诺这个短期因素与气候变化这个长期趋势分层，逻辑清晰。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">not as much... as usual 是**部分否定**，意为「不如往常多」，而非「完全没有吸收」。学生常把部分否定误解为完全否定，导致理解偏差。另外 meant 后接宾语从句时 that 可省略，但在正式写作中保留 that 更清晰。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">描述「某因素削弱了另一因素」时，用 X meant Y did not do as much Z as usual 是地道表达。against the background of 适合在雅思 Task 2 中区分短期波动与长期趋势，是体现分析层次的高分短语。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The economic slowdown against the background of rising debt meant households did not save as much as in previous years.（换领域）</li><li>Staff shortages against the background of growing demand meant hospitals did not treat as many patients as usual.（换主语）</li><li>Higher input costs against the background of fixed prices meant farmers did not plant as much wheat as expected.（换宾语）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Cuts to library budgets against the background of rising enrolment meant students did not have as much access to resources as they needed.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">16</span>
+        <span class="card-title">介词短语前置 + 主句因果（fronted prepositional phrase + causal main clause）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The ability of the Amazon rainforest to absorb CO2 is also being hit by drought, wildfires and deliberate deforestation.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主语：<span class="g-nominal" title="名词化">The ability of the Amazon rainforest to absorb CO2</span>（of 短语 + 不定式双重后置修饰 ability）；谓语：<span class="g-subjunctive" title="虚拟语气">is also being hit</span> 为**现在进行时被动语态**；施动者：by drought, wildfires and deliberate deforestation。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">用 the ability of X to do Y 而非 X&#x27;s ability to do Y，是学术英语偏好「of 所有格」而非「&#x27;s 所有格」的体现——后者偏口语且拟人化。is being hit 用现在进行时被动，强调**损害正在持续发生**，而非已完成的动作。deliberate 一词是关键的**评价性形容词**，明确区分了自然野火与人为纵火的责任归属。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">the ability of sb to do sth 中，不定式必须紧跟被修饰的名词，学生常误写成 the ability to absorb CO2 of the Amazon rainforest。另外 hit 的被动是 being hit by，不能写成 being hit from。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">the ability/capacity/right of X to do Y 是学术写作中高频的名词化结构，比 X can do Y 更正式。现在进行时被动（is being + 过去分词）适合描述「正在被影响的持续过程」，在环境与健康类话题中很常用。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The capacity of public transport to absorb peak demand is being tested by rapid population growth.（换名词）</li><li>The right of workers to organise is being eroded by short-term contracts.（换领域）</li><li>The ability of soils to store carbon is being reduced by intensive farming.（换施动者）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The capacity of local clinics to treat patients is being stretched by a combination of staff shortages and rising demand.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">17</span>
+        <span class="card-title">where 引导的地点状语从句作插入语（parenthetical where-clause as adverbial）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">There were also the effects of the natural El Nino phenomenon - where surface waters in the eastern tropical Pacific Ocean become unusually warm, affecting weather patterns.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">存在句：There were also the effects of the natural El Nino phenomenon；<span class="g-clause" title="从句">where surface waters in the eastern tropical Pacific Ocean become unusually warm</span> 为 where 定语从句解释该现象；<span class="g-nonfinite" title="非谓语">affecting weather patterns</span> 为现在分词作结果状语，逻辑主语是前面整个从句描述的现象。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">在存在句 there were 之后，作者用 where 从句即时释义 + 分词收尾指出后果，形成「引入 → 定义 → 后果」的三段式。affecting 的逻辑主语是「海水异常变暖」这件事，而非 surface waters，这种以整个事件为主语的分词用法在学术英语中很常见。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">分词状语的逻辑主语只能从语境判断时，容易产生歧义。此处 affecting 的主语严格来说是从句所述的整个现象，学生若理解为 surface waters affecting weather patterns 也不算错，但会丢失「通过变暖影响天气」的中间环节。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思阅读中遇到「术语 - where 从句 - 分词」结构时，可以跳过 where 从句先读主句，再回头补定义，这是提速技巧。写作中用它引入因果链很高效。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Cities also face the problem of the urban heat island - where built surfaces absorb and re-radiate heat, pushing night temperatures higher.（换现象）</li><li>There is also the issue of food deserts - where residents cannot easily buy fresh produce, worsening diet-related illness.（换领域）</li><li>A further factor is soil salinisation - where irrigation leaves salts behind, reducing crop yields over time.（换后果）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">There is also the well-documented problem of light pollution - where artificial glare disrupts nocturnal wildlife, altering feeding and migration patterns.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">18</span>
+        <span class="card-title">名词 + 介词 + 动名词复合结构（noun + preposition + gerund）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The record increase adds to concerns that the natural world may become less able to absorb planet-warming gases in the long-term.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：<span class="g-nominal" title="名词化">The record increase</span> adds to concerns；<span class="g-clause" title="从句">that the natural world may become less able to absorb planet-warming gases in the long-term</span> 为 that 引导的**同位语从句**，解释 concerns 的具体内容；从句内 <span class="g-nonfinite" title="非谓语">less able to absorb</span> 为形容词 + 不定式结构。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">adds to concerns 是新闻英语表述「加剧担忧」的高频搭配，比 makes people worried 正式得多。that 从句在此是**同位语从句**而非定语从句——它说明 concerns 的内容，而非限定是哪一个担忧。in the long-term 置于句末作时间限定，体现科学表述对时间尺度的严谨。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">同位语从句与定语从句的区分是考试重点：同位语从句中 that 只起连接作用、不作成分（此处 that 后 the natural world may become... 是完整句子）；定语从句中 that 要作主语或宾语。学生常误把同位语从句当成定语从句来分析。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 提出担忧或风险时，adds to concerns that... / raises fears that... / prompts worries that... 是三个可轮换的高分句型。注意 concern 后接同位语从句时，从句要用 may/might 等情态动词，避免绝对化。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The findings add to concerns that antibiotic resistance may outpace the development of new drugs.（换领域）</li><li>The report raises fears that automation could displace workers faster than retraining can keep up.（换动词）</li><li>The data prompts worries that housing costs may push young families out of major cities entirely.（换名词）</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">These trends add to concerns that social media may be eroding the attention span needed for sustained reading.</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="pattern" class="section sec-pattern"><h2>句型 · Patterns</h2><p class="lead">共 15 项，点击展开解析。</p>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">让步转折：虚拟条件 + 现实反驳</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">This did not break the Paris goal, which refers to a longer-term average over decades, but continued increases to atmospheric CO2 effectively consign the world to doing so.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">This did not break the Paris goal. However, continued increases to atmospheric CO2 will make the world break it.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 However 起新句，逻辑上是「并列转折」，两句话权重相当。原文用 but 把转折压进同一句，并把「让世界注定违约」写成 consign the world to doing so——**用一个强动词承担全部论证**，信息密度更高。which refers to... 定语从句同时完成对 Paris goal 的限定，避免读者误读。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X did not yet V, which refers to A rather than B, but Y effectively consigns Z to doing so.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The new policy has not yet breached the treaty, which sets a ceiling rather than an annual limit, but continued expansion effectively commits the country to doing so.</li><li>The company has not formally broken its pledge, which covers emissions rather than water use, but rapid growth effectively condemns it to doing so.</li><li>The university has not abandoned its access target, which measures enrolment rather than completion, but falling retention effectively consigns it to doing so.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作 Task 2 讨论政策、法规、承诺是否被违反时；托福独立写作的让步段。属**正式书面语**，不适合口语。consign sb to doing sth 语义很重，慎用，一段最多一次。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">考场上的通用骨架是「尚未 + 但实质上已经」。前半句用 has not yet + 完成时，后半句用 effectively + 强动词，中间用 which 从句插入限定条件。这样能在一句话内完成「看似没违反 / 实则已违反」的辩证，是 Task 2 拿 7 分的典型手法。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">引语中的客观陈述：require + 假设 + 现实对照</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Even without the boost from El Nino last year, the CO2 rise driven by fossil fuel burning and deforestation would now be outpacing the IPCC&#x27;s 1.5C scenarios.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">El Nino made CO2 rise. Without El Nino, CO2 would still rise fast.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版把两件事拆开，因果关系模糊。原文用 Even without... 直接把 El Nino 降格为「附加因素」，再用 would be outpacing 的**虚拟进行时**指出：即使剔除这个因素，趋势依然成立。这是「排除干扰项以强化结论」的论证方式，说服力远高于简单并列。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Even without X, Y driven by Z would still be doing W.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Even without the pandemic, healthcare spending driven by an ageing population would still be outpacing economic growth.</li><li>Even without the subsidy, demand driven by falling battery prices would still be overtaking conventional vehicles.</li><li>Even without the new tax, emissions driven by industrial expansion would still be exceeding the national target.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">需要排除某个因素以强化主论点时——雅思 Task 2 的让步-反驳段、托福综合写作的反驳段。属正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">Even without + 名词短语放句首，主句用 would still be doing 是固定搭配。注意 still 不能省，它承担「即便如此结论不变」的语义。driven by 作后置定语替代定语从句，能让句子更紧凑。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">对举定义：where... become... , affecting...</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">La Nina conditions - where surface waters in the eastern tropical Pacific Ocean are cooler than normal - have replaced El Nino, which tends to allow the natural world to take up more CO2.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">La Nina conditions have replaced El Nino. La Nina means the Pacific is cooler. El Nino lets nature take up more CO2.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用三个短句平铺，读者需要自己建立联系。原文用两组定语从句（where 定义 La Nina，which 说明 El Nino 的作用）把两条背景信息同时嵌入主句，主句本身只有一个信息点：La Nina 取代了 El Nino。**主句轻、从句承载背景**，这是外刊信息分层的典型手法。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">A - where X happens - has replaced B, which tends to do Y.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Remote working - where employees operate outside a central office - has replaced the traditional commute, which tends to structure the working day.</li><li>Online banking - where transactions occur without branch visits - has replaced counter service, which tends to build customer loyalty.</li><li>Streaming platforms - where content is delivered on demand - have replaced scheduled broadcasting, which tends to create shared viewing moments.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">需要同时引入两个术语并说明其关系时——科普写作、雅思 Task 2 定义型主体段。属正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">两个从句分工明确：where 负责**定义**，which 负责**作用或倾向**。tends to 是重要的模糊限制语，表明是普遍倾向而非绝对规律，学术写作中能体现严谨性。破折号插入语在考试中可改用逗号。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">引语式结论：While 让步 + 主句断言</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">While there may be a temporary respite with slightly cooler temperatures, warming will resume because CO2 is still building up in the atmosphere.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">Temperatures may be cooler for a while. But warming will come back. CO2 is still increasing.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版四句话情绪化，逻辑松。原文用 While 从句**先承认利好**，再用主句断言趋势不变，最后用 because 从句给出不可逆的物理依据。三步构成「承认—反转—归因」的完整论证，语气冷静克制，正是科学权威的口吻。may be 与 will resume 形成**可能性 vs 必然性**的对比。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">While there may be a temporary + 名词 + with + 现象, X will resume because Y is still doing Z.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>While there may be a short-term dip in unemployment, inflationary pressure will return because demand is still outpacing supply.</li><li>While there may be a temporary improvement in air quality, pollution will worsen because vehicle numbers are still climbing.</li><li>While there may be a brief rise in enrolment, dropout rates will increase because tuition is still unaffordable for many.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">预测未来并反驳乐观预期时——雅思 Task 2 结论段、托福独立写作。书面与口语均可，口语中可把 While 换成 Though。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">这个句型的核心是**必然性词 will 与可能性词 may 的对照**。考场上一旦要反驳「情况正在好转」的观点，套用此骨架即可：先让一步，再用 because + 现在进行时指出根本驱动力仍在。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">数据引证：This is a record... since...</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">This is a record yearly increase since atmospheric measurements were first taken at the remote Mauna Loa research station in Hawaii in 1958.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">This is the biggest increase. Measurements started in 1958.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版两句割裂，读者不知「最大」的范围。原文用 since 引导时间状语从句，**一句话内同时限定比较的起点和时间跨度**，并顺带交代测量机构与地点，把数据可信度的证据嵌入句中。records/measurements were first taken 的被动语态突出「测量行为」本身而非施动者，符合科学客观性。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">This is a record + 名词 + since + 数据来源 + were first taken/recorded in + 年份.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>This is a record annual decline since unemployment figures were first compiled by the national statistics office in 1971.</li><li>This is the sharpest fall in applications since the entrance exam was first administered nationwide in 1998.</li><li>This is a record quarterly loss since the company began publishing accounts in 2004.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 需要交代数据来源与统计起点时；Task 2 引用证据支撑论点。属正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">since 从句用**一般过去时**（were first taken），主句用**一般现在时**（is），这是 since 的固定时态搭配，容易被学生写错。把数据来源写进 since 从句，既限定了范围又增强了说服力，是性价比很高的一招。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">趋势断言的递进：further confirm + 进行时 + faster than ever</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">These latest results further confirm that we are moving into uncharted territory faster than ever as the rise continues to accelerate.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">These results show that things are getting worse. The rise is accelerating.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版两句松散，且 getting worse 含糊。原文用 further confirm 表示「与既有证据一致」，用 are moving into 的**进行时**强调过程正在推进，用 faster than ever 给出比较级强度，最后用 as 从句指出驱动力。三层递进——证据、过程、速度——压进一句。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">These latest X further confirm that we are moving into Y faster than ever as Z continues to do W.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>These latest figures further confirm that we are drifting into a two-tier labour market faster than ever as automation continues to spread.</li><li>The new survey results further confirm that we are entering a period of chronic underemployment faster than ever as graduate numbers continue to rise.</li><li>Recent admissions data further confirm that we are moving into an era of lifelong retraining faster than ever as entire job categories continue to disappear.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 在已有论据基础上强化论点时；托福综合写作引用证据。属正式书面语，further 不可省略——它承担「与前文一致」的语义。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">考场通用的递进框架是「进一步证实 + 正在进入 + 比以往更快 + 随着……持续」。faster than ever 比 more and more 高级且更简洁；用 are moving into 而非 will move into，能强调过程已经开始。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">权威引语：条件句中的虚拟 + 转折对比</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Even without the boost from El Nino last year, the CO2 rise driven by fossil fuel burning and deforestation would now be outpacing the IPCC&#x27;s 1.5C scenarios.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">El Nino is not the only reason. Fossil fuels also cause CO2 to rise.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版只是并列陈述，没有论证力度。原文用 Even without X 把 El Nino 明确降格为「附加因素」，再用 would now be outpacing 的**虚拟进行时**指出：剔除该因素后趋势依然成立。这是「排除干扰项以强化结论」的论证法，说服力远高于简单并列。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Even without X, Y driven by Z would still be doing W.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Even without the pandemic, healthcare spending driven by an ageing population would still be outpacing economic growth.</li><li>Even without the subsidy, demand driven by falling battery prices would still be overtaking conventional vehicles.</li><li>Even without the new tax, emissions driven by industrial expansion would still be exceeding the national target.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 让步-反驳段；托福综合写作反驳听力观点。正式书面语，Speaking 中显得生硬。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">Even without + 名词短语 放句首，主句用 would still be doing 是固定搭配。still 不能省，它承担「即便如此结论不变」的语义。driven by 作后置定语替代定语从句，让句子更紧凑。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">对举定义：where 定义 + which 补充</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">La Nina conditions - where surface waters in the eastern tropical Pacific Ocean are cooler than normal - have replaced El Nino, which tends to allow the natural world to take up more CO2.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">La Nina conditions have replaced El Nino. La Nina means the Pacific is cooler. El Nino lets nature take up more CO2.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用三个短句平铺，读者需自行建立联系。原文用两组定语从句（where 定义 La Nina，which 说明 El Nino 的作用）同时嵌入两条背景信息，主句本身只有一个信息点。**主句轻、从句承载背景**，这是外刊信息分层的典型手法。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">A - where X happens - has replaced B, which tends to do Y.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Remote working - where employees operate outside a central office - has replaced the traditional commute, which tends to structure the working day.</li><li>Online banking - where transactions occur without branch visits - has replaced counter service, which tends to build customer loyalty.</li><li>Streaming platforms - where content is delivered on demand - have replaced scheduled broadcasting, which tends to create shared viewing moments.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">需要同时引入两个术语并说明关系时——科普写作、雅思 Task 2 定义型主体段。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">两个从句分工明确：where 负责定义，which 负责作用或倾向。tends to 是重要的模糊限制语，表明是普遍倾向而非绝对规律，学术写作中体现严谨性。破折号插入语在考试中可改用逗号。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">引语式结论：While 让步 + 主句断言</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">While there may be a temporary respite with slightly cooler temperatures, warming will resume because CO2 is still building up in the atmosphere.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">Temperatures may be cooler for a while. But warming will come back. CO2 is still increasing.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版四句话情绪化，逻辑松。原文用 While 从句先承认利好，再用主句断言趋势不变，最后用 because 从句给出不可逆的物理依据。三步构成「承认—反转—归因」的完整论证，语气冷静克制，正是科学权威的口吻。may be 与 will resume 形成可能性 vs 必然性的对比。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">While there may be a temporary + 名词 + with + 现象, X will resume because Y is still doing Z.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>While there may be a short-term dip in unemployment, inflationary pressure will return because demand is still outpacing supply.</li><li>While there may be a temporary improvement in air quality, pollution will worsen because vehicle numbers are still climbing.</li><li>While there may be a brief rise in enrolment, dropout rates will increase because tuition is still unaffordable for many.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">预测未来并反驳乐观预期时——雅思 Task 2 结论段、托福独立写作。书面与口语均可，口语中可把 While 换成 Though。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">核心是必然性词 will 与可能性词 may 的对照。一旦要反驳「情况正在好转」的观点，套用此骨架即可：先让一步，再用 because + 现在进行时指出根本驱动力仍在。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">数据引证：This is a record... since...</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">This is a record yearly increase since atmospheric measurements were first taken at the remote Mauna Loa research station in Hawaii in 1958.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">This is the biggest increase. Measurements started in 1958.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版两句割裂，读者不知「最大」的范围。原文用 since 引导时间状语从句，在**一句话内同时限定比较的起点和时间跨度**，并顺带交代测量机构与地点，把数据可信度的证据嵌入句中。records were first taken 的被动语态突出「测量行为」本身而非施动者，符合科学客观性。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">This is a record + 名词 + since + 数据来源 + were first taken/recorded in + 年份.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>This is a record annual decline since unemployment figures were first compiled by the national statistics office in 1971.</li><li>This is the sharpest fall in applications since the entrance exam was first administered nationwide in 1998.</li><li>This is a record quarterly loss since the company began publishing accounts in 2004.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 需要交代数据来源与统计起点时；Task 2 引用证据支撑论点。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">since 从句用**一般过去时**（were first taken），主句用**一般现在时**（is），这是 since 的固定时态搭配。把数据来源写进 since 从句，既限定范围又增强说服力，性价比很高。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">原因分层：thanks to A, as well as B</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">But the rise varies from year to year, thanks to differences in how the natural world absorbs carbon, as well as fluctuations in humanity&#x27;s emissions.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">The rise is different every year because nature absorbs carbon differently and human emissions change.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 and 平铺两个原因，权重相同且结构松散。原文用 thanks to 引出原因，用 as well as 连接第二项——**as well as 暗示前项为主、后项为辅**，且后项不影响主谓一致。differences in how... 把整个机制压缩成名词短语，与 fluctuations in... 形成对称。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X varies, thanks to differences in how A does B, as well as fluctuations in C.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Exam results vary widely between regions, thanks to differences in how schools allocate their budgets, as well as fluctuations in local employment.</li><li>Life expectancy has risen unevenly, thanks to differences in how health systems reach rural populations, as well as variations in diet.</li><li>Household energy use differs sharply, thanks to differences in how buildings are insulated, as well as shifts in occupancy patterns.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 解释多因并存、且需区分主次时；Task 1 解释数据波动。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">A, as well as B 与 A and B 的区别在于主次暗示，这是提分细节。differences in how / variations in how 是解释「机制差异」的固定框架，考试中可直接套用。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">后果叠加：adds to concerns that...</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The record increase adds to concerns that the natural world may become less able to absorb planet-warming gases in the long-term.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">The increase is worrying. Maybe nature cannot absorb gases in the future.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 worrying 这种情绪化形容，且 Maybe 太口语。原文用 adds to concerns that... 把新证据与既有担忧**累积**起来，力度是渐进的；that 从句用 may become 保持不确定，in the long-term 限定时间范围，三层限定让它无法被反驳。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X adds to concerns that Y may become less able to do Z in the long-term.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The findings add to concerns that antibiotic resistance may outpace the development of new drugs.</li><li>The report raises fears that automation could displace workers faster than retraining can keep up.</li><li>The data prompts worries that housing costs may push young families out of major cities entirely.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 风险论证段；托福独立写作提出隐忧。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">adds to / raises / prompts concerns that 是三个可轮换的动词。从句中务必用 may/might/could 保持谨慎，直接断言 will 会显得武断，反而扣分。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">13</span>
+        <span class="card-title">让步条件：Even if + 主句仍成立</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Even without the boost from El Nino last year, the CO2 rise driven by fossil fuel burning and deforestation would now be outpacing the IPCC&#x27;s 1.5C scenarios.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">El Nino is not the main cause. Fossil fuels are the main cause.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版两个短句都在做断言，没有证据支撑。原文用 Even without 构造一个**反事实前提**，再用 would be outpacing 指出该前提下结论依然成立——这是逻辑上最强的论证形式：排除唯一可能的反驳。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Even if/without + 反事实条件, + 主语 + would still be doing + 结果.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Even if every country met its current pledge, global temperatures would still be rising beyond the agreed threshold.</li><li>Even if tuition were free, participation would still be limited by the cost of living in university towns.</li><li>Even if the technology improved dramatically, adoption would still be slowed by the need for new infrastructure.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 强化论点、预先反驳；托福综合写作。正式书面语，注意虚拟语气形式。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">Even if 后接完整从句用虚拟语气（were / met），Even without 后接名词短语。两者都能表达「即便排除此因素」，是论证深度的标志。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">14</span>
+        <span class="card-title">不可避免性断言：effectively consign sb to doing</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">This did not break the Paris goal, which refers to a longer-term average over decades, but continued increases to atmospheric CO2 effectively consign the world to doing so.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">This did not break the goal. But CO2 increases will make the world break it.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 will make... break it 这种「动词 + 动词」的松散结构。原文用 consign... to doing 的**强动词 + 介词**结构，把「注定」这一含义压缩进一个词，并用 effectively 标记「形式上未发生、实质上已发生」的辩证关系。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X has not formally done A, but Y effectively consigns Z to doing so.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The company has not formally broken its pledge, but its sourcing practices effectively commit it to doing so.</li><li>The university has not rejected the applicants outright, but continued silence effectively leaves them with no place.</li><li>The government has not raised taxes directly, but inflation effectively condemns households to the same outcome.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 论证「表面与实质不符」；托福独立写作。正式书面语，consign 语义很重，一段最多一次。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">这个句型的核心是 effectively，它承担全部论证张力。写作时先承认形式上的未发生（has not formally），再用 but + effectively + 强动词指出实质后果，能体现批判性思维。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">15</span>
+        <span class="card-title">让步子句前置：Admittedly / While it is true that</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">There were also the effects of the natural El Nino phenomenon - where surface waters in the eastern tropical Pacific Ocean become unusually warm, affecting weather patterns.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替代的低级句型</div><div class="fld-v">El Nino also had effects. El Nino makes the Pacific warm. This affects weather.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版三句流水账。原文用 there were also 承接上文（承认另一因素存在），用 where 从句即时定义，用 affecting 分词收尾指出后果，形成「引入—定义—后果」的三段压缩。also 一词是关键：它把厄尔尼诺定位为**附加因素**，与后面 Even without 的排除论证形成呼应。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">There were also the effects of X - where Y happens, affecting Z.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>There were also the effects of the housing shortage - where supply lags far behind demand, pushing prices beyond local incomes.</li><li>There is also the influence of peer pressure - where adolescents follow group norms, overriding parental guidance.</li><li>A further factor was the collapse in tourism - where visitor numbers fell by two thirds, devastating local services.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 列举多因素时的过渡句；托福综合写作补充要点。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">There were also / There is also / A further factor was 是列举第二、第三个因素的三个阶梯式表达，比 Secondly / Thirdly 更自然。搭配「- where 从句, 分词」即可一句完成引入与展开。</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="word" class="section sec-word"><h2>单词 · Vocabulary</h2><p class="lead">共 32 项，点击展开解析。</p>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">hang by a thread</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">hang by a thread</span><span class="ipa">/hæŋ baɪ ə θred/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/hæŋ baɪ ə θred/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（目标、计划、生命等）岌岌可危，悬于一线</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 in jeopardy 相比，hang by a thread 更形象、更具画面感，暗示「随时可能断裂」；in jeopardy 更中性、更正式，只表示「处于危险中」。与 at risk 相比，hang by a thread 的程度更重，且多用于抽象事物（希望、协议、目标），at risk 可用于人或具体事物。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">leaving a key global climate target hanging by a thread</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">After the funding was cut, the entire research project was left hanging by a thread.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">本义是「命运三女神纺织生命之线」，线断则命终。记住这个画面就不易忘。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">incompatible</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">incompatible</span><span class="ipa">/ˌɪnkəmˈpætəbl/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌɪnkəmˈpætəbl/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（与……）不相容的，无法并存的——此处指该增幅与 1.5C 承诺在逻辑上无法同时成立</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 inconsistent with 相比，incompatible 语气更强：inconsistent 表示「不一致、矛盾」，尚可能解释或调和；incompatible 表示「根本对立、无法共存」。与 contradictory 相比，contradictory 强调命题间自相矛盾，incompatible 更强调事物性质上不能并存。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">is &quot;incompatible&quot; with the international pledge to try to limit global warming</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Unrestricted data collection is fundamentally incompatible with the right to privacy.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">in-（否定）+ compatible（可共存的），com- 表示「共同」，pati 表示「忍受」——无法共同忍受，即不能并存。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">consign</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">consign</span><span class="ipa">/kənˈsaɪn/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/kənˈsaɪn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">使……陷入（某种境地）；把……置于（不利状态）——此处指让世界注定走向违约</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 doom 相比，consign 更冷静、更书面，语气上是「客观上使处于某状态」而非情绪化的「注定毁灭」；doom 带有明显的情感色彩和价值判断。与 relegate 相比，relegate 强调「降级、贬到次要位置」，consign 强调「交付、交由（某种命运）」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">effectively consign the world to doing so</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Poor infrastructure has consigned many rural regions to decades of economic stagnation.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">con-（共同）+ sign（标记）——原本指「盖章交付」，故有「交托、置于」之义。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">unquestionably</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">unquestionably</span><span class="ipa">/ʌnˈkwestʃənəbli/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ʌnˈkwestʃənəbli/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">毫无疑问地，确凿地</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 undoubtedly 基本同义，但 unquestionably 语气更强，暗示「不容置疑、没有讨论余地」；undoubtedly 更常用于日常与学术的通用场合。与 arguably 恰好相反：arguably 表示「可以说、尚有争议」，unquestionably 表示「毫无争议」。学术写作中两者不可混用，误用 arguably 为 unquestionably 会显得武断。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">is unquestionably due to human activities</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The decline in child mortality is unquestionably one of the greatest achievements of modern medicine.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">un- + question + -able + -ly：无法被质疑地。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">fluctuation</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">fluctuation</span><span class="ipa">/ˌflʌktʃuˈeɪʃn/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌflʌktʃuˈeɪʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（数量、水平的）波动，起伏</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 variation 相比，fluctuation 强调**上下起伏、反复不定**，隐含不稳定；variation 只表示「差异、变化」，可以是单向的、稳定的差异。与 volatility 相比，volatility 更强调剧烈且不可预测，多用于金融市场。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">fluctuations in humanity&#x27;s emissions</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Small fluctuations in interest rates can significantly affect mortgage repayments.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">fluct- 与 flow 同源，本义「波浪起伏」，故有波动之义。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">absorb</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">absorb</span><span class="ipa">/əbˈzɔːrb/</span><span class="band">B1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əbˈzɔːrb/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">吸收（气体、热量、液体等）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 take in 相比，absorb 更正式且更常用于科学语境，强调**通过物理或化学过程纳入内部**；take in 更口语化。与 soak up 相比，soak up 形象但偏口语和新闻体，学术写作中应避免。注意 absorb 的引申义「理解、消化（知识）」在学术语境中也很常见。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the natural world struggled to absorb as much CO2</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Wetlands absorb carbon far more efficiently than grassland of the same area.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">ab-（离开）+ sorb（吸吮）——吸走。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">sink</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">sink</span><span class="ipa">/sɪŋk/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/sɪŋk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（碳）汇——吸收并储存温室气体的自然系统（此处为术语义，非「水槽」）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">这是气候科学术语，与日常义「下沉、水槽」完全不同。与 reservoir 相比，sink 强调**吸收过程**，reservoir 强调**储存容量**。碳汇（carbon sink）与碳源（carbon source）构成一对反义术语，考试中常成对出现。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">natural carbon sinks on land did not take up as much CO2</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Forests act as carbon sinks, but only while they remain standing.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源（source，放出）与汇（sink，吸收）成对记忆最有效。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">术语义；需与日常义区分，属领域专用词，写作中仅限环境话题使用。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">rampant</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">rampant</span><span class="ipa">/ˈræmpənt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈræmpənt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（坏事）猖獗的，蔓延失控的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 widespread 相比，rampant 带有强烈的**负面评价**，表示「泛滥成灾、失去控制」；widespread 是中性的「分布广泛」。与 unchecked 相比，unchecked 强调「未被制止」，rampant 强调「正在疯狂蔓延」。因此 rampant 只能修饰负面事物：rampant corruption / rampant inflation，不能说 rampant literacy。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">Rampant wildfires, including in regions not usually affected by El Nino</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Rampant speculation drove housing prices far beyond what local wages could support.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自古法语 ramper（攀爬）——像藤蔓一样四处攀爬蔓延。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">respite</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">respite</span><span class="ipa">/ˈrespɪt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈrespɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">暂时的缓解，短暂的喘息</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 break 相比，respite 更正式，且**特指从痛苦、困难或不快中获得**的暂时缓解；break 是中性的一般性中断。与 relief 相比，relief 强调痛苦的解除，可以是永久的；respite 明确强调**只是暂时**。原文用 a temporary respite，temporary 与 respite 语义重叠，是强调用法。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">While there may be a temporary respite with slightly cooler temperatures</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The ceasefire offered civilians only a brief respite from the fighting.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自拉丁语 respectus（回顾、考虑）——原指「缓期考虑」，故有暂缓之义。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">accelerate</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">accelerate</span><span class="ipa">/əkˈseləreɪt/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əkˈseləreɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">加速，加快（进程、趋势）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 speed up 相比，accelerate 更正式，且**可用于抽象过程**（accelerate growth / accelerate decline），speed up 偏口语和具体动作。与 hasten 相比，hasten 强调「促使某事提前发生」，常含人为推动之意；accelerate 强调「速率本身的提高」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">as the rise continues to accelerate</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Automation has accelerated the decline of routine manufacturing jobs.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">ac-（向）+ celer（快速）——使之变快。同源词 celerity（迅速）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">uncharted territory</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">uncharted territory</span><span class="ipa">/ˌʌnˈtʃɑːrtɪd ˈterətri/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌʌnˈtʃɑːrtɪd ˈterətri/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">未知领域，前人未至的境地</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 unknown area 相比，uncharted territory 是**固定搭配**，带有「没有地图可依、无先例可循」的比喻义，多用于描述前所未有的处境；unknown area 只是字面描述。注意拼写：uncharted（未绘入地图的），不是 unchartered（无特许状的）——这是极常见的拼写错误。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">we are moving into uncharted territory faster than ever</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Generative AI has taken the legal profession into uncharted territory.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">un- + chart（海图）+ -ed：海图上没有标出的。想象航海者驶出地图边界。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">outpace</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">outpace</span><span class="ipa">/ˌaʊtˈpeɪs/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌaʊtˈpeɪs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">超过……的速度，增长快于</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 exceed 相比，exceed 只表示「在数量或程度上超过」，不涉及速度；outpace 明确表示**在速度上超越**，且隐含两者在赛跑、同步变化的意味，因此特别适合描述趋势对比。与 outstrip 相比，outstrip 语义更广（可指数量、质量上的超越），outpace 专指速度。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">would now be outpacing the IPCC&#x27;s 1.5C scenarios</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Demand for skilled technicians has long outpaced the supply of trained graduates.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">out-（超过）+ pace（步速）——步速上超过。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">13</span>
+        <span class="card-title">landmark</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">landmark</span><span class="ipa">/ˈlændmɑːrk/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈlændmɑːrk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（事件）具有里程碑意义的；划时代的——此处修饰 UN meeting</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 historic 相比，landmark 更强调「开创先例、成为后世参照点」；historic 只表示「历史上重要的」。与 unprecedented 相比，unprecedented 强调「前所未有」这一事实，landmark 强调「被后续事件反复援引的地位」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">at a landmark UN meeting in Paris in 2015</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The ruling is regarded as a landmark decision that reshaped privacy law worldwide.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">land + mark（地标）——立在地上的标记，引申为「后人以此为参照」。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">14</span>
+        <span class="card-title">pledge</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">pledge</span><span class="ipa">/pledʒ/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/pledʒ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">承诺，保证（尤指正式的公开承诺）；亦可作动词</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 promise 相比，pledge 更正式，且**带有公开性和约束力**，常用于国家、机构、企业的场合；promise 可用于日常私人承诺。与 commitment 相比，pledge 是「说出来的承诺」，commitment 兼指「实际投入」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the international pledge to try to limit global warming</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Several airlines have pledged to reach net-zero emissions by 2050.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">与 plight（困境）同源，原义「作为担保而交付之物」——交付了东西，承诺就有了分量。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">15</span>
+        <span class="card-title">consign</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">consign</span><span class="ipa">/kənˈsaɪn/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/kənˈsaɪn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">使……陷入（某种境地）；把……置于（不利状态）——此处指让世界注定走向违约</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 doom 相比，consign 更冷静、更书面，语气上是「客观上使处于某状态」而非情绪化的「注定毁灭」；doom 带有明显的情感色彩和价值判断。与 relegate 相比，relegate 强调「降级、贬到次要位置」，consign 强调「交付、交由（某种命运）」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">effectively consign the world to doing so</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Poor infrastructure has consigned many rural regions to decades of economic stagnation.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">con-（共同）+ sign（标记）——原指「盖章交付」，故有「交托、置于」之义。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">16</span>
+        <span class="card-title">accumulate</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">accumulate</span><span class="ipa">/əˈkjuːmjəleɪt/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əˈkjuːmjəleɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（逐渐）积累，聚积——此处指 CO2 在大气中越积越多</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 gather 相比，accumulate 强调**渐进累积**的过程，且常用于抽象事物（财富、证据、气体）；gather 更常用于人或具体物品的聚集。与 amass 相比，amass 强调主动大量收集，accumulate 可以是自然发生的。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">so more accumulated in the atmosphere</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Evidence of the drug&#x27;s side effects has accumulated steadily over the past decade.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">ac-（向）+ cumul（堆）——向上堆起来。同源词 cumulative（累积的）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">17</span>
+        <span class="card-title">sediment</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">sediment</span><span class="ipa">/ˈsedɪmənt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈsedɪmənt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">沉积物，沉淀物——此处指海底沉积物，是古气候研究的重要样本来源</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 deposit 相比，sediment 特指**经水流或风力搬运后沉积下来的物质**，是地质学专用词；deposit 泛指任何沉积或存放物，也可指银行存款。与 residue 相比，residue 强调「剩余残留物」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">ice cores and marine sediments show that CO2 levels are currently at their highest</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Layers of sediment on the lake bed record centuries of industrial pollution.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">sed-（坐）+ -ment——坐下来沉淀下来的东西。同源词 session（坐着的时段）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">领域专用词，仅在地质、考古、环境话题中使用。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">18</span>
+        <span class="card-title">preliminary</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">preliminary</span><span class="ipa">/prɪˈlɪmɪneri/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/prɪˈlɪmɪneri/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">初步的，预备的——此处指尚未最终确认的数据</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 initial 相比，preliminary 明确暗示**后续会有修正**，带有「暂定」含义；initial 只表示「最初的」，不含会修改的意味。学术写作中引用未定稿数据时用 preliminary 是重要的严谨性标记。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">according to preliminary data from the Global Carbon Project team</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Preliminary results suggest the vaccine is effective, but the trial is still running.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">pre-（前）+ limin（门槛）——正式进门之前的阶段。同源词 eliminate（赶出门槛）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">19</span>
+        <span class="card-title">fluctuation</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">fluctuation</span><span class="ipa">/ˌflʌktʃuˈeɪʃn/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌflʌktʃuˈeɪʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（数量、水平的）波动，起伏</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 variation 相比，fluctuation 强调**上下起伏、反复不定**，隐含不稳定；variation 只表示「差异、变化」，可以是单向的、稳定的差异。与 volatility 相比，volatility 更强调剧烈且不可预测，多用于金融市场。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">fluctuations in humanity&#x27;s emissions</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Small fluctuations in interest rates can significantly affect mortgage repayments.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">fluct- 与 flow 同源，本义「波浪起伏」，故有波动之义。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">20</span>
+        <span class="card-title">dissolve</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">dissolve</span><span class="ipa">/dɪˈzɒlv/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/dɪˈzɒlv/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">溶解；使溶解——此处指 CO2 溶于海水</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 melt 相比，dissolve 指固体在液体中**化为溶液**（化学过程），melt 指固体因热变为液体（物理过程）。两者常被中国学生混用。与 absorb 相比，absorb 指被吸收进内部，dissolve 指成为溶液的一部分。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">more of the gas being dissolved in the ocean</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Ocean acidification occurs as more carbon dioxide dissolves in seawater.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">dis-（分开）+ solv（松开）——把结合在一起的分子松开。同源词 solve（解开问题）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">21</span>
+        <span class="card-title">absorb</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">absorb</span><span class="ipa">/əbˈzɔːrb/</span><span class="band">B1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əbˈzɔːrb/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">吸收（气体、热量、液体等）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 take in 相比，absorb 更正式且更常用于科学语境，强调通过物理或化学过程纳入内部；take in 更口语化。与 soak up 相比，soak up 形象但偏口语和新闻体，学术写作中应避免。注意 absorb 的引申义「理解、消化（知识）」在学术语境中也很常见。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the natural world struggled to absorb as much CO2</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Wetlands absorb carbon far more efficiently than grassland of the same area.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">ab-（离开）+ sorb（吸吮）——吸走。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">22</span>
+        <span class="card-title">sink</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">sink</span><span class="ipa">/sɪŋk/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/sɪŋk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（碳）汇——吸收并储存温室气体的自然系统（此处为术语义，非「水槽」）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">这是气候科学术语，与日常义「下沉、水槽」完全不同。与 reservoir 相比，sink 强调吸收过程，reservoir 强调储存容量。碳汇（carbon sink）与碳源（carbon source）构成一对反义术语，考试中常成对出现。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">natural carbon sinks on land did not take up as much CO2</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Forests act as carbon sinks, but only while they remain standing.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源（source，放出）与汇（sink，吸收）成对记忆最有效。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">术语义；需与日常义区分，属领域专用词，写作中仅限环境话题使用。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">23</span>
+        <span class="card-title">rampant</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">rampant</span><span class="ipa">/ˈræmpənt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈræmpənt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（坏事）猖獗的，蔓延失控的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 widespread 相比，rampant 带有强烈的负面评价，表示「泛滥成灾、失去控制」；widespread 是中性的「分布广泛」。与 unchecked 相比，unchecked 强调「未被制止」，rampant 强调「正在疯狂蔓延」。因此 rampant 只能修饰负面事物：rampant corruption / rampant inflation，不能说 rampant literacy。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">Rampant wildfires, including in regions not usually affected by El Nino</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Rampant speculation drove housing prices far beyond what local wages could support.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自古法语 ramper（攀爬）——像藤蔓一样四处攀爬蔓延。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">24</span>
+        <span class="card-title">respite</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">respite</span><span class="ipa">/ˈrespɪt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈrespɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">暂时的缓解，短暂的喘息</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 break 相比，respite 更正式，且特指从痛苦、困难或不快中获得的暂时缓解；break 是中性的一般性中断。与 relief 相比，relief 强调痛苦的解除，可以是永久的；respite 明确强调只是暂时。原文用 a temporary respite，temporary 与 respite 语义重叠，是强调用法。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">While there may be a temporary respite with slightly cooler temperatures</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The ceasefire offered civilians only a brief respite from the fighting.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自拉丁语 respectus（回顾、考虑）——原指「缓期考虑」，故有暂缓之义。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">25</span>
+        <span class="card-title">accelerate</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">accelerate</span><span class="ipa">/əkˈseləreɪt/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əkˈseləreɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">加速，加快（进程、趋势）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 speed up 相比，accelerate 更正式，且可用于抽象过程（accelerate growth / accelerate decline），speed up 偏口语和具体动作。与 hasten 相比，hasten 强调「促使某事提前发生」，常含人为推动之意；accelerate 强调「速率本身的提高」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">as the rise continues to accelerate</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Automation has accelerated the decline of routine manufacturing jobs.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">ac-（向）+ celer（快速）——使之变快。同源词 celerity（迅速）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">26</span>
+        <span class="card-title">uncharted territory</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">uncharted territory</span><span class="ipa">/ˌʌnˈtʃɑːrtɪd ˈterətri/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌʌnˈtʃɑːrtɪd ˈterətri/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">未知领域，前人未至的境地</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 unknown area 相比，uncharted territory 是固定搭配，带有「没有地图可依、无先例可循」的比喻义，多用于描述前所未有的处境；unknown area 只是字面描述。注意拼写：uncharted（未绘入地图的），不是 unchartered（无特许状的）——这是极常见的拼写错误。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">we are moving into uncharted territory faster than ever</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Generative AI has taken the legal profession into uncharted territory.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">un- + chart（海图）+ -ed：海图上没有标出的。想象航海者驶出地图边界。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">27</span>
+        <span class="card-title">outpace</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">outpace</span><span class="ipa">/ˌaʊtˈpeɪs/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌaʊtˈpeɪs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">超过……的速度，增长快于</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 exceed 相比，exceed 只表示「在数量或程度上超过」，不涉及速度；outpace 明确表示在速度上超越，且隐含两者在赛跑、同步变化的意味，因此特别适合描述趋势对比。与 outstrip 相比，outstrip 语义更广（可指数量、质量上的超越），outpace 专指速度。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">would now be outpacing the IPCC&#x27;s 1.5C scenarios</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Demand for skilled technicians has long outpaced the supply of trained graduates.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">out-（超过）+ pace（步速）——步速上超过。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">28</span>
+        <span class="card-title">tundra</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">tundra</span><span class="ipa">/ˈtʌndrə/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈtʌndrə/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">苔原，冻原——北极地区常年低温、树木无法生长的地带</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 desert 相比，tundra 的关键特征是**低温**而非缺水；与 glacier 相比，tundra 是有土壤和植被的陆地，glacier 是冰体。考试中 tundra 常与 permafrost（永久冻土）、thaw（融化）同现。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">The Arctic tundra is being transformed into an overall source of CO2</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">As the tundra thaws, it releases methane that had been locked in the soil for millennia.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自俄语 tundra（无树的平地）。芬兰语同源词 tunturi（无树的山）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">29</span>
+        <span class="card-title">deforestation</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">deforestation</span><span class="ipa">/ˌdiːˌfɒrɪˈsteɪʃn/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌdiːˌfɒrɪˈsteɪʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">毁林，滥伐森林——尤其指为其他用途而大规模清除森林</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 logging 相比，deforestation 指**森林永久消失**（土地转为他用），logging 只指伐木行为，森林可能再生。与 forest degradation 相比，后者指森林质量下降但仍是森林。这是环境类话题的核心术语，必须准确区分。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">drought, wildfires and deliberate deforestation</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Deforestation in the tropics accounts for a significant share of global emissions.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">de-（去除）+ forest + -ation。同族：reforestation（重新造林）、afforestation（在无林地上造林）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">30</span>
+        <span class="card-title">emission</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">emission</span><span class="ipa">/ɪˈmɪʃn/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɪˈmɪʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">排放（物）——特指气体、热量等释放到大气中的量</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 discharge 相比，emission 专指**气体或辐射**的释放，是环境科学的标准用词；discharge 多指液体或污染物的排放，也可指人员释放。与 release 相比，emission 更技术化、更书面。注意常用复数 emissions 指排放总量。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">fossil fuel emissions were at record highs</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Cutting transport emissions requires both cleaner vehicles and fewer journeys.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">e-（向外）+ miss（送）——送出去。同源词 transmit（传送）、mission（派遣）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">31</span>
+        <span class="card-title">at their highest</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">at their highest</span><span class="ipa">/æt ðeə ˈhaɪɪst/</span><span class="band">B1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/æt ðeə ˈhaɪɪst/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">处于最高水平——此处指 CO2 浓度至少两百万年来最高</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 at their peak 相比，at their highest 通常与时间范围连用（in at least two million years），强调「在有记录的整个区间内最高」；at their peak 更强调「达到顶点」这一瞬时状态，且常暗示之后回落。与 more than ever 相比，more than ever 是副词性比较，不能作表语。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">CO2 levels are currently at their highest in at least two million years</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Rents in the capital are at their highest since records began, outpacing wage growth.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">high 的最高级 highest 与介词 at 连用表达「处于最高点」，注意主语为复数时用 their。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">32</span>
+        <span class="card-title">scenario</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">scenario</span><span class="ipa">/səˈnɑːriəʊ/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/səˈnɑːriəʊ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">情景，设想方案——此处指 IPCC 构建的不同排放路径</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 situation 相比，scenario 是**假设性的推演**，尚未发生；situation 是当前的实际情况。这是极易混淆的一对。与 projection 相比，projection 基于现有趋势外推，scenario 基于设定条件推演，可以包含政策变量。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the IPCC&#x27;s 1.5C scenarios</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Under the most optimistic scenario, renewable energy supplies half of all demand by 2040.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自意大利语 scena（舞台）——为不同剧本写的情节走向。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="phrase" class="section sec-phrase"><h2>短语 · Phrases</h2><p class="lead">共 10 项，点击展开解析。</p>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">hang by a thread</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">hang by a thread</span><span class="gloss-inline">岌岌可危，悬于一线</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/hæŋ baɪ ə θred/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">岌岌可危，悬于一线</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">习语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">in serious danger / likely to fail soon</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">in danger 只是中性陈述，hang by a thread 用「一线悬丝」的画面把危险程度和「随时可能断裂」的紧迫感同时传达出来。它是名词性比喻，可用于目标、协议、希望、生命，语域偏书面但不算生僻。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 on the brink of collapse 相比，hang by a thread 强调「目前还悬着但随时会断」，on the brink 强调「已经到边缘」；与 at risk 相比，hang by a thread 程度重得多，且几乎只用于抽象事物。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>After the main funder withdrew, the entire research programme was left hanging by a thread.</li><li>The ceasefire has been hanging by a thread since the talks stalled last month.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作 Task 2 描述目标、协议或制度濒临失败时；Speaking Part 3 讨论风险。写作口语皆可，但一段内不宜重复使用。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">at record highs</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">at record highs</span><span class="gloss-inline">处于历史最高水平</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ət ˈrekɔːd haɪz/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">处于历史最高水平</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">介词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">higher than ever before</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">at record highs 是数据写作的固定表达，比 higher than ever 更简洁，且隐含「有记录可查」的严谨前提。它可作表语（were at record highs）或状语（prices rose to record highs），搭配灵活。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 at an all-time high 相比，at record highs 用复数，暗示多个指标同时创新高；at an all-time high 通常指单一指标，且更口语。与 peaked 相比，peaked 暗示之后会回落，at record highs 不含此意。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Household debt is at record highs even as real wages stagnate.</li><li>Enrolment in online courses reached record highs during the pandemic and has not fallen back.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 图表描述数据峰值；Task 2 引用数据支撑论证。正式书面语。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">due to</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">due to</span><span class="gloss-inline">由于，归因于</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/djuː tuː/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">由于，归因于</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">because of</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">due to 在正式文体中比 because of 更常见，尤其用于书面论证。传统语法要求 due to 作表语（The delay was due to rain），because of 作状语，但在现代用法中 due to 作状语已被广泛接受，考试中两者均可，但 be due to 的形式最稳妥。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 owing to 相比，两者几乎同义，但 owing to 更常用于句首；与 thanks to 相比，thanks to 通常引出中性或积极原因，due to 中性，because of 中性且更口语。引出明显负面原因时用 due to 比 thanks to 更安全。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>The decline in bee populations is due to a combination of pesticides and habitat loss.</li><li>Flights were delayed due to heavy fog across the region.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作 Task 2 归因；Task 1 解释数据变化。全语域通用，但正式写作优先。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">take up</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">take up</span><span class="gloss-inline">吸收；占用——此处指自然界吸收 CO2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/teɪk ʌp/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">吸收；占用——此处指自然界吸收 CO2</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">absorb</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">take up 是 absorb 的日常化替代表达，在新闻英语中频繁出现，语气比 absorb 轻松但含义相同。它的另一个高频义是「开始从事（爱好、职业）」，以及「占用（时间、空间）」，一词多义，考查频率很高。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 soak up 相比，soak up 更形象、更口语，常用于液体和热量；take up 更中性通用。与 absorb 相比，take up 更口语化，学术写作中 absorb 更稳妥。与 occupy 相比，occupy 强调占据空间或时间，不用于气体吸收。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Trees take up carbon dioxide and release oxygen through photosynthesis.</li><li>Administrative work takes up nearly a third of teachers&#x27; working hours.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">环境与科技类话题的写作与口语；描述时间占用时 Task 1 流程图也常用。语域中性。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">against the background of</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">against the background of</span><span class="gloss-inline">在……的大背景下，在……的背景下</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əˈɡenst ðə ˈbækɡraʊnd ɒv/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">在……的大背景下，在……的背景下</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">介词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">in the context of / given</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">against the background of 用于**区分短期波动与长期趋势**，或把某事件放入更大的时代框架中理解。这个短语在学术写作中价值极高，因为它一句话就交代了分析层次，比简单用 because 更能体现思维的结构感。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 in the context of 相比，against the background of 更强调「对比性的衬托」——小的变化发生在大趋势之上；in the context of 更强调「理解所需的语境」。与 amid 相比，amid 强调「在……之中发生」，更新闻化，如 amid rising prices。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Against the background of an ageing population, even modest rises in healthcare spending look inadequate.</li><li>Against the background of falling global demand, the country&#x27;s export growth is a genuine achievement.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 需要区分短期因素与长期趋势时；托福独立写作的论证铺垫。正式书面语，口语中不宜使用。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">add to concerns</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">add to concerns</span><span class="gloss-inline">加剧担忧，使忧虑增加</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/æd tuː kənˈsɜːnz/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">加剧担忧，使忧虑增加</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">makes people more worried</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">adds to concerns 的妙处在于 adds——它表示**在既有担忧之上再添一层**，是累积性的，比 causes concern（引发担忧）更能体现证据链的递进。这个短语后接 that 同位语从句说明担忧内容，是学术风险论证的标准结构。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 raises concerns 相比，raises 是「首次提出」，adds to 是「在已有基础上加强」；与 fuels concerns 相比，fuels 强调「火上浇油、加速恶化」，语气更重；与 prompts concerns 相比，prompts 强调「引发」，中性。选用哪个取决于该担忧是否已存在。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>The latest unemployment figures add to concerns that the recovery is stalling.</li><li>Rising antibiotic resistance adds to concerns that routine surgery could become far riskier.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 风险论证段；托福独立写作的论点深化。正式书面语。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">in the long-term</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">in the long-term</span><span class="gloss-inline">从长远来看，长期而言</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɪn ðə ˈlɒŋ tɜːm/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">从长远来看，长期而言</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">介词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">eventually / over time</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">in the long-term 是时间尺度限定语，能让论断免于被短期反例推翻。学术写作中，明确时间尺度是严谨性的标志——它告诉读者这个结论在什么范围内成立。与 in the long run 相比，in the long-term 更书面，且有连字符形式作定语。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 in the long run 相比，两者含义相同，但 in the long run 更口语、更常见于评论；in the long-term 更学术。与 ultimately 相比，ultimately 强调「最终结果」，in the long-term 强调「在长时段内持续成立」。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>In the long-term, investing in early education costs far less than remedial programmes later.</li><li>The policy may ease inflation now but is likely to raise debt in the long-term.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论政策的长期与短期影响；结论段限定范围。全语域通用。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">off-track</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">off-track</span><span class="gloss-inline">偏离轨道的，未达标的——此处指未走在达成 1.5C 目标的轨道上</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌɒf ˈtræk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">偏离轨道的，未达标的——此处指未走在达成 1.5C 目标的轨道上</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">not on course to achieve</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">off-track to do sth 是项目管理与气候政策中的高频表达，它比 will not meet 更精确——「未达标」是结果判断，「偏离轨道」是过程判断，且暗示「若不加干预就不会达标」，为后续建议留出空间。significantly 作程度副词，说明偏离程度不小。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 behind schedule 相比，off-track 用于目标达成而非时间进度；与 falling short of 相比，falling short of 是「已经未达到」，off-track 是「正走向未达到」，时态含义不同。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>The country remains off-track to meet its renewable energy targets for 2030.</li><li>Despite recent progress, the region is still off-track to eliminate malaria by the stated deadline.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 评估政策与目标；Task 1 描述进度差距。正式书面语。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">a close eye on</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">a close eye on</span><span class="gloss-inline">密切注视，密切关注（keep a close eye on）</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ə kləʊs aɪ ɒn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">密切注视，密切关注（keep a close eye on）</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">习语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">monitor carefully</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">keep a close eye on 是口语与书面通吃的习语，比 monitor 更生动，且带有「持续警觉」的意味。在学术转述中，它能让引语部分读起来自然；在口语中，它可以替代 watch carefully，显得地道。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 keep track of 相比，keep a close eye on 强调警觉和关注潜在问题，keep track of 强调「记录、跟进」不遗漏；与 monitor 相比，monitor 更技术化、更中性，常用于系统或数据。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Regulators are keeping a close eye on how banks price these new products.</li><li>Parents should keep a close eye on how much time children spend on social media.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Speaking Part 3 讨论监管或家长责任；写作中引述专家建议。口语优先，写作中偏非正式。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">an open question</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">an open question</span><span class="gloss-inline">悬而未决的问题；尚无定论的事</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ən ˈəʊpən ˈkwestʃən/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">悬而未决的问题；尚无定论的事</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">still uncertain / not yet decided</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">an open question 是学术写作中表达**不确定性**的高价值短语，比 I don&#x27;t know 或 it is uncertain 更专业，且暗示「有讨论空间、值得继续研究」。在雅思 Task 2 中用它来承认论点的局限，能体现批判性思维，是加分项。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 a moot point 相比，a moot point 指「已无实际意义、不值得争论的问题」，含义完全不同，容易误用；与 an unsettled matter 相比，an open question 更常用于学术语境。与 debatable 相比，debatable 是形容词，且暗示「有争议」，an open question 更中性。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Whether remote work permanently reduces urban congestion remains an open question.</li><li>It is an open question whether the tax will change behaviour or simply raise revenue.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作 Task 2 承认局限、展示思辨；Speaking Part 3 讨论未定议题。正式与半正式均可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article></section>
+  
+    <section id="quiz" class="section sec-quiz">
+      <h2>小测 · Check yourself</h2>
+      <p class="lead">13 题，点击选项立即判定并给出解析。</p>
+      <div class="score" id="score"><span>得分</span> <b>0</b> <span>/ 13</span></div>
+      
+        <div class="quiz-q" data-q="1">
+          <div class="quiz-stem">1. 在 &quot;leaving a key global climate target hanging by a thread&quot; 中，leaving 在句中充当什么成分？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>与 rose 并列的谓语动词</button><button class="opt" data-correct="1"><span class="opt-k">B</span>现在分词作结果状语</button><button class="opt" data-correct="0"><span class="opt-k">C</span>动名词作主语</button><button class="opt" data-correct="0"><span class="opt-k">D</span>定语，修饰 target</button></div>
+          <div class="quiz-exp" hidden>leaving 前有逗号且无连词，说明它不是谓语；它的逻辑主语是前面整个主句所述事件，表示该事件带来的结果。若与 rose 并列，需要写成 and left。</div>
+        </div>
+        <div class="quiz-q" data-q="2">
+          <div class="quiz-stem">2. 为什么原文用 &quot;would require the CO2 rise to be slowing&quot; 而不是 &quot;to slow&quot;？</div>
+          <div class="opts"><button class="opt" data-correct="1"><span class="opt-k">A</span>to be slowing 表示需要一个正在持续的过程</button><button class="opt" data-correct="0"><span class="opt-k">B</span>to slow 语法错误，不能使用</button><button class="opt" data-correct="0"><span class="opt-k">C</span>为了与前面的 would 保持时态一致</button><button class="opt" data-correct="0"><span class="opt-k">D</span>slow 不能作不定式</button></div>
+          <div class="quiz-exp" hidden>require sth to be doing 强调「需要某个过程正在发生」。to slow 语法上成立，但指一次性动作，无法表达「持续放缓」这一渐进含义。</div>
+        </div>
+        <div class="quiz-q" data-q="3">
+          <div class="quiz-stem">3. &quot;different in how the natural world absorbs carbon&quot; 中，how 从句的语序应该是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>疑问语序：how does the natural world absorb carbon</button><button class="opt" data-correct="1"><span class="opt-k">B</span>陈述语序：how the natural world absorbs carbon</button><button class="opt" data-correct="0"><span class="opt-k">C</span>两种都可以</button><button class="opt" data-correct="0"><span class="opt-k">D</span>必须用 how that 引导</button></div>
+          <div class="quiz-exp" hidden>how 引导的从句在此作介词 in 的宾语，属于名词性从句，必须用陈述语序，不能保留疑问句的助动词倒装。</div>
+        </div>
+        <div class="quiz-q" data-q="4">
+          <div class="quiz-stem">4. &quot;ideally suited to monitoring&quot; 中的 to 是什么词性？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>不定式符号，后接动词原形</button><button class="opt" data-correct="1"><span class="opt-k">B</span>介词，后接动名词</button><button class="opt" data-correct="0"><span class="opt-k">C</span>连词</button><button class="opt" data-correct="0"><span class="opt-k">D</span>副词</button></div>
+          <div class="quiz-exp" hidden>suited to 中的 to 是介词，因此后接动名词 monitoring。若写成 suited to monitor 就错了。同类结构还有 be committed to doing、be opposed to doing。</div>
+        </div>
+        <div class="quiz-q" data-q="5">
+          <div class="quiz-stem">5. &quot;thanks to differences in...&quot; 中的 thanks to 表达的是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>感谢</button><button class="opt" data-correct="1"><span class="opt-k">B</span>归因于（原因）</button><button class="opt" data-correct="0"><span class="opt-k">C</span>尽管（让步）</button><button class="opt" data-correct="0"><span class="opt-k">D</span>目的是（目的）</button></div>
+          <div class="quiz-exp" hidden>thanks to 在此相当于 because of / owing to，表示原因。注意它通常引出中性或积极的原因，引出明显的负面原因时用 because of 更稳妥。</div>
+        </div>
+        <div class="quiz-q" data-q="6">
+          <div class="quiz-stem">6. &quot;as the rise continues to accelerate&quot; 中的 as 表示什么？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>因为</button><button class="opt" data-correct="1"><span class="opt-k">B</span>随着（两个过程同步推进）</button><button class="opt" data-correct="0"><span class="opt-k">C</span>虽然</button><button class="opt" data-correct="0"><span class="opt-k">D</span>如同</button></div>
+          <div class="quiz-exp" hidden>此处 as 表示「随着」，两个分句描述同时演进的过程。若误读为「因为」，因果关系就被颠倒了——上升加速并不是「进入未知领域」的原因，而是并行现象。</div>
+        </div>
+        <div class="quiz-q" data-q="7">
+          <div class="quiz-stem">7. &quot;consign the world to doing so&quot; 中 consign sb/sth to 的意思是？</div>
+          <div class="opts"><button class="opt" data-correct="1"><span class="opt-k">A</span>使某人/某物陷入某种（通常不利的）境地</button><button class="opt" data-correct="0"><span class="opt-k">B</span>把某人/某物运送出去</button><button class="opt" data-correct="0"><span class="opt-k">C</span>为某人/某物签名担保</button><button class="opt" data-correct="0"><span class="opt-k">D</span>把某人/某物隐藏起来</button></div>
+          <div class="quiz-exp" hidden>consign 本义为「盖章交付」，引申为「使陷入某种境地」，语气冷静书面，多用于描述不利处境。注意它后接 to doing。</div>
+        </div>
+        <div class="quiz-q" data-q="8">
+          <div class="quiz-stem">8. 根据原文，为什么 2024 年 CO2 上升幅度特别大？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>仅因化石燃料排放创下新高</button><button class="opt" data-correct="0"><span class="opt-k">B</span>仅因厄尔尼诺现象</button><button class="opt" data-correct="1"><span class="opt-k">C</span>化石燃料排放创高，叠加自然碳汇吸收能力下降（野火、干旱、厄尔尼诺）</button><button class="opt" data-correct="0"><span class="opt-k">D</span>因为各国退出了巴黎协定</button></div>
+          <div class="quiz-exp" hidden>原文明确给出两组原因：fossil fuel emissions were at record highs，同时 natural carbon sinks on land did not take up as much CO2 as usual，后者由野火、干旱与厄尔尼诺共同导致。只选其一是以偏概全。</div>
+        </div>
+        <div class="quiz-q" data-q="9">
+          <div class="quiz-stem">9. 在 &quot;the first calendar year in which annual average temperatures were higher...&quot; 中，in which 能否换成 when？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>可以，完全等价</button><button class="opt" data-correct="1"><span class="opt-k">B</span>正式文体中 in which 更严谨，因为强调「在该年期间」</button><button class="opt" data-correct="0"><span class="opt-k">C</span>不能，when 不能引导定语从句</button><button class="opt" data-correct="0"><span class="opt-k">D</span>必须用 that</button></div>
+          <div class="quiz-exp" hidden>先行词为 year 且强调「在这一年之内发生」时，in which 比 when 更精确。when 语法上可行，但正式写作中 in which 更严谨。</div>
+        </div>
+        <div class="quiz-q" data-q="10">
+          <div class="quiz-stem">10. &quot;50% higher than before humans started burning...&quot; 中，50% higher than 的意思是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>是过去水平的 50%</button><button class="opt" data-correct="1"><span class="opt-k">B</span>比过去水平高出 50%</button><button class="opt" data-correct="0"><span class="opt-k">C</span>过去水平的 1.5 倍</button><button class="opt" data-correct="0"><span class="opt-k">D</span>下降了 50%</button></div>
+          <div class="quiz-exp" hidden>X% higher than 表示「比……高出 X%」。注意与 X% as high as（是……的 X%）区分——选项 C 若改为「是过去水平的 1.5 倍」在数值上恰好正确，但 50% higher 的表述本身强调的是超出部分。</div>
+        </div>
+        <div class="quiz-q" data-q="11">
+          <div class="quiz-stem">11. &quot;adds to concerns that...&quot; 中 concerns 后的 that 从句属于？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>定语从句，that 作主语</button><button class="opt" data-correct="1"><span class="opt-k">B</span>同位语从句，that 不作成分</button><button class="opt" data-correct="0"><span class="opt-k">C</span>宾语从句</button><button class="opt" data-correct="0"><span class="opt-k">D</span>结果状语从句</button></div>
+          <div class="quiz-exp" hidden>该从句说明 concerns 的具体内容，that 只起连接作用、不作任何成分，因此是同位语从句。若为定语从句，that 必须充当主语或宾语。</div>
+        </div>
+        <div class="quiz-q" data-q="12">
+          <div class="quiz-stem">12. &quot;kept a close eye on&quot; 最接近的含义是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>用眼睛近距离观看</button><button class="opt" data-correct="1"><span class="opt-k">B</span>密切注视、持续关注</button><button class="opt" data-correct="0"><span class="opt-k">C</span>短暂瞥一眼</button><button class="opt" data-correct="0"><span class="opt-k">D</span>视而不见</button></div>
+          <div class="quiz-exp" hidden>keep a close eye on 是习语，表示持续密切地关注，常用于监管、照看等语境，不是字面意义的「近距离看」。</div>
+        </div>
+        <div class="quiz-q" data-q="13">
+          <div class="quiz-stem">13. 下列哪个词在原文中表示「岌岌可危、悬于一线」？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>off-track</button><button class="opt" data-correct="1"><span class="opt-k">B</span>hang by a thread</button><button class="opt" data-correct="0"><span class="opt-k">C</span>at record highs</button><button class="opt" data-correct="0"><span class="opt-k">D</span>an open question</button></div>
+          <div class="quiz-exp" hidden>hang by a thread 表示「悬于一线、随时可能失败」。off-track 指「偏离目标轨道」，an open question 指「尚无定论」，三者含义不同。</div>
+        </div>
+    </section>
+  <footer>
+    <div class="grad"></div>
+    readkiller · 生成于 sample run<br>
+    原句引用自原文；例句为备考迁移用例，非原文内容。
+  </footer>
+</div>
+<script>
+(function(){
+  var bar=document.getElementById('bar');
+  function prog(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  }
+  addEventListener('scroll',prog,{passive:true});prog();
+
+  document.querySelectorAll('.card-head').forEach(function(head){
+    var card=head.closest('.card');
+    function toggle(){
+      var open=card.classList.toggle('open');
+      head.setAttribute('aria-expanded',open?'true':'false');
+    }
+    head.addEventListener('click',function(e){e.preventDefault();toggle();});
+    head.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}
+    });
+  });
+
+  var total=document.querySelectorAll('.quiz-q').length, score=0, done=0;
+  var out=document.getElementById('score');
+  document.querySelectorAll('.quiz-q').forEach(function(q){
+    var opts=q.querySelectorAll('.opt');
+    opts.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        if(q.dataset.answered)return;
+        q.dataset.answered='1';
+        var right=btn.dataset.correct==='1';
+        if(right)score++;
+        done++;
+        btn.classList.add(right?'right':'wrong');
+        if(!right)opts.forEach(function(o){if(o.dataset.correct==='1')o.classList.add('right');});
+        opts.forEach(function(o){o.disabled=true;});
+        var exp=q.querySelector('.quiz-exp'); if(exp)exp.hidden=false;
+        if(out)out.innerHTML='<span>得分</span> <b>'+score+'</b> <span>/ '+total+'</span>'+(done===total?' <span>— 完成！</span>':'');
+      });
+    });
+  });
+
+  // Highlight the nav pill for the section currently in view.
+  var links=[].slice.call(document.querySelectorAll('nav.pills a'));
+  var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  if('IntersectionObserver' in window && sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting)return;
+        links.forEach(function(a){
+          var on='#'+e.target.id===a.getAttribute('href');
+          a.style.background=on?'linear-gradient(120deg,#5B4BFF,#B84BFF)':'';
+          a.style.color=on?'#fff':'';
+          a.style.borderColor=on?'transparent':'';
+        });
+      });
+    },{rootMargin:'-64px 0px -70% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+})();
+</script>
+</body>
+</html>
