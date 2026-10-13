@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="生活记录">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+<title>生活记录</title>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ 登录页 ============ -->
+  <section id="authScreen" class="auth-screen hidden">
+    <div class="auth-box">
+      <div class="auth-logo">📔</div>
+      <h2>生活记录</h2>
+      <p class="auth-sub">登录后，手机和电脑的数据会自动同步</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth="signin">登录</button>
+        <button class="auth-tab" data-auth="signup">注册</button>
+      </div>
+
+      <form id="authForm" class="auth-form" autocomplete="on">
+        <input type="email" id="authEmail" class="input" placeholder="邮箱"
+               autocomplete="email" required>
+        <input type="password" id="authPassword" class="input" placeholder="密码（至少 6 位）"
+               autocomplete="current-password" required>
+        <button type="submit" id="authSubmit" class="btn primary">登录</button>
+      </form>
+
+      <p id="authMsg" class="auth-msg"></p>
+
+      <button id="authSkip" class="auth-skip">先不登录，仅在本机使用</button>
+    </div>
+  </section>
+
+  <!-- ============ 主界面 ============ -->
+  <div id="mainApp" class="hidden">
+
+  <!-- ============ 顶部栏 ============ -->
+  <header class="topbar">
+    <h1 id="pageTitle">今天</h1>
+    <div class="topbar-right">
+      <button id="syncBtn" class="sync-pill" title="同步状态">
+        <span id="syncDot" class="sync-dot"></span>
+        <span id="syncText">本机</span>
+      </button>
+      <button id="btnSettings" class="icon-btn" aria-label="设置">⚙</button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ 页面：今天（录入 + 今日流水） ============ -->
+    <section class="page" data-page="today">
+
+      <div class="date-strip">
+        <button id="prevDay" class="icon-btn" aria-label="前一天">‹</button>
+        <div class="date-label">
+          <strong id="dateMain">—</strong>
+          <span id="dateSub">—</span>
+        </div>
+        <button id="nextDay" class="icon-btn" aria-label="后一天">›</button>
+      </div>
+
+      <!-- 快速录入：三个 Tab -->
+      <div class="card">
+        <div class="seg" id="entryTabs">
+          <button class="seg-btn active" data-kind="expense">💸 支出</button>
+          <button class="seg-btn" data-kind="study">📚 学习</button>
+          <button class="seg-btn" data-kind="fitness">🏃 健身</button>
+        </div>
+
+        <!-- 支出表单 -->
+        <form class="entry-form" data-form="expense" autocomplete="off">
+          <div class="row">
+            <input type="text" inputmode="decimal" name="amount" placeholder="金额" class="input amount-input" required>
+            <span class="unit">元</span>
+          </div>
+          <div class="chips" data-chips="expense">
+            <button type="button" class="chip" data-val="吃饭">吃饭</button>
+            <button type="button" class="chip" data-val="交通">交通</button>
+            <button type="button" class="chip" data-val="购物">购物</button>
+            <button type="button" class="chip" data-val="居住">居住</button>
+            <button type="button" class="chip" data-val="娱乐">娱乐</button>
+            <button type="button" class="chip" data-val="医疗">医疗</button>
+            <button type="button" class="chip" data-val="人情">人情</button>
+            <button type="button" class="chip" data-val="其他">其他</button>
+          </div>
+          <input type="text" name="note" placeholder="备注（可选）" class="input">
+          <button type="submit" class="btn primary">记一笔支出</button>
+        </form>
+
+        <!-- 学习表单 -->
+        <form class="entry-form hidden" data-form="study" autocomplete="off">
+          <div class="row">
+            <input type="text" inputmode="decimal" name="minutes" placeholder="时长" class="input amount-input" required>
+            <span class="unit">分钟</span>
+          </div>
+          <div class="chips" data-chips="study">
+            <button type="button" class="chip" data-val="英语">英语</button>
+            <button type="button" class="chip" data-val="编程">编程</button>
+            <button type="button" class="chip" data-val="阅读">阅读</button>
+            <button type="button" class="chip" data-val="网课">网课</button>
+            <button type="button" class="chip" data-val="刷题">刷题</button>
+            <button type="button" class="chip" data-val="其他">其他</button>
+          </div>
+          <input type="text" name="note" placeholder="学了什么（可选）" class="input">
+          <button type="submit" class="btn primary">记一笔学习</button>
+        </form>
+
+        <!-- 健身表单 -->
+        <form class="entry-form hidden" data-form="fitness" autocomplete="off">
+          <div class="row">
+            <input type="text" inputmode="decimal" name="minutes" placeholder="时长" class="input amount-input" required>
+            <span class="unit">分钟</span>
+          </div>
+          <div class="chips" data-chips="fitness">
+            <button type="button" class="chip" data-val="跑步">跑步</button>
+            <button type="button" class="chip" data-val="力量">力量</button>
+            <button type="button" class="chip" data-val="游泳">游泳</button>
+            <button type="button" class="chip" data-val="骑车">骑车</button>
+            <button type="button" class="chip" data-val="球类">球类</button>
+            <button type="button" class="chip" data-val="拉伸">拉伸</button>
+          </div>
+          <input type="text" name="note" placeholder="练了什么 / 强度（可选）" class="input">
+          <button type="submit" class="btn primary">记一笔健身</button>
+        </form>
+      </div>
+
+      <!-- 当日概览 -->
+      <div class="stats-row" id="dayStats"></div>
+
+      <!-- 当日流水 -->
+      <h2 class="section-title">当天记录</h2>
+      <div id="dayList" class="list"></div>
+
+    </section>
+
+    <!-- ============ 页面：统计（周报 / 月报） ============ -->
+    <section class="page hidden" data-page="report">
+      <div class="seg" id="rangeTabs">
+        <button class="seg-btn active" data-range="week">本周</button>
+        <button class="seg-btn" data-range="month">本月</button>
+        <button class="seg-btn" data-range="all">全部</button>
+      </div>
+
+      <div id="reportNav" class="date-strip">
+        <button id="prevRange" class="icon-btn" aria-label="上一期">‹</button>
+        <div class="date-label">
+          <strong id="rangeMain">—</strong>
+          <span id="rangeSub">—</span>
+        </div>
+        <button id="nextRange" class="icon-btn" aria-label="下一期">›</button>
+      </div>
+
+      <div id="reportBody"></div>
+    </section>
+
+  </main>
+
+  <!-- ============ 底部导航 ============ -->
+  <nav class="tabbar">
+    <button class="tab active" data-nav="today">
+      <span class="tab-ico">✎</span><span>记录</span>
+    </button>
+    <button class="tab" data-nav="report">
+      <span class="tab-ico">📊</span><span>总结</span>
+    </button>
+  </nav>
+
+  </div><!-- /mainApp -->
+
+</div>
+
+<!-- ============ 设置弹层 ============ -->
+<div id="settingsSheet" class="sheet-mask hidden">
+  <div class="sheet">
+    <div class="sheet-head">
+      <strong>设置</strong>
+      <button id="closeSettings" class="icon-btn" aria-label="关闭">✕</button>
+    </div>
+
+    <div class="sheet-body">
+      <div class="field">
+        <label>每月预算（元）</label>
+        <input type="text" inputmode="decimal" id="budgetInput" class="input" placeholder="例如 3000">
+        <p class="hint">用于总结页显示预算使用进度，留空则不显示。</p>
+      </div>
+
+      <div class="field">
+        <label>每周学习目标（分钟）</label>
+        <input type="text" inputmode="decimal" id="studyGoalInput" class="input" placeholder="例如 600">
+      </div>
+
+      <div class="field">
+        <label>每周健身目标（分钟）</label>
+        <input type="text" inputmode="decimal" id="fitGoalInput" class="input" placeholder="例如 180">
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <label>安装到桌面</label>
+        <p class="hint" id="installHint">—</p>
+        <button id="btnInstall" class="btn ghost hidden">立即安装</button>
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <label>账户与同步</label>
+        <p class="hint" id="accountInfo">—</p>
+        <div class="btn-row" id="accountBtns">
+          <button id="btnSignIn" class="btn ghost hidden">登录 / 注册</button>
+          <button id="btnSyncNow" class="btn ghost hidden">立即同步</button>
+        </div>
+        <button id="btnSignOut" class="btn danger hidden">退出登录</button>
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <label>数据管理</label>
+        <p class="hint" id="dataHint">数据只存在这台设备上，不会上传。换设备请用下方的导出 / 导入。</p>
+        <div class="btn-row">
+          <button id="btnExport" class="btn ghost">导出文件</button>
+          <button id="btnImport" class="btn ghost">导入文件</button>
+        </div>
+        <div class="btn-row">
+          <button id="btnCopy" class="btn ghost">复制数据</button>
+          <button id="btnPaste" class="btn ghost">粘贴导入</button>
+        </div>
+        <p class="hint">手机用「复制数据」，发到电脑后用「粘贴导入」，两边记录会自动合并，不会重复。</p>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+        <button id="btnClear" class="btn danger">清空所有数据</button>
+      </div>
+
+      <p class="hint center" id="countInfo"></p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<!-- 配置（必须在 data.js 之前） -->
+<script src="config.js"></script>
+<!-- Supabase SDK：本地文件，不依赖 CDN，离线也能登录/同步 -->
+<script src="vendor/supabase.js"></script>
+<script src="data.js"></script>
+<script src="insight.js"></script>
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

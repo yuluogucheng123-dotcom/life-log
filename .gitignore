@@ -1,0 +1,10 @@
+# 测试与临时文件（本地产物，不需要上传）
+_*.js
+_*.html
+_*.txt
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
