@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Why staying focused is harder than ever and what science can tell us about it</title>
+<style>
+:root{
+  --bg:#F2F3F7; --surface:#FFF; --text:#14141A; --muted:#6B6B76;
+  --line:rgba(0,0,0,.09); --shadow:0 4px 20px rgba(20,20,40,.07);
+  --accent:#0077E3;
+  --g-title:linear-gradient(100deg,#5B4BFF,#B84BFF,#0077E3,#5B4BFF);
+  --g-overview:linear-gradient(120deg,#5B4BFF,#B84BFF);
+  --g-grammar:linear-gradient(120deg,#0077E3,#00B4D8);
+  --g-pattern:linear-gradient(120deg,#7C3AED,#DB2777);
+  --g-word:linear-gradient(120deg,#F59E0B,#EF4444);
+  --g-phrase:linear-gradient(120deg,#10B981,#06B6D4);
+  --g-quiz:linear-gradient(120deg,#6366F1,#EC4899);
+  --c-clause:#0077E3; --c-nonfinite:#10B981; --c-subj:#F59E0B;
+  --c-inv:#A855F7; --c-nom:#EF4444;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#08080B; --surface:#17171C; --text:#F4F4F7; --muted:#9C9CA8;
+         --line:rgba(255,255,255,.12); --shadow:none; --accent:#4DA3FF;
+         --c-clause:#4DA3FF; --c-nonfinite:#34D399; --c-subj:#FBBF24;
+         --c-inv:#C084FC; --c-nom:#F87171; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:400 17px/1.65 -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+  background:linear-gradient(90deg,#5B4BFF,#B84BFF,#0077E3,#10B981,#F59E0B,#EF4444);
+  background-size:300% 100%;animation:slide 8s linear infinite}
+@keyframes slide{to{background-position:300% 0}}
+
+/* Hero */
+.hero{position:relative;border-radius:22px;padding:26px 22px;margin-bottom:26px;color:#fff;
+  background:linear-gradient(125deg,#4C3FE0,#8B3FE0 45%,#C43FE0);overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 88% 8%,rgba(255,255,255,.30),transparent 60%);pointer-events:none}
+.hero .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero h1{font-size:30px;line-height:1.22;margin:.3em 0 .2em;font-weight:800;letter-spacing:-.02em}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1}
+.tag{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px)}
+.tag.primary{background:#fff;color:#4C3FE0;border-color:transparent}
+
+/* Nav */
+nav.pills{position:sticky;top:0;z-index:40;display:flex;gap:9px;overflow-x:auto;
+  margin:0 -18px 20px;padding:11px 18px;
+  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);
+  scrollbar-width:none}
+nav.pills::-webkit-scrollbar{display:none}
+nav.pills a{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
+  min-height:44px;padding:8px 15px;border-radius:999px;font-size:13.5px;font-weight:650;
+  text-decoration:none;color:var(--muted);background:var(--surface);border:1px solid var(--line);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),color .2s,border-color .2s,box-shadow .22s}
+nav.pills a .ico{width:17px;height:17px;flex:0 0 17px;transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+nav.pills a .ico *{transition:stroke .2s,fill .2s}
+/* Hover / focus: lift, tint to the section's own gradient, animate the icon. */
+nav.pills a:hover,nav.pills a:focus-visible{color:#fff;border-color:transparent;transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(20,20,60,.16);outline:none}
+nav.pills a:hover .ico,nav.pills a:focus-visible .ico{transform:scale(1.22) rotate(-6deg)}
+nav.pills a[data-sec="grammar"]:hover,nav.pills a[data-sec="grammar"]:focus-visible,nav.pills a[data-sec="grammar"].active{background:var(--g-grammar)}
+nav.pills a[data-sec="pattern"]:hover,nav.pills a[data-sec="pattern"]:focus-visible,nav.pills a[data-sec="pattern"].active{background:var(--g-pattern)}
+nav.pills a[data-sec="word"]:hover,nav.pills a[data-sec="word"]:focus-visible,nav.pills a[data-sec="word"].active{background:var(--g-word)}
+nav.pills a[data-sec="phrase"]:hover,nav.pills a[data-sec="phrase"]:focus-visible,nav.pills a[data-sec="phrase"].active{background:var(--g-phrase)}
+nav.pills a[data-sec="quiz"]:hover,nav.pills a[data-sec="quiz"]:focus-visible,nav.pills a[data-sec="quiz"].active{background:var(--g-quiz)}
+nav.pills a.active{color:#fff;border-color:transparent}
+nav.pills a.active .ico{transform:scale(1.12)}
+/* Tooltip: shows the item count, hidden on touch widths where hover is meaningless. */
+nav.pills a::after{content:attr(data-tip);position:absolute;top:calc(100% + 9px);left:50%;
+  transform:translateX(-50%) translateY(-4px);white-space:nowrap;font-size:11.5px;font-weight:600;
+  padding:5px 10px;border-radius:8px;color:#fff;background:rgba(20,20,30,.92);
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
+nav.pills a::before{content:'';position:absolute;top:calc(100% + 4px);left:50%;
+  transform:translateX(-50%);border:5px solid transparent;border-bottom-color:rgba(20,20,30,.92);
+  opacity:0;transition:opacity .18s;pointer-events:none;z-index:5}
+nav.pills a:hover::after,nav.pills a:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+nav.pills a:hover::before,nav.pills a:focus-visible::before{opacity:1}
+/* A brief pulse on the target section so a jump is unmistakable. */
+@keyframes secflash{0%{background:transparent}30%{background:color-mix(in srgb,var(--accent) 9%,transparent)}100%{background:transparent}}
+.section.flash{border-radius:16px;animation:secflash 1.05s ease-out}
+
+/* Sections */
+.section{margin:40px 0 0;scroll-margin-top:64px}
+h2{font-size:23px;font-weight:700;letter-spacing:-.015em;margin:0 0 4px;display:inline-block;
+  padding-bottom:6px;position:relative}
+h2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px}
+.sec-grammar h2::after{background:var(--g-grammar)}
+.sec-pattern h2::after{background:var(--g-pattern)}
+.sec-word h2::after{background:var(--g-word)}
+.sec-phrase h2::after{background:var(--g-phrase)}
+.sec-quiz h2::after{background:var(--g-quiz)}
+.lead{color:var(--muted);font-size:15px;margin:10px 0 18px}
+.summary{position:relative;background:var(--surface);border-radius:18px;padding:20px;
+  box-shadow:var(--shadow);font-size:16px;border:1px solid var(--line)}
+.summary::before{content:'';position:absolute;left:0;top:16px;bottom:16px;width:4px;
+  border-radius:0 4px 4px 0;background:var(--g-overview)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;padding:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:16px}
+.legend span{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.swatch{font-weight:700;font-size:13.5px}
+
+/* Cards */
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  margin:0 0 12px;box-shadow:var(--shadow);overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;opacity:0;transition:opacity .25s}
+.card.open::before{opacity:1}
+.card[data-kind="grammar"]::before{background:var(--g-grammar)}
+.card[data-kind="pattern"]::before{background:var(--g-pattern)}
+.card[data-kind="word"]::before{background:var(--g-word)}
+.card[data-kind="phrase"]::before{background:var(--g-phrase)}
+.card-head{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;
+  padding:14px 16px;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.card-head:active{background:rgba(127,127,127,.08)}
+.card-idx{flex:0 0 27px;height:27px;border-radius:999px;color:#fff;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+.card[data-kind="grammar"] .card-idx{background:var(--g-grammar)}
+.card[data-kind="pattern"] .card-idx{background:var(--g-pattern)}
+.card[data-kind="word"] .card-idx{background:var(--g-word)}
+.card[data-kind="phrase"] .card-idx{background:var(--g-phrase)}
+.card-title{flex:1;font-weight:650;font-size:15.5px;line-height:1.4}
+.chev{flex:0 0 10px;width:10px;height:10px;border-right:2px solid var(--muted);
+  border-bottom:2px solid var(--muted);transform:rotate(45deg);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.card.open .chev{transform:rotate(-135deg)}
+.card-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1)}
+.card.open .card-body{grid-template-rows:1fr}
+.card-body>.card-inner{overflow:hidden;min-height:0;padding:0 16px}
+.card-inner>*:last-child{margin-bottom:16px}
+.sentence{font:400 17.5px/1.72 Georgia,'Times New Roman',serif;padding:12px 0;
+  border-top:1px solid var(--line)}
+.word-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:12px 0 4px;
+  border-top:1px solid var(--line)}
+.word{font:700 21px/1.3 Georgia,serif}
+.ipa{color:var(--muted);font-size:14.5px}
+.gloss-inline{font-size:14px;color:var(--muted)}
+.band{font-size:11.5px;padding:2px 9px;border-radius:999px;background:var(--bg);
+  border:1px solid var(--line);color:var(--muted);font-weight:600}
+.analysis{padding:4px 0 10px}
+.fld{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;
+  border-top:1px dashed var(--line)}
+.fld-k{color:var(--muted);font-size:12.5px;font-weight:700;padding-top:2px;letter-spacing:.01em}
+.fld-v{font-size:15px;line-height:1.7}
+.fld-v ul{margin:0;padding-left:18px}
+.fld-v li{margin:4px 0}
+.badge-row{display:flex;flex-wrap:wrap;gap:6px}
+.badge{display:inline-block;padding:5px 10px;border-radius:8px;background:var(--bg);
+  border:1px solid var(--line);font-size:12px;color:var(--muted);margin-bottom:8px}
+.badge.warn{color:#B25000;border-color:#F5A623;background:rgba(245,166,35,.10)}
+@media (prefers-color-scheme:dark){.badge.warn{color:#FBBF24}}
+
+/* Grammar marking: color + distinct underline style */
+.g-clause{text-decoration:underline solid var(--c-clause) 2px;text-underline-offset:3px}
+.g-nonfinite{text-decoration:underline dotted var(--c-nonfinite) 2px;text-underline-offset:3px}
+.g-subjunctive{text-decoration:underline dashed var(--c-subj) 2px;text-underline-offset:3px}
+.g-inversion{text-decoration:underline double var(--c-inv) 2px;text-underline-offset:3px}
+.g-nominal{text-decoration:underline wavy var(--c-nom) 2px;text-underline-offset:3px}
+
+/* Quiz */
+.quiz-q{margin:0 0 16px}
+.quiz-stem{font-weight:650;margin:18px 0 10px;font-size:15.5px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 14px;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  color:inherit;font:inherit;font-size:15px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt-k{flex:0 0 24px;height:24px;border-radius:999px;background:var(--bg);border:1px solid var(--line);
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.opt.right{border-color:#10B981;background:rgba(16,185,129,.12)}
+.opt.right .opt-k{background:#10B981;color:#fff;border-color:transparent}
+.opt.wrong{border-color:#EF4444;background:rgba(239,68,68,.12)}
+.opt.wrong .opt-k{background:#EF4444;color:#fff;border-color:transparent}
+.opt[disabled]{cursor:default}
+.quiz-exp{margin-top:10px;padding:12px 14px;background:var(--bg);border-radius:13px;
+  font-size:14px;color:var(--muted);border:1px solid var(--line)}
+.score{position:sticky;top:52px;z-index:5;padding:9px 0;font-size:14px;color:var(--muted);
+  background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px)}
+.score b{color:var(--text);font-size:17px}
+
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer .grad{height:3px;border-radius:2px;margin-bottom:16px;background:var(--g-overview)}
+
+@media (max-width:430px){
+  .hero{border-radius:18px;padding:22px 18px}
+  .hero h1{font-size:25px}
+  .wrap{padding:18px 14px 64px}
+  nav.pills{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+  .fld{grid-template-columns:1fr;gap:1px}
+  .sentence{font-size:16.5px}
+  .card-title{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">readkiller · 英语精读</div>
+    <h1>Why staying focused is harder than ever and what science can tell us about it</h1>
+    <div class="meta"><span class="tag primary">教育心理</span><span class="tag">Rice University</span><span class="tag">2026-01-07</span><span class="tag">约 IELTS 6.5 / CEFR B2–C1</span></div>
+  </header>
+  <nav class="pills"><a href="#grammar" data-sec="grammar" data-tip="语法 · 12 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M4 12h16M4 18h12"/><circle cx="18" cy="6" r="2.4"/></svg><span>语法</span></a><a href="#pattern" data-sec="pattern" data-tip="句型 · 10 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="7" height="7" rx="2"/><rect x="13.5" y="12.5" width="7" height="7" rx="2"/><path d="M10.5 8h3M12 8v4.5"/></svg><span>句型</span></a><a href="#word" data-sec="word" data-tip="单词 · 20 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h5.5a3.5 3.5 0 0 1 0 7H5zM5 11.5h6.5a3.5 3.5 0 0 1 0 7H5z"/></svg><span>单词</span></a><a href="#phrase" data-sec="phrase" data-tip="短语 · 10 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 8 11l-3 1.5L8 14l1.5 4.5L11 14l3-1.5L11 11z"/><path d="M17.5 4v3.5M15.75 5.75h3.5"/></svg><span>短语</span></a><a href="#quiz" data-sec="quiz" data-tip="自测 · 10 题"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.4 9.4a2.7 2.7 0 1 1 3.4 2.6c-.6.2-.8.7-.8 1.3v.4"/><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/></svg><span>小测</span></a></nav>
+  <section class="section">
+    <h2>摘要 · Overview</h2>
+    <div class="summary">这是一篇**教育心理类**的大学新闻稿，报道莱斯大学心理学家 Kirsten Adam 关于「注意力如何被干扰、又如何恢复」的研究。文章结构是典型的**科研报道体**：先抛出日常现象（手机通知、拥挤屏幕），再引出研究者的核心问题，然后介绍研究方法（EEG 脑电测量）与两种竞争性理论，最后落到现实意义（医疗影像、机场安检、驾驶）。&lt;br&gt;&lt;br&gt;**考试价值**：这类文本是雅思阅读 Passage 2–3 与托福学术听力的常见体裁。语言上有三个高频特征——**名词化抽象主语**（Failures of attention play a role...）、**让步从句 + 主句转折**（Although the research is rooted in basic science, ...）、以及**引语中的条件与目的表达**（so we can stop designing...）。掌握这三种，科普与学术类文章基本能读懂八成。</div>
+  </section>
+  <section id="grammar" class="section sec-grammar"><h2>语法 · Grammar</h2><p class="lead">共 12 项，点击展开解析。</p>
+      <div class="legend">
+        <span><b class="swatch g-clause">从句</b>实线</span>
+        <span><b class="swatch g-nonfinite">非谓语</b>点线</span>
+        <span><b class="swatch g-subjunctive">虚拟/情态</b>虚线</span>
+        <span><b class="swatch g-inversion">倒装/强调</b>双线</span>
+        <span><b class="swatch g-nominal">名词化</b>波浪线</span>
+      </div>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">介词短语前置 + 现在分词作后置定语（fronted prepositional phrase + participial postmodifier）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">From phone notifications and flashing alerts to crowded screens and busy workspaces, modern life is full of visual distractions competing for our attention.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-nonfinite" title="非谓语">From phone notifications and flashing alerts to crowded screens and busy workspaces</span> 为 from A to B 结构作**状语**，铺陈范围；主句：<span class="g-nominal" title="名词化">modern life</span> is full of visual distractions；<span class="g-nonfinite" title="非谓语">competing for our attention</span> 为现在分词短语作**后置定语**，修饰 distractions（等于 which compete for...）。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">从 A 到 B 的铺陈先给读者一个「处处皆是」的画面感，再用 modern life is full of 收束，逻辑是**先具体后概括**。若改成 There are many distractions in modern life, such as...，画面感和节奏都弱了。competing for 用分词而非定语从句，让句子更紧凑，且 compete 的「争夺」含义比 attract（吸引）更能体现注意力是稀缺资源。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">分词作后置定语时，学生常误加逗号写成 visual distractions, competing for our attention，这样就变成了状语，修饰主句谓语，语义错位。限定性后置定语不加逗号。另外 from A to B 中的 A 和 B 必须语法对称，此处都是名词短语，若写成 from phone notifications to where we work 就破坏了对称。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作 Task 2 开头引入现象时，可用 From X to Y, ... is full of Z 的框架，一句话铺开背景再点题。competing for 是描述资源稀缺的高频搭配，可用于 housing / funding / talent 等话题。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>From rising tuition fees to shrinking graduate salaries, higher education is facing pressures reshaping student choices.</li><li>From urban sprawl to declining public transport, modern cities are grappling with problems demanding urgent solutions.</li><li>From streaming platforms to short-video apps, the media landscape is crowded with services competing for viewers&#x27; time.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">From lengthening commutes to shrinking green space, many cities now face challenges testing the limits of urban planning.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">While 让步状语从句（concessive clause with while）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">While people often talk about focus as a matter of willpower, Rice University psychologist Kirsten Adam is interested in what&#x27;s happening beneath the surface - specifically in the brain - when attention slips and when it recovers.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-clause" title="从句">While people often talk about focus as a matter of willpower</span> 为让步状语从句，表示「尽管人们常把……当作……」；主句：Rice University psychologist Kirsten Adam is interested in；<span class="g-clause" title="从句">what&#x27;s happening beneath the surface</span> 为 what 引导的**宾语从句**作 in 的宾语；破折号内 <span class="g-inversion" title="强调">specifically in the brain</span> 为插入语作补充限定；<span class="g-clause" title="从句">when attention slips and when it recovers</span> 为两个并列的时间状语从句。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">While 在此不是「当……时」而是「尽管」，用来**先承认大众的普遍看法，再引出研究者的不同视角**——这正是科普写作建立「新知」感的经典手法。把 focus as a matter of willpower 归入「人们常说」，暗示这是一种未经检验的常识，为后文的科学视角留出空间。talk about X as Y 是「把 X 说成 Y」的地道表达，含轻微保留态度。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">While 的多义性是最大陷阱：可表「当……时」「尽管」「然而」。此处若误读为「当人们常谈论……时」，整句逻辑就散了。判断依据是主从句之间是否存在**预期冲突**——「大众认为是意志力问题」与「科学家关注大脑机制」形成对照，故为让步。另外 talk about A as B 中介词用 as，不能换成 like。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 主体段开头极好用：While many people assume X, researchers/some argue Y。这个框架能同时展示让步与转折两项得分点。注意 as a matter of + 名词 是「……的问题」的正式表达，比 is decided by 更书面。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>While employers often treat productivity as a matter of working hours, economists point to what actually drives output — namely skills and technology.</li><li>While politicians often present migration as a matter of border control, demographers study what shapes population movements over decades.</li><li>While parents often see screen time as a matter of discipline, researchers examine what it does to developing attention systems.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">While commentators often frame obesity as a matter of personal choice, public health researchers emphasise the role of food environments and pricing.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">引语中的存在句 + 比较结构（existential there + comparative clause）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">At any given moment, there&#x27;s far more information in the world than our brains can process.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">时间状语：<span class="g-inversion" title="强调">At any given moment</span>；存在句：there&#x27;s far more information in the world；<span class="g-clause" title="从句">than our brains can process</span> 为**比较状语从句**；句末 Adam said 为**引述插入语**。注意 far 是修饰比较级的程度副词，意为「远远、大大」。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">用存在句 there&#x27;s 而非 The world contains，把「信息过多」呈现为一种**客观存在的状态**而非某人的主张，弱化了主观性。far more... than... can 是一个极其高效的框架：它把「供给远超处理能力」的核心矛盾一句话说清。far 修饰比较级比 much 更强调差距之大。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">中国学生常把 far more 写成 more much 或 very more，都是错的——比较级前只能用 far / much / a lot / slightly 等程度副词。另外 than 后接从句时语序为陈述语序（our brains can process），不能倒装。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 论证「资源不足」时，There is far more X than Y can handle 是万能框架，可用于医疗、教育、环境各话题。口语 Part 3 也可用，far 让语气更自然。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>At any given time, there is far more demand for social housing than local authorities can meet.</li><li>In most hospitals, there are far more patients needing specialist care than the system can treat promptly.</li><li>Every year, there is far more climate data than any single research team can analyse.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">In many regions, there is far more groundwater being extracted than rainfall can replenish.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">介词短语 + 动名词复合结构 + 两个宾语从句并列（with-preposition + gerund + parallel nominal clauses）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">With support from the $600,000 National Science Foundation CAREER Award, Adam is investigating how irrelevant visual information interferes with our ability to stay on task and why certain distractions slow us down more than others.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-nonfinite" title="非谓语">With support from the $600,000 National Science Foundation CAREER Award</span> 为 with 复合结构作状语，交代资金来源；主句：Adam is investigating；<span class="g-clause" title="从句">how irrelevant visual information interferes with our ability to stay on task</span> 与 <span class="g-clause" title="从句">why certain distractions slow us down more than others</span> 为两个并列的**宾语从句**，分别由 how 和 why 引导。ability to stay on task 中不定式作后置定语。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">用 With support from... 开头，把资金来源压缩成背景状语，让主句直接进入研究内容——这是学术新闻稿交代资助信息的标准写法，既合规又不打断主线。两个宾语从句由 how 和 why 并列，分别回答「机制如何」和「原因何在」，构成完整的研究问题陈述。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">how 和 why 引导的宾语从句必须用**陈述语序**，学生常写成 how does information interfere（疑问语序错误）。另外 interfere 是不及物动词，必须接 with，不能直接跟宾语：interfere our ability 是错的。slow sb down 中 down 是副词，代词宾语要放中间（slow us down），不能写成 slow down us。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作 Task 2 陈述研究或问题时可仿写：X is investigating how A affects B and why C behaves differently。interfere with 是描述负面影响的精准动词，比 affect 更有力度，适合科技与健康类话题。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The team is examining how air pollution affects childhood development and why some neighbourhoods suffer more than others.</li><li>Economists are studying how remote work changes urban housing demand and why certain cities recover faster than others.</li><li>Researchers are exploring how sleep quality influences memory and why teenagers are particularly vulnerable.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The study examines how early literacy programmes shape later academic outcomes and why their benefits vary so widely between schools.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">被动语态 + 定语从句 + 不定式（passive with relative clause and infinitive）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The highly competitive five-year NSF grants are given to early career faculty members who demonstrate the potential to serve as academic models and leaders in research and education.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：<span class="g-subjunctive" title="虚拟语气">The highly competitive five-year NSF grants are given to early career faculty members</span> 为**被动语态**；<span class="g-clause" title="从句">who demonstrate the potential to serve as academic models and leaders in research and education</span> 为定语从句修饰 faculty members；从句内 <span class="g-nonfinite" title="非谓语">to serve as academic models and leaders</span> 为不定式作后置定语修饰 potential。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">被动语态 are given 让**资助本身成为话题**，而不必说明是谁发放（虽然读者知道是 NSF）——这是机构文本的典型客观化写法。serve as 比 be 更正式，表示「担任、充当」。highly competitive 前置作定语，直接把奖项的含金量写进主语，省去一个判断句。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">the potential to do sth 中的 to 是**不定式**，与 the ability to do 同类；学生有时误用 the potential of doing。serve as 后接名词，不接不定式（serve as to be a model 是错的）。另外 faculty 在此是集合名词，指「全体教员」，faculty members 才指个体。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">描述奖学金、职位、资格时，be given/awarded to sb who... 是标准句式。the potential to serve as 是学术推荐语的高频搭配，雅思写作中描述人才或制度作用时也可借用。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The scholarships are awarded to students who show the capacity to contribute to their fields after graduation.</li><li>These positions are offered to candidates who demonstrate the ability to work across disciplinary boundaries.</li><li>The funding is allocated to institutions that have shown the potential to widen access for underrepresented groups.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The fellowships are reserved for early-career researchers who demonstrate the potential to lead independent projects.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">引语中的 because 原因从句 + 形容词并列作补语（causal clause with coordinated adjectives）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Because distractions continue to increase all around us, her research is timely and imperative to understanding their widespread impacts on the human brain.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-clause" title="从句">Because distractions continue to increase all around us</span> 为原因状语从句，从句内 <span class="g-nonfinite" title="非谓语">to increase</span> 为 continue 后的不定式；主句：her research is <span class="g-inversion" title="强调">timely and imperative</span> to understanding...，两个形容词并列作表语；<span class="g-nonfinite" title="非谓语">to understanding their widespread impacts on the human brain</span> 中介词 to 后接动名词。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">把原因从句前置，让「干扰越来越多」这一事实先建立紧迫感，主句的 timely and imperative 才有说服力——这是推荐语的标准修辞顺序。imperative 比 important 语气重得多，表示「紧迫且必须」。注意 imperative to doing 中的 to 是**介词**，后接动名词。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">最大的陷阱是 imperative to understanding 中的 to：这里 to 是介词，故接动名词。学生常误写成 imperative to understand，虽然 imperative to do 在某些语境也成立，但此处与 understanding 搭配是因为 to 作介词，与前面的 timely 共享同一介词结构。另外 continue to increase 用不定式，不用 continue increasing 在正式文体中更常见（两者皆可，但不定式更正式）。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 论证某研究或政策的必要性时：Because X continues to worsen, Y is timely and imperative to understanding Z。timely 是「及时的、应时的」，在学术写作中比 useful 更精准。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Because antibiotic resistance continues to spread worldwide, research into new drug classes is timely and essential to protecting public health.</li><li>Because urban populations continue to expand rapidly, investment in public transport is urgent and critical to reducing emissions.</li><li>Because automation continues to reshape labour markets, policy reform is timely and necessary to supporting displaced workers.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Because coastal erosion continues to accelerate, long-term planning is timely and imperative to protecting vulnerable communities.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">非限制性定语从句 + 同位语（non-restrictive relative clause with explanation）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">In Adam&#x27;s lab, participants complete simplified visual search tasks while their brain activity is recorded using electroencephalography, or EEG.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">地点状语：In Adam&#x27;s lab；主句：participants complete simplified visual search tasks；<span class="g-clause" title="从句">while their brain activity is recorded using electroencephalography, or EEG</span> 为 while 引导的时间状语从句，表示「与此同时」；从句内 is recorded using electroencephalography 为被动语态 + 方式状语；<span class="g-inversion" title="强调">or EEG</span> 为**同位语**，给出缩写形式。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">while 在此表示两个动作**同时进行**（参与者做任务 + 脑活动被记录），比 and 更能体现并行关系。using electroencephalography 用现在分词作方式状语，比 by means of 简洁。or EEG 这种「全称 + or + 缩写」的写法是科技写作给术语定义的标准格式，读者不必回头查。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">while 引导的从句在此是**时间**含义，不是让步——判断依据是两件事同时发生而非对立。学生常因前面学过 while 表让步而误判。另外 using 的逻辑主语是 their brain activity 还是 researchers？严格说此处 using 的逻辑主语应是研究者，属**垂悬分词**，但在科技写作中已被广泛接受。若要严谨可改为 is recorded by means of。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 1 描述实验流程时，X is measured using Y 是标准被动句式。while 表同时进行可用于描述并行过程。术语首次出现时用「全称, or 缩写」是学术写作规范，Task 2 引用专业概念时也适用。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>In the trial, participants complete memory tests while their heart rate is monitored using wearable sensors.</li><li>In field studies, soil samples are collected while temperature data is logged using automated stations.</li><li>In the survey, respondents answer questions while their response times are tracked using specialised software.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">In the experiment, volunteers performed decision tasks while their eye movements were recorded using infrared cameras.</div></div></div>
+          <div class="badge-row"><span class="badge">using 的逻辑主语在严格语法上应为研究者，此处属科技写作中常见的垂悬分词用法。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">现在分词作结果状语 + 两个并列的动名词（result participle with coordinated gerunds）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The technique allows researchers to measure attention shifts in real time, capturing the moment attention is drawn away from a goal and the effort it takes to disengage and refocus.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：The technique allows researchers to measure attention shifts in real time；<span class="g-nonfinite" title="非谓语">capturing the moment ... and the effort ...</span> 为现在分词作**结果状语**；capturing 的宾语是两个并列名词短语：the moment <span class="g-clause" title="从句">attention is drawn away from a goal</span>（省略 that 的定语从句修饰 moment）与 the effort <span class="g-clause" title="从句">it takes to disengage and refocus</span>（省略 that 的定语从句）；<span class="g-nonfinite" title="非谓语">to disengage and refocus</span> 为两个并列动名词/不定式。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">allow sb to do 是「使某人能够」的精准表达，比 help 更强调**能力上的许可**。capturing 分词收尾，把「测量」带来的额外收获（捕捉到瞬间与代价）自然带出，信息密度高。the effort it takes to do 是地道框架，it takes 为形式主语结构，意为「做某事所需付出的努力」。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">两个并列宾语结构复杂，学生容易在 capturing 后接从句而破坏平行：应保持 the moment... and the effort... 的名词短语对称。另外 the effort it takes to do 中的 it 是**形式主语**，真正主语是 to do，学生常误写成 the effort takes to do（漏掉 it）。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 描述方法带来的好处时，可用 X allows researchers/policymakers to do A, capturing B and C。the effort it takes to do 适合描述成本，如 the effort it takes to retrain workers。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The method allows analysts to track price movements continuously, revealing the moment a trend reverses and the time it takes for markets to adjust.</li><li>The policy allows employers to hire flexibly, reflecting the demand for shorter contracts and the pressure it puts on job security.</li><li>The app allows users to log symptoms daily, capturing the moment a condition worsens and the effort it takes to seek treatment.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The survey allows planners to map commuting patterns precisely, capturing the peak hours when networks are strained and the time it takes to recover.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">介词 by + 动名词 + 插入语（by + gerund with parenthetical）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">By combining precise brain measurements with subtle changes in behavior, especially moments when people slow down the most, Adam is testing long-standing theories about distraction.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-nonfinite" title="非谓语">By combining precise brain measurements with subtle changes in behavior</span> 为 by + 动名词作**方式状语**；<span class="g-inversion" title="强调">especially moments when people slow down the most</span> 为插入语，具体说明 behavior 指什么，其中 when 引导定语从句修饰 moments；主句：Adam is testing <span class="g-nominal" title="名词化">long-standing theories about distraction</span>。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">by doing A with B 是描述研究方法的标准框架：combine A with B 表示「把 A 与 B 结合」，比 use A and B 更强调**整合**而非并列。插入语 especially moments when... 用破折号式的补充把抽象的 behavior 落地为可观察的现象，让研究设计显得具体可信。long-standing 是复合形容词，意为「长期存在的」，在学术语境中常用来指需要被检验的旧理论。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">combine A with B 中介词固定用 with，学生常误用 and（combine A and B 虽可见，但 with 更强调结合过程）。当插入语紧跟 behavior 时，逗号必须成对使用，否则会切断主句结构。另外 long-standing 中的连字符不可省，且 standing 不加 ed。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作 Task 1 描述流程、Task 2 描述方法时，By combining A with B, researchers can... 是高频框架。long-standing 适合引出需要被重新审视的传统观点，如 long-standing assumption / debate / problem。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>By combining satellite imagery with ground-level sensors, scientists are testing long-standing assumptions about deforestation rates.</li><li>By combining survey data with administrative records, economists are challenging long-standing views on social mobility.</li><li>By combining classroom observation with test scores, educators are revisiting long-standing beliefs about class size.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">By combining genetic analysis with historical records, historians are questioning long-standing accounts of how populations migrated.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">One possibility is that... Another is that... 平行理论框架</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">One possibility is that attention must be pulled away from irrelevant information before it can return to the task at hand. Another is that distractions compete directly with relevant information for limited mental resources.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">第一句：<span class="g-inversion" title="强调">One possibility</span> is <span class="g-clause" title="从句">that attention must be pulled away from irrelevant information before it can return to the task at hand</span>，为 that 引导的**表语从句**；从句内 <span class="g-subjunctive" title="虚拟语气">must be pulled away</span> 为被动 + 情态，before 引导时间状语从句。第二句：<span class="g-inversion" title="强调">Another is that</span> 省略 possibility，用 Another 指代，后接表语从句；<span class="g-nonfinite" title="非谓语">compete directly with relevant information for limited mental resources</span> 中 compete with sb for sth 为固定搭配。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">用 One possibility is that... Another is that... 并列两种竞争性理论，是学术写作呈现**未决问题**的标准做法：既说明了争议所在，又不对任何一方表态，保持中立。注意第二句用 Another 而非 The other——因为可能性可能不止两种，Another 留有余地，比 The other 更严谨。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">compete with sb **for** sth 是固定搭配：with 引出竞争者，for 引出争夺目标。学生常混淆，写成 compete for sb with sth 或 compete against for。另外 must be pulled away 中 must 表**必然性推论**（逻辑上的必须），不是义务；若理解为「必须被拉开」的义务含义，会误解研究结论的性质。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 讨论有争议的议题时，One explanation is that... Another is that... 是展现思辨的高分框架，比 Some people think... Others think... 更学术。注意用 Another 而非 The other 保持开放性。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>One possibility is that urban inequality stems from housing supply constraints before it can be addressed by transport policy. Another is that wage structures play the decisive role.</li><li>One explanation is that students disengage because the material feels irrelevant before they can develop genuine interest. Another is that assessment pressure crowds out curiosity.</li><li>One view is that automation displaces workers before retraining can keep pace. Another is that it reshapes tasks rather than eliminating them outright.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">One possibility is that language barriers limit access to healthcare before cost becomes the deciding factor. Another is that cultural expectations shape when people seek help.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">Although 让步从句 + 主句转折 + 介词短语补足（concessive with prepositional specification）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Although the research is rooted in basic science, the questions it addresses have clear real-world relevance.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-clause" title="从句">Although the research is rooted in basic science</span> 为让步状语从句，is rooted in 为被动语态；主句：the questions <span class="g-clause" title="从句">it addresses</span> have clear real-world relevance，其中 it addresses 为**省略 that 的定语从句**修饰 questions；谓语 have；宾语 relevance 前有 clear 和复合形容词 real-world 修饰。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">be rooted in 是「根植于」的比喻表达，比 comes from 更有画面感，且暗示「基础深厚」。让步结构制造了「纯理论 vs 现实相关性」的张力，正是科研报道需要向公众证明价值的核心论点。the questions it addresses 用省略 that 的定语从句，比 the questions which are addressed 简洁得多。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">Although 与 but 不能同时使用（Although..., but... 是中式英语高频错误），因为 although 已承担转折功能。另外 be rooted in 中介词固定用 in，不用 at 或 on。real-world 作定语时连字符不可省。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 论证「看似无关实则有价值」时，Although X is rooted in Y, it has clear relevance to Z 是高效框架。be rooted in 适合描述现象的深层原因，如 problems rooted in inequality。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Although the debate is rooted in economics, the questions it raises have clear ethical dimensions.</li><li>Although the technology is rooted in military research, the applications it enables have obvious civilian benefits.</li><li>Although the dispute is rooted in history, the tensions it sustains have immediate political consequences.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Although the policy is rooted in public health logic, the objections it provokes have clear economic foundations.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">not only... but also 并列 + 三项动名词并列（correlative coordination with gerund series）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The funding will be used not only to conduct the research but also to train graduate students in advanced cognitive neuroscience methods, expand access to tools such as EEG and promote open, collaborative science through public data sharing and mentorship.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：The funding will be used；<span class="g-inversion" title="强调">not only to conduct the research but also to train graduate students..., expand access to..., and promote open, collaborative science...</span> 中，not only 后接第一个不定式，but also 后接**三个并列不定式**（train, expand, promote）；其中 expand access to tools such as EEG 与 promote ... through public data sharing and mentorship 各含介词短语作状语。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">not only... but also... 的修辞作用是**递进而非简单并列**：它暗示 but also 后的内容比 not only 后的更重要或更丰富。此处作者把「做研究」放在 not only（基本义务），把「培养学生、开放共享」放在 but also（额外贡献），从而突出了该奖项在科研之外的教育价值——这是推荐类文本的常见侧重点安排。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">三个不定式并列时，最后一个前才加 and，前两个之间用逗号，学生常写成 expand access, and promote 或全部用 and。另外 not only 置于句中时，其后成分必须与 but also 后成分**语法对称**：此处都是不定式，正确；若写成 not only to conduct... but also training... 就破坏了对称。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 列举多重好处时，not only... but also... 能体现递进关系。注意保持语法对称，这是考官判断句式掌控力的重要依据。适合教育、科技投入类话题。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The scheme will be used not only to cut emissions but also to create green jobs, improve air quality and reduce household energy bills.</li><li>The platform will be used not only to deliver lessons but also to assess progress, identify gaps and provide targeted feedback.</li><li>The investment will be used not only to upgrade equipment but also to retrain staff, modernise processes and strengthen quality control.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The programme will be used not only to treat patients but also to train local staff, build laboratory capacity and strengthen disease surveillance.</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="pattern" class="section sec-pattern"><h2>句型 · Patterns</h2><p class="lead">共 10 项，点击展开解析。</p>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">让步转折：While 普遍看法 + 研究者视角</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">While people often talk about focus as a matter of willpower, Rice University psychologist Kirsten Adam is interested in what&#x27;s happening beneath the surface - specifically in the brain - when attention slips and when it recovers.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">People think focus is about willpower. But a scientist studies the brain instead.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 But 起新句，两句权重相当，且 think 过于口语。原文用 While 把普遍看法降格为从句，主句立刻给出研究者的不同关注点，形成**主次分明**的对照。talk about X as Y 含轻微保留，暗示这种看法未必可靠；beneath the surface 用空间隐喻点出「表层 vs 深层」的认知层次。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">While people often talk about X as a matter of Y, [researcher] is interested in what&#x27;s happening at a deeper level — specifically Z.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>While employers often treat productivity as a matter of hours worked, economists are interested in what actually drives output — specifically skills and technology.</li><li>While policymakers often present inequality as a matter of taxation, sociologists examine what sustains it — specifically access to education and housing.</li><li>While patients often see recovery as a matter of medication, clinicians focus on what determines outcomes — specifically sleep, diet and social support.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 引出与常识不同的论证角度；托福独立写作开头。正式书面语，也适合学术演讲。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">考场通用骨架是「尽管人们常把 X 当作 Y 问题，研究者关注 Z」。as a matter of + 名词 比 is caused by 更书面；beneath the surface / at a deeper level 是建立分析层次的固定表达。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">存在句比较：There is far more X than Y can handle</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">At any given moment, there&#x27;s far more information in the world than our brains can process.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The world has too much information. Our brains cannot process it all.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版两句都在做平铺陈述，没有量化差距。原文用 far more... than... can 的框架，把「供给远超处理能力」压缩成一句，far 明确强调了差距之大。At any given moment 是时间限定语，使论断在任何时点都成立，增强了普遍性。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">At any given moment, there is far more X than Y can do.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>At any given time, there is far more demand for social housing than local authorities can meet.</li><li>In most hospitals, there are far more patients needing specialist care than the system can treat promptly.</li><li>Every year, there is far more climate data than any single research team can analyse.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 论证资源不足或信息过载；Task 1 描述供需差距。书面与口语皆可。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">far more... than... can 是描述「缺口」的最高效框架。比较级前的程度副词只能用 far / much / a lot / slightly，绝不能用 very。At any given moment / At any given time 能让论断显得严谨。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">研究问题陈述：investigating how A affects B and why C differs</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">With support from the $600,000 National Science Foundation CAREER Award, Adam is investigating how irrelevant visual information interferes with our ability to stay on task and why certain distractions slow us down more than others.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">Adam has a grant. She studies distractions. Some distractions slow people down more.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版三句破碎，没有体现研究的逻辑结构。原文用 with 短语交代资金背景，主句用两个并列宾语从句（how 机制 + why 差异）精确陈述研究问题——how 回答「如何发生」，why 回答「为何不同」，两者合起来构成完整的研究议程。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">With support from X, [researcher] is investigating how A affects B and why C differs from D.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The team is examining how air pollution affects childhood development and why some neighbourhoods suffer more than others.</li><li>Economists are studying how remote work changes urban housing demand and why certain cities recover faster than others.</li><li>Researchers are exploring how sleep quality influences memory and why teenagers are particularly vulnerable.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 陈述研究或问题定义；Task 1 描述实验设计。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">how + why 的双宾语从句是陈述研究问题的标准配置。With support from X 可替换为 Funded by X / Backed by X，用于交代背景。interfere with 是描述负面影响的精准动词，强于 affect。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">引语推荐：Because X continues to grow, Y is timely and imperative</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Because distractions continue to increase all around us, her research is timely and imperative to understanding their widespread impacts on the human brain.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">Distractions are increasing. So this research is important.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 important 这种模糊评价，且 So 太口语。原文先用 because 从句建立紧迫性（continue to increase 表明是持续恶化而非一次性），再用两个精确形容词 timely（应时的）和 imperative（紧迫必须的）作双重评价，最后用 to understanding 说明研究服务于什么。评价有依据、有层次。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Because X continues to grow/worsen, Y is timely and imperative to doing Z.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Because antibiotic resistance continues to spread worldwide, research into new drug classes is timely and essential to protecting public health.</li><li>Because urban populations continue to expand rapidly, investment in public transport is urgent and critical to reducing emissions.</li><li>Because automation continues to reshape labour markets, policy reform is timely and necessary to supporting displaced workers.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 论证某研究、政策或投资的必要性；结论段强化呼吁。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">核心是「because + 持续恶化的事实 → 双重形容词评价 → to doing 说明目的」。timely 比 useful 精准，imperative 比 important 有力。注意 to doing 中的 to 是介词。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">竞争性理论并列：One possibility is that... Another is that...</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">One possibility is that attention must be pulled away from irrelevant information before it can return to the task at hand. Another is that distractions compete directly with relevant information for limited mental resources.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">There are two ideas about distraction. The first is that attention must be pulled away. The second is about competition for resources.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 The first / The second，机械且暗示只有两种。原文用 One / Another，前者开启、后者并列且**保持开放**（可能还有第三种），体现学术写作对不确定性的尊重。两句都用 is that 表语从句平行展开，结构对称，读者容易对比。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">One possibility is that X does A before it can B. Another is that Y competes directly with Z for W.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>One possibility is that urban inequality stems from housing supply constraints before it can be addressed by transport policy. Another is that wage structures play the decisive role.</li><li>One explanation is that students disengage because the material feels irrelevant before they can develop genuine interest. Another is that assessment pressure crowds out curiosity.</li><li>One view is that automation displaces workers before retraining can keep pace. Another is that it reshapes tasks rather than eliminating them outright.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论有争议议题、展现思辨；托福综合写作对比观点。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">用 Another 而非 The other，能保留「还有其他可能」的余地，是学术严谨性的体现。两句务必保持 is that 的结构平行，让读者易于对比。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">让步承认价值：Although rooted in X, it has clear Y relevance</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Although the research is rooted in basic science, the questions it addresses have clear real-world relevance.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The research is basic science. But it is also relevant to the real world.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 But 平列，且 relevant 是孤立的形容词。原文用 Although 把「纯理论」降为让步从句，主句用 the questions it addresses 精确限定「相关的不是研究本身，而是它提出的问题」——这种限定体现了思维的精确。clear real-world relevance 中 clear 表程度，real-world 是复合定语，信息量高于单个 relevant。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Although X is rooted in A, the B it produces has clear C relevance.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Although the debate is rooted in economics, the questions it raises have clear ethical dimensions.</li><li>Although the technology is rooted in military research, the applications it enables have obvious civilian benefits.</li><li>Although the dispute is rooted in history, the tensions it sustains have immediate political consequences.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 论证「看似无关实则有价值」；结论段为本方观点辩护。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">Although 与 but 不可连用。be rooted in 是「根植于」的高级表达，暗示深层渊源。the X it produces/raises/enables 用省略 that 的定语从句限定讨论对象，比笼统说 it is relevant 精确得多。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">现实后果链：X play a role in settings such as A, B and C, where...</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Failures of attention play a role in high-stakes settings such as medical imaging, airport security screening and driving, where missed details can have serious consequences.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">Attention problems matter in some jobs. For example medical imaging and driving. Mistakes there are bad.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版三句松散，bad 太笼统。原文用 <span class="g-nominal" title="名词化">Failures of attention</span> 作抽象主语（比 When people fail to pay attention 简洁且正式），play a role in 表示「起作用」而非「是唯一原因」，用词谨慎；high-stakes settings 是「高风险场景」的精准术语；三项举例后接 where 从句点出后果，逻辑链条完整。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Failures of X play a role in high-stakes settings such as A, B and C, where D can have serious consequences.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Errors in communication play a role in high-stakes settings such as emergency medicine, aviation and industrial safety, where misunderstandings can cost lives.</li><li>Gaps in training play a role in high-risk settings such as surgery, firefighting and offshore engineering, where lapses can prove fatal.</li><li>Weak oversight plays a role in sensitive settings such as food inspection, drug approval and financial auditing, where failures can affect millions.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 论证某因素的实际影响；托福独立写作举例段。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">play a role in 是谨慎的归因表达，避免绝对化。high-stakes / high-risk 是描述重要场景的固定复合形容词。such as 后接三项列举，末尾用 where 从句收束后果，一句完成「普遍性 → 具体化 → 严重性」。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">目的否定：not trying to X, but trying to Y so we can Z</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">We&#x27;re not trying to make attention limitless</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">We cannot make attention limitless. We want to understand it. Then we can design better environments.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版四句平铺，缺乏论证张力。原文用 not X but Y 的对照结构先否定不切实际的目标（make attention limitless），再在紧随其后的另一句中给出务实目标（understand how it actually works），最后用 so we can 引出应用目的。注意原文的这两层意思分属**两个独立引语**，中间由 Adam said 隔开——引用时不可合并成一句，否则就是改写原文。这构成「排除误解 → 确立立场 → 指出用途」的完整论证，语气克制而有力。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">We&#x27;re not trying to make X limitless, but we&#x27;re trying to understand how it actually works, so we can stop doing Y that fights against it.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>We are not trying to eliminate all risk, but we are trying to understand how systems fail, so we can stop designing infrastructure that ignores human error.</li><li>We are not trying to make students study constantly, but we are trying to understand how learning actually works, so we can stop setting expectations that undermine motivation.</li><li>We are not trying to remove technology from classrooms, but we are trying to understand how it shapes attention, so we can stop adopting tools that work against teaching.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 澄清立场、避免被误解；结论段重申务实目标。正式与半正式皆可。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">面对过于理想化的议题（如「彻底消除贫困」），用 not trying to make X limitless/perfect 先排除误解，再给务实立场，能显著提升论证的成熟度。so we can stop doing Y 是点出应用价值的高效收尾。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">未来重要性：understanding X is especially important as Y explores Z</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">She said that understanding those limits is especially important as researchers and designers explore tools, including artificial intelligence-assisted technologies, that aim to support human attention.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">This is important. AI tools are coming. They want to help attention.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版三句断裂且用词模糊。原文用动名词 understanding those limits 作主语（名词化，比 If we understand 更紧凑），is especially important 表评价，as 从句表示「随着……」（两件事并行发展），最后用 including 插入语 + that 定语从句说明工具的性质与目的。一句之内完成评价、时机、对象、目的四层信息。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Understanding X is especially important as A and B explore tools, including C, that aim to do D.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Understanding how misinformation spreads is especially important as platforms and regulators explore tools, including AI-driven fact-checking, that aim to protect public debate.</li><li>Understanding the limits of automation is especially important as firms and governments deploy systems, including algorithmic hiring tools, that aim to improve efficiency.</li><li>Understanding how antibiotics lose effectiveness is especially important as hospitals and drugmakers pursue options, including combination therapies, that aim to slow resistance.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 结论段指出议题的当下紧迫性；托福独立写作收尾。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">as 在此表示「随着」（两事并行），不是「因为」。including C 用插入语补充具体例子，比 for example C 更紧凑。that aim to do D 说明目的，让评价更有针对性。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">沉浸式投入：commitment to doing + 三项并列</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The CAREER Award also supports Adam&#x27;s commitment to education and training.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The award also helps Adam teach students.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版把「教育」窄化为 teach，且 helps 太泛。原文用 commitment to education and training，commitment 表示**长期投入和责任感**，比 interest 或 involvement 分量更重；to 是介词接名词短语，可扩展为 to doing。education and training 是学术语境中的固定搭配（教学与培训），比单说 teaching 更全面。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X also supports [person]&#x27;s commitment to A and B.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The grant also supports the team&#x27;s commitment to public engagement and open data.</li><li>The scheme also reflects the government&#x27;s commitment to regional development and skills training.</li><li>The award also recognises her commitment to mentoring early-career researchers and widening participation.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作描述机构或个人投入；口语 Part 2 描述人物时评价其品质。正式与半正式皆可。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">commitment to doing sth 中 to 是介词。这个句型适合用来描述机构的价值观或个人的长期坚持，比简单说 they do X 更能体现持续性。三项并列时注意语法对称。</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="word" class="section sec-word"><h2>单词 · Vocabulary</h2><p class="lead">共 20 项，点击展开解析。</p>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">distraction</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">distraction</span><span class="ipa">/dɪˈstrækʃn/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/dɪˈstrækʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">使人分心的事物；干扰</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 interruption 相比，distraction 强调**持续地把注意力引开**，可以是内在的（杂念）或外在的（噪音）；interruption 指**一次性的打断**，打断结束后可以继续。与 disturbance 相比，disturbance 更强调对秩序或安静的扰乱，distraction 聚焦于注意力的转移。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">visual distractions competing for our attention</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Constant notifications are the single biggest distraction for students revising at home.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">dis-（分开）+ tract（拉）——把注意力拉开。同源词 attract（拉向）、contract（拉到一起）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">willpower</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">willpower</span><span class="ipa">/ˈwɪlpaʊə(r)/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈwɪlpaʊə(r)/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">意志力，自控力</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 self-control 相比，willpower 更强调**克服内在抗拒时的心理能量**，常用于「坚持做难事」；self-control 更强调**抑制冲动**，常用于「忍住不做某事」。与 discipline 相比，discipline 是长期养成的习惯与自律体系，willpower 是当下调用的力量。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">talk about focus as a matter of willpower</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Quitting smoking takes more than willpower; it usually requires support and a change of environment.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">will（意志）+ power（力量）——意志的力量。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">beneath</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">beneath</span><span class="ipa">/bɪˈniːθ/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/bɪˈniːθ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">在……之下；（隐喻）在……表面之下</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 under 相比，beneath 更书面，且常用于**抽象或隐喻**含义（beneath the surface 表面之下）；under 更中性通用，既指具体位置也指抽象。与 below 相比，below 指水平位置更低，不强调覆盖关系；beneath 暗示被上层遮盖。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">what&#x27;s happening beneath the surface</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Beneath the calm tone of the report lies a serious warning about funding gaps.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">be-（在）+ neath（下方，与 nether 同源）——在下方。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">interfere</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">interfere</span><span class="ipa">/ˌɪntəˈfɪə(r)/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌɪntəˈfɪə(r)/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">妨碍，干扰（必须搭配 with）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 disturb 相比，interfere with 强调**阻碍正常进行**，含负面评价；disturb 只表示「扰乱」，程度较轻。与 intervene 相比，intervene 是「介入、干预」，可以是中性的甚至是必要的介入；interfere 明确是负面的妨碍。注意 interfere 是不及物动词，必须接 with。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">how irrelevant visual information interferes with our ability to stay on task</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Frequent interruptions interfere with the deep concentration that complex tasks require.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">inter-（之间）+ fere（打，与 strike 同源）——打到中间去，故为妨碍。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">linger</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">linger</span><span class="ipa">/ˈlɪŋɡə(r)/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈlɪŋɡə(r)/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">（注意力、感觉等）逗留不去，徘徊</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 remain 相比，linger 强调**超出预期地停留**，含有「该走却未走」的意味，常用于抽象事物（记忆、气味、目光、注意力）；remain 是中性的「保持、留下」，不带评价。与 stay 相比，linger 更书面且更有画面感。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">how it lingers on distractions</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The smell of smoke lingered in the room long after the fire was out.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">与 long（长）同源——停留得比该有的时间长。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">clarify</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">clarify</span><span class="ipa">/ˈklærəfaɪ/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈklærəfaɪ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">澄清，使清晰明了</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 explain 相比，clarify 特指**消除已有的困惑或误解**，前提是听众已接触过该信息但不清楚；explain 是首次讲解新信息。与 illustrate 相比，illustrate 用例子说明，clarify 用解释或界定来消除歧义。学术写作中 clarify a point / distinction 是高频搭配。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">Her work aims to clarify how attention is captured</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The spokesperson clarified that the policy would not apply to existing contracts.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">clar-（清晰，与 clear 同源）+ -ify（使）——使清晰。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">competitive</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">competitive</span><span class="ipa">/kəmˈpetətɪv/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/kəmˈpetətɪv/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">竞争激烈的；（人）好胜的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 contested 相比，competitive 描述**申请者或参与者众多、胜出困难**的状态，是形容奖项与市场的固定用词；contested 强调「有争议、被争夺」。注意 competitive 有两个含义：形容事物是「竞争激烈的」，形容人是「争强好胜的」，需靠上下文区分。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">The highly competitive five-year NSF grants</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Entry to the programme is highly competitive, with only one place for every forty applicants.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">com-（共同）+ pet（追求）——共同追求同一目标，故有竞争。同源词 appetite（欲望）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">demonstrate</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">demonstrate</span><span class="ipa">/ˈdemənstreɪt/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈdemənstreɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">展示，证明；示范</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 show 相比，demonstrate 更正式，且强调**通过证据或行动证明**，常用于学术与专业语境；show 更笼统口语。与 prove 相比，prove 语气更强，表示「确证无疑」；demonstrate 是「有力地表明」，留有余地。与 illustrate 相比，illustrate 侧重举例说明。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">who demonstrate the potential to serve as academic models</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The trial demonstrated that the drug reduces recurrence rates by nearly a third.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">de-（完全）+ monstr（显示，与 monster 同源，原指「显现的征兆」）——完全显示出来。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">prestigious</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">prestigious</span><span class="ipa">/preˈstɪdʒəs/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/preˈstɪdʒəs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">有声望的，享有盛誉的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 famous 相比，prestigious 强调**因卓越而受人尊敬**，含价值判断；famous 仅指「广为人知」，可以是因负面原因出名。与 reputable 相比，reputable 强调「可靠、信誉好」，prestigious 强调「地位高、令人向往」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">awarded the prestigious NSF CAREER</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">She was offered a place at one of the most prestigious research institutes in Europe.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自拉丁语 praestigium（幻术、迷惑）——原指「令人目眩的把戏」，后引申为「令人仰慕的声望」。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">timely</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">timely</span><span class="ipa">/ˈtaɪmli/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈtaɪmli/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">适时的，应时的（在恰当时间发生的）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 punctual 相比，timely 指**时机恰当、正合需要**，评价的是内容与时代的相关性；punctual 指「准时不迟到」，评价的是守时。与 relevant 相比，timely 强调时间维度的契合（此刻正需要），relevant 强调内容上的相关。这是学术评价语中的高价值词。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">her research is timely and imperative</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The report is a timely reminder that funding decisions have long-term consequences.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">time + -ly（形容词后缀）——合乎时宜的。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">imperative</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">imperative</span><span class="ipa">/ɪmˈperətɪv/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɪmˈperətɪv/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">紧迫必要的，至关重要的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 important 相比，imperative 语气重得多，表示**必须做、刻不容缓**；important 只表示「重要」。与 essential 相比，essential 强调「不可缺少的组成部分」，imperative 强调「因紧迫而必须行动」。与 urgent 相比，两者接近，但 imperative 更常用于正式书面语和论证。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">timely and imperative to understanding their widespread impacts</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">It is imperative that governments act before the window for intervention closes.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">imper-（命令，与 emperor 同源）——带有命令性质的，故为「必须」。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">widespread</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">widespread</span><span class="ipa">/ˈwaɪdspred/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈwaɪdspred/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">广泛的，普遍的（尤指影响范围广）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 common 相比，widespread 强调**地理或人群上的分布广**，常与影响、现象搭配；common 强调「出现频率高、不稀奇」。与 prevalent 相比，prevalent 更正式，多用于疾病、观念在特定群体中的盛行；widespread 范围感更强。与 extensive 相比，extensive 强调「覆盖面积或程度大」，可用于具体事物（extensive damage）。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">their widespread impacts on the human brain</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">There is widespread agreement that early intervention produces the best long-term outcomes.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">wide（宽）+ spread（散布）——散布得广。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">13</span>
+        <span class="card-title">subtle</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">subtle</span><span class="ipa">/ˈsʌtl/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈsʌtl/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">微妙的，不易察觉的；细微的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 slight 相比，subtle 强调**细微但重要**，需要敏锐才能察觉，含褒义或中性；slight 只表示「程度小」，可以是无关紧要的。与 delicate 相比，delicate 强调「易损、需小心处理」，subtle 强调「不易察觉」。注意 b 不发音：/ˈsʌtl/。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">subtle changes in behavior</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">There is a subtle difference between confidence and arrogance that many speakers miss.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自拉丁语 subtilis（精细编织的）——纹理细密，故为微妙。注意发音中 b 不发音。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          <div class="badge-row"><span class="badge">拼写含无声字母 b，发音为 /ˈsʌtl/。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">14</span>
+        <span class="card-title">disengage</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">disengage</span><span class="ipa">/ˌdɪsɪnˈɡeɪdʒ/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌdɪsɪnˈɡeɪdʒ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">脱离，使脱身；不再关注</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 withdraw 相比，disengage 强调**从已卷入的状态中有意识地抽离**，常指注意力、军事力量或机械部件；withdraw 强调「撤回、退出」，范围更广（资金、军队、申请）。与 detach 相比，detach 强调物理上的分离，disengage 可以是抽象的关注转移。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the effort it takes to disengage and refocus</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">It takes several minutes to fully disengage from a demanding task before switching to another.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">dis-（否定）+ engage（卷入）——不卷入，即脱离。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">15</span>
+        <span class="card-title">refocus</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">refocus</span><span class="ipa">/ˌriːˈfəʊkəs/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌriːˈfəʊkəs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">重新聚焦，重新集中注意力</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 concentrate 相比，refocus 特指**在被中断之后重新集中**，含「恢复」意味；concentrate 是「集中注意力」的一般表达，不一定有被中断的前提。与 refocus on 搭配时，on 引出重新关注的对象。re- 前缀在此表示「再次」，是全词的语义核心。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the effort it takes to disengage and refocus</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">After the interruption, it took her a while to refocus on the report.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">re-（再次）+ focus（聚焦）——再次聚焦。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">16</span>
+        <span class="card-title">long-standing</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">long-standing</span><span class="ipa">/ˌlɒŋ ˈstændɪŋ/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌlɒŋ ˈstændɪŋ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">长期存在的，由来已久的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 old 相比，long-standing 特指**问题、传统、关系等已持续很久**，含「需要被正视」的意味；old 只表示「存在时间长」，可指物。与 longstanding 相比，连字符形式更为通行。常用于 long-standing problem / assumption / dispute / relationship。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">testing long-standing theories about distraction</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The report challenges a long-standing assumption that class size has little effect on learning.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">long（长）+ standing（站立、存在）——站立很久的。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">17</span>
+        <span class="card-title">resource</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">resource</span><span class="ipa">/rɪˈsɔːs/</span><span class="band">B1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/rɪˈsɔːs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">资源（此处指心理资源，如注意力容量）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 asset 相比，resource 强调**可供使用以达成目标的储备**，可以是有限且需分配的；asset 强调「有价的财产或优势」。与 capacity 相比，capacity 强调「容量上限」，resource 强调「可被消耗和争夺的东西」。注意此处 mental resources 是心理学术语，指有限的认知加工能力。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">compete directly with relevant information for limited mental resources</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Multitasking divides limited cognitive resources and usually reduces overall performance.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">re-（再）+ source（源头）——可以反复取用的来源。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">18</span>
+        <span class="card-title">high-stakes</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">high-stakes</span><span class="ipa">/ˌhaɪ ˈsteɪks/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌhaɪ ˈsteɪks/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">高风险的，输赢攸关的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 dangerous 相比，high-stakes 强调**结果影响重大**而非过程危险本身；dangerous 指可能造成伤害。与 critical 相比，critical 泛指「关键的」，high-stakes 特指「失败代价极高的场景」，是教育、医疗、金融领域的专业术语。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">play a role in high-stakes settings such as medical imaging</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">High-stakes examinations tend to encourage rote learning rather than genuine understanding.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">stake 原指「赌注」——赌注很高的，故为风险大。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">19</span>
+        <span class="card-title">consequence</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">consequence</span><span class="ipa">/ˈkɒnsɪkwəns/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈkɒnsɪkwəns/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">后果，结果（尤指负面的）</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 result 相比，consequence 常含**负面或重大**的意味，且暗示因果链条较长；result 是中性的直接结果。与 outcome 相比，outcome 中性，常用于评估（learning outcomes）；consequence 更强调「因某行为而承担的东西」。固定搭配：serious / severe / lasting consequences。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">where missed details can have serious consequences</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Cutting public spending has consequences that often take a decade to become visible.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">con-（共同）+ sequ（跟随）——跟着来的东西。同源词 sequence（序列）。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">20</span>
+        <span class="card-title">overwhelm</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">overwhelm</span><span class="ipa">/ˌəʊvəˈwelm/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌəʊvəˈwelm/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">使不堪承受，压倒；使应接不暇</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 defeat 相比，overwhelm 强调**因数量或强度过大而被压垮**，可以是情感、任务或信息层面；defeat 指在竞争或战斗中被打败。与 overload 相比，overload 更技术化，指「超负荷」，常用于系统或电路；overwhelm 更有情感色彩，常指人的主观感受。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">rather than overwhelm it</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">First-year students are often overwhelmed by the volume of reading they are expected to complete.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">over-（过度）+ whelm（倾覆，与「淹没」有关）——被淹没，故为压倒。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="phrase" class="section sec-phrase"><h2>短语 · Phrases</h2><p class="lead">共 10 项，点击展开解析。</p>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">compete for</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">compete for</span><span class="gloss-inline">争夺，竞争获取</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/kəmˈpiːt fɔː(r)/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">争夺，竞争获取</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">try to get</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">try to get 只是「试图获得」，平淡且不体现多方争夺。compete for 明确点出**资源有限、多方抢夺**的格局，一个词就建立了「稀缺」的前提，后面的论证才有依据。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 compete with 相比，compete with 引出的是**竞争者**（compete with rivals），compete for 引出的是**争夺目标**（compete for attention）。两者可同时出现：compete with rivals for resources。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Dozens of startups are competing for the same small pool of experienced engineers.</li><li>In many cities, cyclists and drivers compete for the same narrow stretches of road.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 描述资源竞争（住房、资金、注意力）；口语 Part 3 讨论竞争议题。书面口语皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">a matter of</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">a matter of</span><span class="gloss-inline">……的问题；取决于……的事</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ə ˈmætə(r) ɒv/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">……的问题；取决于……的事</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">is decided by</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">is decided by 是因果断言，语气绝对；a matter of X 是「属于 X 范畴的问题」，语气更审慎，且常用于**把复杂议题简化为某个单一因素**的语境——原文正是用这个词组暗示「人们把它简单化了」。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 a question of 相比，两者几乎同义，但 a matter of 更常用于既定说法（a matter of time / fact / opinion）；a question of 更常用于有争议的议题（a question of fairness）。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Success in research is rarely a matter of talent alone; it also depends on resources and timing.</li><li>Whether the target is met is ultimately a matter of political will rather than technology.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论某议题的归因；口语 Part 3 表达谨慎判断。正式与半正式皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">beneath the surface</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">beneath the surface</span><span class="gloss-inline">在表面之下；在表象背后</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/bɪˈniːθ ðə ˈsɜːfɪs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">在表面之下；在表象背后</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">介词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">in reality / basically</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">in reality 只是「实际上」，平铺直叙；beneath the surface 用空间隐喻建立**表象与深层**的对比，暗示表面的解释不充分，需要深入探究——这正是学术写作建立分析层次的核心手法。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 at a deeper level 相比，两者接近，但 beneath the surface 更强调「表象具有欺骗性」，at a deeper level 更中性，只表示分析更深入。与 behind the scenes 相比，后者特指「幕后操作」，含隐秘意味。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Beneath the surface of steady growth lie widening regional disparities.</li><li>The statistics look reassuring, but beneath the surface the picture is more fragile.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 引出深层原因；学术写作建立论证层次。正式书面语。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">stay on task</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">stay on task</span><span class="gloss-inline">保持专注，不偏离任务</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/steɪ ɒn tɑːsk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">保持专注，不偏离任务</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">keep working</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">keep working 只说明「继续工作」，不涉及注意力是否集中。stay on task 明确指**不偏离当前任务的注意力状态**，是心理学与教育领域的专业表达，比 keep focused 更具体（强调「任务」这个参照点）。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 stay focused 相比，stay focused 强调注意力集中这一状态本身，stay on task 强调不偏离任务目标，更侧重行为结果。与 concentrate 相比，concentrate 是动词，不能与 stay 连用表示持续状态。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Open-plan offices make it harder for employees to stay on task for extended periods.</li><li>Short breaks between study sessions help students stay on task for longer.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思口语 Part 3 讨论工作或学习环境；写作 Task 2 教育类话题。书面口语皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">slow down</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">slow down</span><span class="gloss-inline">使减速；使变慢</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/sləʊ daʊn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">使减速；使变慢</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">make us slower</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">make us slower 是静态描述，slow down 是**动态过程动词**，强调速度正在下降，更适合描述实验中的实时变化。且 slow sb down 的语序比 make sb slower 紧凑，在学术描述中更专业。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 decelerate 相比，decelerate 是物理学术语，指速度数值下降，不用于人或抽象过程；slow down 可用于人、经济、进程，用途更广。注意代词宾语需置于中间：slow us down，不可写作 slow down us。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Frequent context switching slows workers down far more than most managers realise.</li><li>Poor infrastructure slows down the delivery of aid in the first weeks after a disaster.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 描述效率损失；口语描述影响因素。书面口语皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">get back on track</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">get back on track</span><span class="gloss-inline">重回正轨，恢复原有进度</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɡet bæk ɒn træk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">重回正轨，恢复原有进度</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">习语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">return to normal</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">return to normal 只表示「恢复正常」，比较笼统。get back on track 用「轨道」比喻，暗示**原本有明确目标和进度，中途偏离后重新对齐**，比 return to normal 更能体现「有既定方向」这层含义。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 return to normal 相比，get back on track 预设了目标和进度，return to normal 只预设常态。与 back on course 相比，两者接近，但 on track 更常用于项目、进度、计划；on course 更常用于航向、趋势。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>After two quarters of losses, the company has finally got back on track.</li><li>It took the team several months to get back on track after the funding was delayed.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思口语 Part 2 描述一次挫折与恢复；写作 Task 2 讨论政策调整。半正式与口语为主。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">play a role in</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">play a role in</span><span class="gloss-inline">在……中起作用；是……的因素之一</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/pleɪ ə rəʊl ɪn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">在……中起作用；是……的因素之一</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">cause</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">cause 是**单一因果的绝对断言**，容易被反驳；play a role in 表示「是多个因素之一」，是学术写作中**谨慎归因**的标准表达。这个措辞上的克制，恰恰体现了科学表述的严谨，也是雅思高分作文的特征。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 contribute to 相比，两者接近，但 contribute to 有时暗含「有助于」的正面含义（contribute to success），play a role in 更中性，可搭配负面事物。与 be responsible for 相比，be responsible for 语气强，指「是……的原因」，接近 cause。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Poor diet plays a role in the development of several chronic diseases.</li><li>Timing and luck play a role in most scientific breakthroughs, not just skill.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 归因论证（极力推荐）；学术写作描述多因关系。正式书面语。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">rather than</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">rather than</span><span class="gloss-inline">而不是；与其……不如</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈrɑːðə(r) ðæn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">而不是；与其……不如</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">and not</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">and not 是简单否定并列，语气生硬。rather than 表达**取舍与偏好**，暗示「本应是 A 而不是 B」，带有价值判断。在学术写作中，rather than 是纠正误解、明确立场的高效工具。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 instead of 相比，两者常可互换，但 instead of 是介词，后接名词或动名词；rather than 可接不定式（不带 to）或名词，用法更灵活，且更书面。与 not... but... 相比，rather than 是**附加式**否定，not... but... 是**对比式**强调，后者语气更强。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Universities should be judged on what students learn rather than on how many they admit.</li><li>The policy aims to reduce demand rather than simply increase supply.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 明确立场、区分两种做法；口语 Part 3 表达偏好。书面口语皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">such as</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">such as</span><span class="gloss-inline">例如，诸如（用于举例，后接名词或名词短语）</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/sʌtʃ æz/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">例如，诸如（用于举例，后接名词或名词短语）</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">like / for example</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">like 偏口语且位置灵活；such as 是**书面举例**的标准形式，直接跟在被举例的名词之后，语法上更紧凑。与 for example 相比，for example 需要另起结构（通常加逗号并接完整句），such as 直接嵌入句中，不打断句子节奏。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 for example 相比，such as 后只能接**名词或名词短语**（such as EEG），而 for example 后可接完整句子（For example, EEG is widely used）。考试中把 such as 后接完整句是常见错误。与 namely 相比，namely 是「即、也就是」，用于**穷尽列举**（只有一个或全部），such as 用于**部分举例**，暗示还有其他。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>The scheme targets renewable sources such as solar and wind, rather than fossil fuels.</li><li>Cognitive skills such as working memory and inhibition develop unevenly across childhood.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 举例论证（高频）；Task 1 描述类别。正式书面语。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">fight against</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">fight against</span><span class="gloss-inline">与……抗争；对抗</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/faɪt əˈɡenst/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">与……抗争；对抗</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">work against</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">work against 是中性描述「不利于」；fight against 把环境与预期**拟人化**为主动的对手，语气更强，暗示这种对抗是持续而有阻力的。在论证中，这个词能让抽象的「设计不当」变得有画面感，增强说服力。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 struggle against 相比，struggle against 强调「艰难地挣扎对抗」，含被动和吃力感；fight against 更中性，强调主动对抗本身，不含是否成功的判断。与 combat 相比，combat 更正式，多用于疾病、犯罪等具体对象。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Many workplace cultures unintentionally fight against the very creativity they claim to want.</li><li>Poorly designed public spaces can fight against efforts to encourage walking.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 批评制度或环境设计；口语 Part 3 讨论组织文化。书面口语皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article></section>
+  
+    <section id="quiz" class="section sec-quiz">
+      <h2>小测 · Check yourself</h2>
+      <p class="lead">10 题，点击选项立即判定并给出解析。</p>
+      <div class="score" id="score"><span>得分</span> <b>0</b> <span>/ 10</span></div>
+      
+        <div class="quiz-q" data-q="1">
+          <div class="quiz-stem">1. &quot;From phone notifications to crowded screens, modern life is full of distractions competing for our attention.&quot; 中 competing 是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>与 is 并列的谓语</button><button class="opt" data-correct="1"><span class="opt-k">B</span>现在分词作后置定语，修饰 distractions</button><button class="opt" data-correct="0"><span class="opt-k">C</span>现在分词作结果状语</button><button class="opt" data-correct="0"><span class="opt-k">D</span>动名词作主语</button></div>
+          <div class="quiz-exp" hidden>competing 紧跟在名词 distractions 之后且无逗号，因此是限定性后置定语，相当于 which compete for。若加逗号则变成状语，修饰主句谓语，语义会错位。</div>
+        </div>
+        <div class="quiz-q" data-q="2">
+          <div class="quiz-stem">2. 在 &quot;While people often talk about focus as a matter of willpower, ...&quot; 中，While 表示？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>当……的时候</button><button class="opt" data-correct="1"><span class="opt-k">B</span>尽管（让步）</button><button class="opt" data-correct="0"><span class="opt-k">C</span>然而（对比）</button><button class="opt" data-correct="0"><span class="opt-k">D</span>只要（条件）</button></div>
+          <div class="quiz-exp" hidden>主从句之间存在预期冲突——「大众认为是意志力问题」与「科学家关注大脑机制」形成对照，故为让步。判断 while 的含义要看主从句是否构成预期对立。</div>
+        </div>
+        <div class="quiz-q" data-q="3">
+          <div class="quiz-stem">3. &quot;there&#x27;s far more information than our brains can process&quot; 中，far 的作用是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>表示距离远</button><button class="opt" data-correct="1"><span class="opt-k">B</span>修饰比较级 more，强调差距之大</button><button class="opt" data-correct="0"><span class="opt-k">C</span>表示「遥远的」</button><button class="opt" data-correct="0"><span class="opt-k">D</span>可以省略，不影响意思</button></div>
+          <div class="quiz-exp" hidden>far 在此是程度副词，修饰比较级 more，意为「远远、大大」。比较级前只能用 far/much/a lot/slightly 等，绝不能用 very。</div>
+        </div>
+        <div class="quiz-q" data-q="4">
+          <div class="quiz-stem">4. interfere 的正确用法是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>interfere our ability</button><button class="opt" data-correct="1"><span class="opt-k">B</span>interfere with our ability</button><button class="opt" data-correct="0"><span class="opt-k">C</span>interfere to our ability</button><button class="opt" data-correct="0"><span class="opt-k">D</span>interfere for our ability</button></div>
+          <div class="quiz-exp" hidden>interfere 是不及物动词，必须接 with 才能带宾语。同类需接介词的动词还有 depend on、result in、consist of 等。</div>
+        </div>
+        <div class="quiz-q" data-q="5">
+          <div class="quiz-stem">5. &quot;slow us down&quot; 为什么不能写成 &quot;slow down us&quot;？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>因为没有语法规定</button><button class="opt" data-correct="1"><span class="opt-k">B</span>因为 down 是副词，代词宾语必须放在动词与副词之间</button><button class="opt" data-correct="0"><span class="opt-k">C</span>因为 us 是主语</button><button class="opt" data-correct="0"><span class="opt-k">D</span>两者都对</button></div>
+          <div class="quiz-exp" hidden>「动词 + 副词」构成的短语动词，宾语为代词时必须置于中间：slow us down、turn it off、pick them up。若宾语是名词则两种语序皆可。</div>
+        </div>
+        <div class="quiz-q" data-q="6">
+          <div class="quiz-stem">6. &quot;compete with relevant information for limited mental resources&quot; 中，with 和 for 分别引出？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>with 引出争夺目标，for 引出竞争者</button><button class="opt" data-correct="1"><span class="opt-k">B</span>with 引出竞争者，for 引出争夺目标</button><button class="opt" data-correct="0"><span class="opt-k">C</span>两者都引出竞争者</button><button class="opt" data-correct="0"><span class="opt-k">D</span>两者都引出目标</button></div>
+          <div class="quiz-exp" hidden>compete with sb for sth 是固定搭配：with 后接竞争者，for 后接争夺的目标。此处竞争者是 relevant information，目标是 limited mental resources。</div>
+        </div>
+        <div class="quiz-q" data-q="7">
+          <div class="quiz-stem">7. &quot;Although the research is rooted in basic science, the questions it addresses have clear real-world relevance.&quot; 这句话的语法错误的是？</div>
+          <div class="opts"><button class="opt" data-correct="1"><span class="opt-k">A</span>Although 与 but 同时使用</button><button class="opt" data-correct="0"><span class="opt-k">B</span>使用 be rooted in</button><button class="opt" data-correct="0"><span class="opt-k">C</span>省略了定语从句的关系词</button><button class="opt" data-correct="0"><span class="opt-k">D</span>使用 real-world 作定语</button></div>
+          <div class="quiz-exp" hidden>Although 已承担转折功能，再加 but 是中式英语高频错误。另外 the questions it addresses 省略了 that/which，这在定语从句中作宾语时是允许的。</div>
+        </div>
+        <div class="quiz-q" data-q="8">
+          <div class="quiz-stem">8. &quot;the effort it takes to disengage and refocus&quot; 中 it 的作用是？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>指代前面的 the moment</button><button class="opt" data-correct="1"><span class="opt-k">B</span>形式主语，真正主语是 to disengage and refocus</button><button class="opt" data-correct="0"><span class="opt-k">C</span>强调用法</button><button class="opt" data-correct="0"><span class="opt-k">D</span>多余的，可以省略</button></div>
+          <div class="quiz-exp" hidden>这是「the effort it takes to do sth」的固定框架，it 是形式主语，真正主语是不定式。若省略 it 写成 the effort takes to do 则语法错误。</div>
+        </div>
+        <div class="quiz-q" data-q="9">
+          <div class="quiz-stem">9. &quot;One possibility is that... Another is that...&quot; 中为什么用 Another 而不是 The other？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>因为 Another 更正式</button><button class="opt" data-correct="1"><span class="opt-k">B</span>因为可能性可能不止两种，Another 保留了开放性</button><button class="opt" data-correct="0"><span class="opt-k">C</span>因为 The other 只能指人</button><button class="opt" data-correct="0"><span class="opt-k">D</span>两者完全等价</button></div>
+          <div class="quiz-exp" hidden>用 The other 会断言「只有两种可能」，而 Another 表示「还有另一种」，不排除存在第三种。学术写作中这种措辞上的开放性是严谨性的体现。</div>
+        </div>
+        <div class="quiz-q" data-q="10">
+          <div class="quiz-stem">10. &quot;timely and imperative to understanding&quot; 中 to 后为什么用动名词？</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>因为 to 在这里是不定式符号，写错了</button><button class="opt" data-correct="1"><span class="opt-k">B</span>因为 to 在此是介词，后接动名词</button><button class="opt" data-correct="0"><span class="opt-k">C</span>因为 understanding 是名词</button><button class="opt" data-correct="0"><span class="opt-k">D</span>因为 imperative 后必须接动名词</button></div>
+          <div class="quiz-exp" hidden>此处 to 是介词，与 timely 共享同一介词结构（timely to doing / imperative to doing），故接动名词。同类结构：be committed to doing、be opposed to doing、look forward to doing。</div>
+        </div>
+    </section>
+  <footer>
+    <div class="grad"></div>
+    readkiller · 生成于 sample run 2<br>
+    原句引用自原文；例句为备考迁移用例，非原文内容。
+  </footer>
+</div>
+<script>
+(function(){
+  var bar=document.getElementById('bar');
+  function prog(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  }
+  addEventListener('scroll',prog,{passive:true});prog();
+
+  document.querySelectorAll('.card-head').forEach(function(head){
+    var card=head.closest('.card');
+    function toggle(){
+      var open=card.classList.toggle('open');
+      head.setAttribute('aria-expanded',open?'true':'false');
+    }
+    head.addEventListener('click',function(e){e.preventDefault();toggle();});
+    head.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}
+    });
+  });
+
+  var total=document.querySelectorAll('.quiz-q').length, score=0, done=0;
+  var out=document.getElementById('score');
+  document.querySelectorAll('.quiz-q').forEach(function(q){
+    var opts=q.querySelectorAll('.opt');
+    opts.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        if(q.dataset.answered)return;
+        q.dataset.answered='1';
+        var right=btn.dataset.correct==='1';
+        if(right)score++;
+        done++;
+        btn.classList.add(right?'right':'wrong');
+        if(!right)opts.forEach(function(o){if(o.dataset.correct==='1')o.classList.add('right');});
+        opts.forEach(function(o){o.disabled=true;});
+        var exp=q.querySelector('.quiz-exp'); if(exp)exp.hidden=false;
+        if(out)out.innerHTML='<span>得分</span> <b>'+score+'</b> <span>/ '+total+'</span>'+(done===total?' <span>— 完成！</span>':'');
+      });
+    });
+  });
+
+  // Nav: click jumps immediately, the target section flashes, and the pill highlights.
+  var links=[].slice.call(document.querySelectorAll('nav.pills a'));
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function activate(link){
+    links.forEach(function(a){a.classList.toggle('active',a===link);});
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var target=document.querySelector(a.getAttribute('href'));
+      if(!target)return;              // fall back to the default anchor jump
+      e.preventDefault();
+      activate(a);
+      target.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+      if(history.replaceState)history.replaceState(null,'',a.getAttribute('href'));
+      target.classList.remove('flash');
+      void target.offsetWidth;        // restart the animation if it is already running
+      target.classList.add('flash');
+      setTimeout(function(){target.classList.remove('flash');},1100);
+      // Move focus for keyboard users without stealing the visual scroll.
+      var h=target.querySelector('h2');
+      if(h){ if(!h.hasAttribute('tabindex'))h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); }
+    });
+  });
+
+  // Keep the pill in sync while the reader scrolls manually.
+  var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  if('IntersectionObserver' in window && sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting)return;
+        var link=links.filter(function(a){return a.getAttribute('href')==='#'+e.target.id;})[0];
+        if(link)activate(link);
+      });
+    },{rootMargin:'-64px 0px -70% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+})();
+</script>
+</body>
+</html>
