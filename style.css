@@ -280,12 +280,31 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   padding: var(--space-4) var(--space-4) calc(96px + env(safe-area-inset-bottom));
 }
 
-/* 导航切换：侧滑（呼应前进/后退的心智模型） */
-.page { animation: pageIn var(--dur-base) var(--ease-out); }
+/* 页面容器
+ *
+ * 这里刻意不放常驻 animation —— 之前挂的 pageIn 侧滑会在每次
+ * 显示/隐藏切换时重新触发，观感偏硬且帧率不稳。
+ * 切页过渡改为「按需添加一次类」，由 interactions.js 触发。 */
+.page {
+  will-change: opacity, transform;
+}
 
-@keyframes pageIn {
-  from { opacity: 0; transform: translateX(12px); }
-  to   { opacity: 1; transform: none; }
+/* 轻量切页动画：只做很小的横向位移 + 淡入，300ms 内结束。
+   只用 opacity / transform —— 走 GPU 合成，稳定 60fps。
+   位移方向由 --page-shift 控制（去总结从右来，回记录从左来）。 */
+.page.is-switching-in {
+  animation: pageSoftIn 300ms var(--ease-out) both;
+}
+
+@keyframes pageSoftIn {
+  from {
+    opacity: 0;
+    transform: translateX(var(--page-shift, 10px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* 分节标题：小、大写、次要色 —— 靠留白分组，不靠线条 */
@@ -451,9 +470,13 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   border-radius: var(--radius-pill);
   cursor: pointer;
   position: relative;
-  transition: background var(--dur-fast) var(--ease-inout),
-              color var(--dur-fast) var(--ease-inout),
-              transform var(--dur-fast) var(--ease-spring);
+  /* 物理反馈用 scale 独立属性，与 transform 分开，互不干扰 */
+  transform-origin: 50% 50%;
+  will-change: scale, transform;
+  transition:
+    background var(--dur-fast) var(--ease-inout),
+    color var(--dur-fast) var(--ease-inout),
+    border-color var(--dur-fast) var(--ease-inout);
   touch-action: manipulation;
 }
 /* 热区补足到 44px */
@@ -472,7 +495,9 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   color: #FFFFFF;
   font-weight: 600;
 }
-.chip:active { transform: scale(0.96); }
+/* 按下的即时反馈交给 interactions.js 的弹簧驱动，
+   这里只保留一个极轻的触感，避免与物理动画打架 */
+.chip:active { opacity: 0.92; }
 
 .chip-add {
   background: transparent;
@@ -934,43 +959,69 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   margin-top: var(--space-1);
 }
 
-.bars { display: flex; flex-direction: column; gap: var(--space-3); }
-.bar-row { display: flex; align-items: center; gap: var(--space-2); }
+/* 分类明细行
+ *
+ * 两个约束同时成立才不重叠、也不参差：
+ *   1. 数字不能写死宽度 —— 金额可达 ¥123,456.00、时长可达「12 小时 45 分」，
+ *      固定 66px 时右对齐会向左溢出，压住条形图（这就是之前重叠的原因）。
+ *   2. 但数字宽度完全自由又会让每行条形图起点参差不齐，很难看。
+ *
+ * 解法：整个列表用 grid，三列分别是「分类名 / 条形图 / 数字」。
+ * 数字列设为 auto，grid 会自动取所有行里最宽的那个作为统一列宽，
+ * 于是既不会溢出，各行也严格对齐。 */
+.bars {
+  display: grid;
+  grid-template-columns: minmax(2.5em, 5em) 1fr auto;
+  column-gap: var(--space-2);
+  row-gap: var(--space-3);
+  align-items: center;
+}
+
+/* 每行不再自己布局，交给 grid 分列 */
+.bar-row {
+  display: contents;
+}
+
 .bar-label {
-  width: 52px;
-  flex-shrink: 0;
+  grid-column: 1;
   font-size: var(--text-caption);
   line-height: var(--lh-caption);
   color: var(--label-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
+
 .bar-track {
-  flex: 1;
+  grid-column: 2;
   height: 6px;
   background: var(--bg-sunken);
   border-radius: var(--radius-pill);
   overflow: hidden;
+  /* 条形图至少保留可读宽度 */
+  min-width: 40px;
 }
+
 .bar-fill {
   display: block;
   height: 100%;
   border-radius: var(--radius-pill);
   transition: width var(--dur-slow) var(--ease-out);
 }
+
 .bar-fill.kind-expense { background: var(--ink-expense); }
 .bar-fill.kind-study   { background: var(--ink-study); }
 .bar-fill.kind-fitness { background: var(--ink-fitness); }
 
 .bar-val {
-  width: 66px;
-  flex-shrink: 0;
+  grid-column: 3;
   text-align: right;
   font-size: var(--text-caption);
   line-height: var(--lh-caption);
   color: var(--label-secondary);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* 趋势柱 */
@@ -1740,20 +1791,10 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   z-index: 150;
 }
 
-/* =====================================================================
- * 26. 交互 2.6 —— 圆形扩散转场
- *
- * 点击处到「最远角」的距离决定圆半径（用最近角会导致盖不满屏）：
- *     r = max( √((x−cx)² + (y−cy)²) )  对四个角取最大
- * 扩散 r/400 px/ms，返回 r/300 px/ms（更快，像退回去）
- * ===================================================================== */
-.diffuse-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 120;
-  pointer-events: none;
-  will-change: clip-path;
-  background: var(--bg-base);
+/* 页面切换：轻量位移淡入（由 interactions.js 施加内联过渡）
+   不用 clip-path 做全屏扩散 —— 那个在 iOS 上走 CPU 合成，帧率会掉。 */
+#main {
+  will-change: opacity, transform;
 }
 
 /* =====================================================================
@@ -1972,6 +2013,10 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   /* 交互附加效果一律关闭 */
   .btn.is-complete .btn-check path { animation: none; stroke-dashoffset: 0; }
   .burst-canvas { display: none; }
-  .diffuse-overlay { display: none; }
   .insight.is-open .insight-caret { transform: none; }
+  /* 分类标签不做物理回弹 */
+  .chip { will-change: auto; }
+  .chip:active { opacity: 1; }
+  /* 页面切换不做位移 */
+  #main { will-change: auto; }
 }

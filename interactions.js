@@ -47,6 +47,13 @@ function createSpring({ k, m, c, initial = 0, target = 0, onFrame, onRest }) {
   let last = 0;
   let alive = true;
 
+  /* 静止阈值按「初始位移的比例」计算，而不是固定 0.1。
+     scale 这类 0–1 量级的动画初始位移可能只有 0.12，
+     固定 0.1 的阈值会让弹簧一开始就被判定为静止，冲不出过冲。 */
+  const amplitude = Math.abs(x) || 1;
+  const restX = Math.max(amplitude * 0.002, 1e-4);
+  const restV = Math.max(amplitude * 0.002, 1e-4);
+
   const step = (now) => {
     if (!alive) return;
     // dt 上限 1/30：切标签页回来时不会因为超大 dt 炸掉
@@ -64,8 +71,8 @@ function createSpring({ k, m, c, initial = 0, target = 0, onFrame, onRest }) {
 
     if (onFrame) onFrame(target + x, v);
 
-    // 静止判定：亚像素且速度可忽略
-    if (Math.abs(x) < 0.1 && Math.abs(v) < 0.1) {
+    // 静止判定：相对初始幅度可忽略，且速度足够小
+    if (Math.abs(x) < restX && Math.abs(v) < restV) {
       if (onFrame) onFrame(target, 0);
       if (onRest) onRest();
       raf = null;
@@ -232,82 +239,154 @@ function playComplete(btn) {
 }
 
 /* =====================================================================
- * 2. 交互 2.6 —— 圆形扩散转场
+ * 2. 分类标签的物理选中反馈
  *
- * r 取到「最远角」的距离，否则圆盖不满屏
- * 扩散 r/400 px/ms，返回 r/300 px/ms
+ * 需求：选中一个分类时要有"物理感"，不能只是变个颜色。
+ *
+ * 用两层物理叠加：
+ *   ① 被选中的那个：ζ=0.5 欠阻尼弹簧，明显回弹（按下 → 弹出）
+ *   ② 相邻的标签：被"顶开"一点再归位，模拟实体按键的挤压传导
+ *
+ * 弹簧用 createSpring 逐帧积分，可被下一次点击打断（retarget）。
  * ===================================================================== */
-/**
- * 圆形扩散转场。
- *
- * 速度是「px/ms」，所以时间 = r / speed，单位是 ms：
- *     r = 938px, speed = r/400 → t = 938 / (938/400) = 400ms
- * 之前误把 r/400 当成毫秒数直接用了，于是一帧铺满、转场看不见。
- */
-function circleReveal(overlayEl, x, y, { speedPxPerMs = 2.35 } = {}) {
-  const w = innerWidth;
-  const h = innerHeight;
-  // 四个角全部算一遍，取最远 —— 这是盖满屏幕的必要条件
-  const corners = [[0, 0], [w, 0], [0, h], [w, h]];
-  const r = Math.max(...corners.map(([cx, cy]) => Math.hypot(x - cx, y - cy)));
+const CHIP_SPRING = { k: 420, m: 1, c: 20.5 };   // ζ≈0.5 明显回弹
+const NEIGHBOR_SPRING = { k: 300, m: 1, c: 34.6 }; // ζ=1 无回弹，只做位移
 
-  // 时间 = 距离 / 速度（px ÷ px/ms = ms），并夹在合理区间
-  const durMs = Math.max(280, Math.min(r / speedPxPerMs, 460));
+/* 一个标签当前正在跑的动画，便于打断 */
+const chipAnims = new WeakMap();
 
-  const closed = `circle(0px at ${x}px ${y}px)`;
+function springScale(el, from, to, spring, onDone) {
+  // 打断该元素上正在跑的动画
+  const prev = chipAnims.get(el);
+  if (prev) prev.stop();
 
-  overlayEl.style.clipPath = closed;
-  overlayEl.style.opacity = '1';
-  overlayEl.style.display = 'block';
-
-  requestAnimationFrame(() => {
-    overlayEl.style.transition = `clip-path ${durMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-    overlayEl.style.clipPath = `circle(${r}px at ${x}px ${y}px)`;
-  });
-
-  return {
-    duration: durMs,
-    reverse: () => {
-      // 返回稍快，像"退回去"
-      const durOut = Math.round(durMs * 0.72);
-      overlayEl.style.transition = `clip-path ${durOut}ms cubic-bezier(0.4, 0, 0.2, 1)`;
-      overlayEl.style.clipPath = closed;
-      setTimeout(() => {
-        overlayEl.style.display = 'none';
-        overlayEl.style.opacity = '0';
-      }, durOut + 40);
+  const s = createSpring({
+    k: spring.k, m: spring.m, c: spring.c,
+    initial: from,
+    target: to,
+    onFrame: (v) => { el.style.scale = String(v); },
+    onRest: () => {
+      el.style.scale = '';
+      chipAnims.delete(el);
+      if (onDone) onDone();
     },
-  };
+  });
+  chipAnims.set(el, s);
+  s.start();
+  return s;
 }
 
-/* 让底部 Tab 切换带上扩散转场 */
-function attachDiffuseTransition() {
-  let overlay = document.querySelector('.diffuse-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.className = 'diffuse-overlay';
-    overlay.setAttribute('aria-hidden', 'true');
-    overlay.style.display = 'none';
-    document.body.appendChild(overlay);
-  }
+function springShift(el, from, to, spring) {
+  const key = 'shift';
+  let prev = el['__shiftSpring'];
+  if (prev) prev.stop();
+
+  const s = createSpring({
+    k: spring.k, m: spring.m, c: spring.c,
+    initial: from,
+    target: to,
+    onFrame: (v) => { el.style.transform = `translateX(${v.toFixed(2)}px)`; },
+    onRest: () => { el.style.transform = ''; el.__shiftSpring = null; },
+  });
+  el.__shiftSpring = s;
+  s.start();
+  return s;
+}
+
+function attachChipPhysics() {
+  $$('.chips').forEach((box) => {
+    box.addEventListener('click', (ev) => {
+      const chip = ev.target.closest('.chip');
+      // 「＋ 新分类」按钮走自己的逻辑，不参与物理反馈
+      if (!chip || chip.classList.contains('chip-add')) return;
+      if (prefersReduced()) return;
+
+      const chips = [...box.querySelectorAll('.chip:not(.chip-add)')];
+      const idx = chips.indexOf(chip);
+      if (idx < 0) return;
+
+      // ① 被选中的标签：按下 0.9 再弹回 1（ζ=0.5 有可见回弹）
+      springScale(chip, 0.88, 1, CHIP_SPRING);
+
+      // ② 相邻标签被顶开 —— 左邻左移、右邻右移，然后归位
+      //    距离越远影响越小，符合弹性传导
+      chips.forEach((other, i) => {
+        if (other === chip) return;
+        const dist = i - idx;
+        const push = Math.sign(dist) * Math.max(0, 4 - Math.abs(dist) * 1.5);
+        if (push === 0) return;
+        springShift(other, push, 0, NEIGHBOR_SPRING);
+      });
+    }, { capture: true });   // 先于原有的选中逻辑执行，但不阻断它
+  });
+}
+/**
+ * 页面切换的轻量过渡。
+ *
+ * 之前用 clip-path: circle() 做圆形扩散 —— 在 iOS Safari 上
+ * clip-path 走 CPU 合成，每帧要重新光栅化整个视口，帧率会掉。
+ * 这里改成只有 transform + opacity 的位移淡入：
+ *   · transform/opacity 走 GPU 合成层，稳定 60fps
+ *   · 不做全屏覆盖，只让内容轻轻位移，符合「不要过度动画」
+ *
+ * @keyframes 定义在 style.css 里（静态），不在此处动态注入 ——
+ * 动态注入的 keyframes 会与样式解析竞争，导致动画不生效。
+ */
+function attachPageTransition() {
+  if (!$('#main')) return;
+
+  let running = false;
+  let currentAnim = null;
 
   $$('.tab').forEach((tab) => {
-    tab.addEventListener('click', (ev) => {
-      if (prefersReduced()) return;
+    tab.addEventListener('click', () => {
       const target = tab.dataset.nav;
-      if (target === state.page) return;   // 已在目标页，不播
+      if (target === state.page) return;
+      if (prefersReduced()) return;
+      // 连点保护：已有动画在跑时先取消，避免叠加
+      if (currentAnim) { try { currentAnim.cancel(); } catch (e) {} currentAnim = null; }
+      running = false;
 
-      // 从手指（或按钮中心）位置扩散
-      const r = tab.getBoundingClientRect();
-      const x = ev.clientX || (r.left + r.width / 2);
-      const y = ev.clientY || (r.top + r.height / 2);
+      // 方向感：去「总结」从右滑入，回「记录」从左滑入
+      const forward = target === 'report';
 
-      const anim = circleReveal(overlay, x, y);
-      // 扩散到一半时切换页面，视觉上像是「被揭开」
-      setTimeout(() => {
-        try { anim.reverse(); } catch (e) {}
-      }, 220);
-    }, { capture: true });   // capture 保证先于原有 handler 执行，但不阻止它
+      /* switchPage 是同步的，会在本帧内把新页面显示出来。
+         下一帧给「新的当前页」加动画类，让它从侧面淡入。 */
+      requestAnimationFrame(() => {
+        const page = document.querySelector(`.page[data-page="${target}"]`);
+        if (!page) { running = false; return; }
+
+        const from = forward ? 10 : -10;
+
+        if (typeof page.animate === 'function') {
+          /* 用 Web Animations API 而不是 CSS 动画类：
+             WAAPI 的 finished Promise 能精确知道动画结束，
+             也便于在需要时取消（用户快速连点时不会叠加）。 */
+          const anim = page.animate(
+            [
+              { opacity: 0, transform: `translateX(${from}px)` },
+              { opacity: 1, transform: 'translateX(0)' },
+            ],
+            { duration: 300, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'both' }
+          );
+          currentAnim = anim;
+          anim.finished
+            .then(() => { anim.cancel(); if (currentAnim === anim) currentAnim = null; running = false; })
+            .catch(() => { running = false; });   // cancel 会 reject，忽略
+        } else {
+          // 老引擎回退到类驱动
+          page.style.setProperty('--page-shift', `${from}px`);
+          page.classList.remove('is-switching-in');
+          void page.offsetWidth;
+          page.classList.add('is-switching-in');
+          setTimeout(() => {
+            page.classList.remove('is-switching-in');
+            page.style.removeProperty('--page-shift');
+            running = false;
+          }, 340);
+        }
+      });
+    }, { capture: true });
   });
 }
 
@@ -689,8 +768,11 @@ function initInteractions() {
   // 2.1 完成反馈按钮（三类表单都挂）
   $$('.entry-form').forEach(attachCompleteFeedback);
 
-  // 2.6 圆形扩散转场
-  attachDiffuseTransition();
+  // 分类标签的物理选中反馈
+  attachChipPhysics();
+
+  // 页面切换：轻量位移淡入（替代原先的 clip-path 扩散）
+  attachPageTransition();
 
   // 2.3 洞察卡展开
   attachInsightExpand();
