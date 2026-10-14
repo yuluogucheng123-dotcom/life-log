@@ -241,6 +241,37 @@ function renderSummaryRow(entries, days, bounds) {
     </div>`;
 }
 
+// 洞察卡的展开详情：只重排已有字段，不引入新数据
+function insightDetail(it) {
+  const rows = [];
+
+  const push = (label, value) => {
+    if (value === undefined || value === null || value === '') return;
+    rows.push(
+      `<div class="insight-detail-row">` +
+      `<span>${escapeHtml(label)}</span><b>${escapeHtml(String(value))}</b>` +
+      `</div>`
+    );
+  };
+
+  push('类别', KINDS[it.kind] ? KINDS[it.kind].label : '');
+  push('指标', it.title);
+  push('数值', it.value);
+  if (it.desc) push('说明', it.desc);
+
+  if (it.delta) {
+    const { cur, prev, kind } = it.delta;
+    const fmt = kind === 'expense' ? fmtMoney : fmtDuration;
+    push('本期', fmt(cur));
+    push('上期', fmt(prev));
+    const diff = cur - prev;
+    push('变化', (diff > 0 ? '+' : '') + fmt(Math.abs(diff)));
+  }
+
+  if (!rows.length) return '';
+  return rows.join('');
+}
+
 function renderReport() {
   const bounds = getRangeBounds();
   renderReportHeader(bounds);
@@ -278,14 +309,20 @@ function renderReport() {
   if (insights.length) {
     blocks.push(`<h2 class="section-title">本期看点</h2>`);
     blocks.push(`<div class="insight-grid">` + insights.map((it) => `
-      <div class="insight kind-${it.kind}">
+      <div class="insight kind-${it.kind}" role="button" tabindex="0" aria-expanded="false">
         <div class="insight-top">
           <span class="insight-ico">${it.icon}</span>
           <span class="insight-title">${escapeHtml(it.title)}</span>
           ${it.delta ? deltaTag(it.delta.cur, it.delta.prev, it.delta.kind) : ''}
+          <span class="insight-caret" aria-hidden="true">›</span>
         </div>
         <div class="insight-val">${escapeHtml(String(it.value))}</div>
         <div class="insight-desc">${escapeHtml(it.desc || '')}</div>
+        <div class="insight-detail">
+          <div class="insight-detail-inner">
+            ${insightDetail(it)}
+          </div>
+        </div>
       </div>`).join('') + `</div>`);
   }
 

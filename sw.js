@@ -8,7 +8,7 @@
  *   4. 数据存在 localStorage，不经过 SW，因此断网也能完整使用。
  * ===================================================================== */
 
-const CACHE = 'lifelog-v7';
+const CACHE = 'lifelog-v8';
 
 const SHELL = [
   './',
@@ -20,6 +20,7 @@ const SHELL = [
   './insight.js',
   './sync.js',
   './app.js',
+  './interactions.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
