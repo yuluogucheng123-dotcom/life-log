@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>The Elephant Vanishes — Haruki Murakami (trans. Jay Rubin)</title>
+<style>
+:root{
+  --bg:#F2F3F7; --surface:#FFF; --text:#14141A; --muted:#6B6B76;
+  --line:rgba(0,0,0,.09); --shadow:0 4px 20px rgba(20,20,40,.07);
+  --accent:#0077E3;
+  --g-title:linear-gradient(100deg,#5B4BFF,#B84BFF,#0077E3,#5B4BFF);
+  --g-overview:linear-gradient(120deg,#5B4BFF,#B84BFF);
+  --g-grammar:linear-gradient(120deg,#0077E3,#00B4D8);
+  --g-pattern:linear-gradient(120deg,#7C3AED,#DB2777);
+  --g-word:linear-gradient(120deg,#F59E0B,#EF4444);
+  --g-phrase:linear-gradient(120deg,#10B981,#06B6D4);
+  --g-quiz:linear-gradient(120deg,#6366F1,#EC4899);
+  --c-clause:#0077E3; --c-nonfinite:#10B981; --c-subj:#F59E0B;
+  --c-inv:#A855F7; --c-nom:#EF4444;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#08080B; --surface:#17171C; --text:#F4F4F7; --muted:#9C9CA8;
+         --line:rgba(255,255,255,.12); --shadow:none; --accent:#4DA3FF;
+         --c-clause:#4DA3FF; --c-nonfinite:#34D399; --c-subj:#FBBF24;
+         --c-inv:#C084FC; --c-nom:#F87171; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:400 17px/1.65 -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+  background:linear-gradient(90deg,#5B4BFF,#B84BFF,#0077E3,#10B981,#F59E0B,#EF4444);
+  background-size:300% 100%;animation:slide 8s linear infinite}
+@keyframes slide{to{background-position:300% 0}}
+
+/* Hero */
+.hero{position:relative;border-radius:22px;padding:26px 22px;margin-bottom:26px;color:#fff;
+  background:linear-gradient(125deg,#4C3FE0,#8B3FE0 45%,#C43FE0);overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 88% 8%,rgba(255,255,255,.30),transparent 60%);pointer-events:none}
+.hero .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero h1{font-size:30px;line-height:1.22;margin:.3em 0 .2em;font-weight:800;letter-spacing:-.02em}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1}
+.tag{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px)}
+.tag.primary{background:#fff;color:#4C3FE0;border-color:transparent}
+
+/* Nav */
+nav.pills{position:sticky;top:0;z-index:40;display:flex;gap:9px;overflow-x:auto;
+  margin:0 -18px 20px;padding:11px 18px;
+  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);
+  scrollbar-width:none}
+nav.pills::-webkit-scrollbar{display:none}
+nav.pills a{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
+  min-height:44px;padding:8px 15px;border-radius:999px;font-size:13.5px;font-weight:650;
+  text-decoration:none;color:var(--muted);background:var(--surface);border:1px solid var(--line);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),color .2s,border-color .2s,box-shadow .22s}
+nav.pills a .ico{width:17px;height:17px;flex:0 0 17px;transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+nav.pills a .ico *{transition:stroke .2s,fill .2s}
+/* Hover / focus: lift, tint to the section's own gradient, animate the icon. */
+nav.pills a:hover,nav.pills a:focus-visible{color:#fff;border-color:transparent;transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(20,20,60,.16);outline:none}
+nav.pills a:hover .ico,nav.pills a:focus-visible .ico{transform:scale(1.22) rotate(-6deg)}
+nav.pills a[data-sec="grammar"]:hover,nav.pills a[data-sec="grammar"]:focus-visible,nav.pills a[data-sec="grammar"].active{background:var(--g-grammar)}
+nav.pills a[data-sec="pattern"]:hover,nav.pills a[data-sec="pattern"]:focus-visible,nav.pills a[data-sec="pattern"].active{background:var(--g-pattern)}
+nav.pills a[data-sec="word"]:hover,nav.pills a[data-sec="word"]:focus-visible,nav.pills a[data-sec="word"].active{background:var(--g-word)}
+nav.pills a[data-sec="phrase"]:hover,nav.pills a[data-sec="phrase"]:focus-visible,nav.pills a[data-sec="phrase"].active{background:var(--g-phrase)}
+nav.pills a[data-sec="quiz"]:hover,nav.pills a[data-sec="quiz"]:focus-visible,nav.pills a[data-sec="quiz"].active{background:var(--g-quiz)}
+nav.pills a.active{color:#fff;border-color:transparent}
+nav.pills a.active .ico{transform:scale(1.12)}
+/* Tooltip: shows the item count, hidden on touch widths where hover is meaningless. */
+nav.pills a::after{content:attr(data-tip);position:absolute;top:calc(100% + 9px);left:50%;
+  transform:translateX(-50%) translateY(-4px);white-space:nowrap;font-size:11.5px;font-weight:600;
+  padding:5px 10px;border-radius:8px;color:#fff;background:rgba(20,20,30,.92);
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
+nav.pills a::before{content:'';position:absolute;top:calc(100% + 4px);left:50%;
+  transform:translateX(-50%);border:5px solid transparent;border-bottom-color:rgba(20,20,30,.92);
+  opacity:0;transition:opacity .18s;pointer-events:none;z-index:5}
+nav.pills a:hover::after,nav.pills a:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+nav.pills a:hover::before,nav.pills a:focus-visible::before{opacity:1}
+/* A brief pulse on the target section so a jump is unmistakable. */
+@keyframes secflash{0%{background:transparent}30%{background:color-mix(in srgb,var(--accent) 9%,transparent)}100%{background:transparent}}
+.section.flash{border-radius:16px;animation:secflash 1.05s ease-out}
+
+/* Sections */
+.section{margin:40px 0 0;scroll-margin-top:64px}
+h2{font-size:23px;font-weight:700;letter-spacing:-.015em;margin:0 0 4px;display:inline-block;
+  padding-bottom:6px;position:relative}
+h2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px}
+.sec-grammar h2::after{background:var(--g-grammar)}
+.sec-pattern h2::after{background:var(--g-pattern)}
+.sec-word h2::after{background:var(--g-word)}
+.sec-phrase h2::after{background:var(--g-phrase)}
+.sec-quiz h2::after{background:var(--g-quiz)}
+.lead{color:var(--muted);font-size:15px;margin:10px 0 18px}
+.summary{position:relative;background:var(--surface);border-radius:18px;padding:20px;
+  box-shadow:var(--shadow);font-size:16px;border:1px solid var(--line)}
+.summary::before{content:'';position:absolute;left:0;top:16px;bottom:16px;width:4px;
+  border-radius:0 4px 4px 0;background:var(--g-overview)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;padding:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:16px}
+.legend span{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.swatch{font-weight:700;font-size:13.5px}
+
+/* Cards */
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  margin:0 0 12px;box-shadow:var(--shadow);overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;opacity:0;transition:opacity .25s}
+.card.open::before{opacity:1}
+.card[data-kind="grammar"]::before{background:var(--g-grammar)}
+.card[data-kind="pattern"]::before{background:var(--g-pattern)}
+.card[data-kind="word"]::before{background:var(--g-word)}
+.card[data-kind="phrase"]::before{background:var(--g-phrase)}
+.card-head{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;
+  padding:14px 16px;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.card-head:active{background:rgba(127,127,127,.08)}
+.card-idx{flex:0 0 27px;height:27px;border-radius:999px;color:#fff;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+.card[data-kind="grammar"] .card-idx{background:var(--g-grammar)}
+.card[data-kind="pattern"] .card-idx{background:var(--g-pattern)}
+.card[data-kind="word"] .card-idx{background:var(--g-word)}
+.card[data-kind="phrase"] .card-idx{background:var(--g-phrase)}
+.card-title{flex:1;font-weight:650;font-size:15.5px;line-height:1.4}
+.chev{flex:0 0 10px;width:10px;height:10px;border-right:2px solid var(--muted);
+  border-bottom:2px solid var(--muted);transform:rotate(45deg);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.card.open .chev{transform:rotate(-135deg)}
+.card-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1)}
+.card.open .card-body{grid-template-rows:1fr}
+.card-body>.card-inner{overflow:hidden;min-height:0;padding:0 16px}
+.card-inner>*:last-child{margin-bottom:16px}
+.sentence{font:400 17.5px/1.72 Georgia,'Times New Roman',serif;padding:12px 0;
+  border-top:1px solid var(--line)}
+.word-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:12px 0 4px;
+  border-top:1px solid var(--line)}
+.word{font:700 21px/1.3 Georgia,serif}
+.ipa{color:var(--muted);font-size:14.5px}
+.gloss-inline{font-size:14px;color:var(--muted)}
+.band{font-size:11.5px;padding:2px 9px;border-radius:999px;background:var(--bg);
+  border:1px solid var(--line);color:var(--muted);font-weight:600}
+.analysis{padding:4px 0 10px}
+.fld{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;
+  border-top:1px dashed var(--line)}
+.fld-k{color:var(--muted);font-size:12.5px;font-weight:700;padding-top:2px;letter-spacing:.01em}
+.fld-v{font-size:15px;line-height:1.7}
+.fld-v ul{margin:0;padding-left:18px}
+.fld-v li{margin:4px 0}
+.badge-row{display:flex;flex-wrap:wrap;gap:6px}
+.badge{display:inline-block;padding:5px 10px;border-radius:8px;background:var(--bg);
+  border:1px solid var(--line);font-size:12px;color:var(--muted);margin-bottom:8px}
+.badge.warn{color:#B25000;border-color:#F5A623;background:rgba(245,166,35,.10)}
+@media (prefers-color-scheme:dark){.badge.warn{color:#FBBF24}}
+
+/* Grammar marking: color + distinct underline style */
+.g-clause{text-decoration:underline solid var(--c-clause) 2px;text-underline-offset:3px}
+.g-nonfinite{text-decoration:underline dotted var(--c-nonfinite) 2px;text-underline-offset:3px}
+.g-subjunctive{text-decoration:underline dashed var(--c-subj) 2px;text-underline-offset:3px}
+.g-inversion{text-decoration:underline double var(--c-inv) 2px;text-underline-offset:3px}
+.g-nominal{text-decoration:underline wavy var(--c-nom) 2px;text-underline-offset:3px}
+
+/* Quiz */
+.quiz-q{margin:0 0 16px}
+.quiz-stem{font-weight:650;margin:18px 0 10px;font-size:15.5px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 14px;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  color:inherit;font:inherit;font-size:15px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt-k{flex:0 0 24px;height:24px;border-radius:999px;background:var(--bg);border:1px solid var(--line);
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.opt.right{border-color:#10B981;background:rgba(16,185,129,.12)}
+.opt.right .opt-k{background:#10B981;color:#fff;border-color:transparent}
+.opt.wrong{border-color:#EF4444;background:rgba(239,68,68,.12)}
+.opt.wrong .opt-k{background:#EF4444;color:#fff;border-color:transparent}
+.opt[disabled]{cursor:default}
+.quiz-exp{margin-top:10px;padding:12px 14px;background:var(--bg);border-radius:13px;
+  font-size:14px;color:var(--muted);border:1px solid var(--line)}
+.score{position:sticky;top:52px;z-index:5;padding:9px 0;font-size:14px;color:var(--muted);
+  background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px)}
+.score b{color:var(--text);font-size:17px}
+
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer .grad{height:3px;border-radius:2px;margin-bottom:16px;background:var(--g-overview)}
+
+@media (max-width:430px){
+  .hero{border-radius:18px;padding:22px 18px}
+  .hero h1{font-size:25px}
+  .wrap{padding:18px 14px 64px}
+  nav.pills{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+  .fld{grid-template-columns:1fr;gap:1px}
+  .sentence{font-size:16.5px}
+  .card-title{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">readkiller · 英语精读</div>
+    <h1>The Elephant Vanishes — Haruki Murakami (trans. Jay Rubin)</h1>
+    <div class="meta"><span class="tag primary">文化艺术</span><span class="tag">文学小说</span><span class="tag">1985/1991</span><span class="tag">约 IELTS 7 / CEFR C1</span></div>
+  </header>
+  <nav class="pills"><a href="#grammar" data-sec="grammar" data-tip="语法 · 12 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M4 12h16M4 18h12"/><circle cx="18" cy="6" r="2.4"/></svg><span>语法</span></a><a href="#pattern" data-sec="pattern" data-tip="句型 · 10 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="7" height="7" rx="2"/><rect x="13.5" y="12.5" width="7" height="7" rx="2"/><path d="M10.5 8h3M12 8v4.5"/></svg><span>句型</span></a><a href="#word" data-sec="word" data-tip="单词 · 20 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h5.5a3.5 3.5 0 0 1 0 7H5zM5 11.5h6.5a3.5 3.5 0 0 1 0 7H5z"/></svg><span>单词</span></a><a href="#phrase" data-sec="phrase" data-tip="短语 · 10 项"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 8 11l-3 1.5L8 14l1.5 4.5L11 14l3-1.5L11 11z"/><path d="M17.5 4v3.5M15.75 5.75h3.5"/></svg><span>短语</span></a><a href="#quiz" data-sec="quiz" data-tip="自测 · 10 题"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.4 9.4a2.7 2.7 0 1 1 3.4 2.6c-.6.2-.8.7-.8 1.3v.4"/><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/></svg><span>小测</span></a></nav>
+  <section class="section">
+    <h2>摘要 · Overview</h2>
+    <div class="summary">村上春树短篇《象的失踪》开篇一节。叙事者读报得知:镇上一头老象连同饲养员一起凭空消失,笼舍完好、钢环仍锁、地面无足迹。文章用**公文式的冷静笔调**叙述一件荒诞之事——这种「语气与内容错位」正是村上的标志性手法。&lt;br&gt;&lt;br&gt;**与考试文本的关键差异**:这不是说明文,而是**叙事文学**。语言特征完全不同——大量**过去完成时**构建时间层次,**分词短语**控制句子节奏,**自由间接引语**混合作者与人物视角,以及大量**感官细节的名词化罗列**。雅思写作不要求你写小说,但**托福/雅思阅读中的文学作品选段**、以及写作中的「描述细节」能力,都依赖这些技巧。这节的取材重点因此偏向「如何用英文写好一个场景」。</div>
+  </section>
+  <section id="grammar" class="section sec-grammar"><h2>语法 · Grammar</h2><p class="lead">共 12 项，点击展开解析。</p>
+      <div class="legend">
+        <span><b class="swatch g-clause">从句</b>实线</span>
+        <span><b class="swatch g-nonfinite">非谓语</b>点线</span>
+        <span><b class="swatch g-subjunctive">虚拟/情态</b>虚线</span>
+        <span><b class="swatch g-inversion">倒装/强调</b>双线</span>
+        <span><b class="swatch g-nominal">名词化</b>波浪线</span>
+      </div>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">过去完成时铺陈前情（past perfect for narrative backstory）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">On the ground, still locked, lay the steel shackle that had been fastened to the elephant&#x27;s hind leg, as though the elephant had slipped out of it.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">全句为**倒装**：地点状语 On the ground + 状态状语 <span class="g-inversion" title="强调">still locked</span> 前置，主语 the steel shackle 后置，谓语 lay；<span class="g-clause" title="从句">that had been fastened to the elephant&#x27;s hind leg</span> 为定语从句，用**过去完成时**表示「在发现之前就已锁上」；<span class="g-clause" title="从句">as though the elephant had slipped out of it</span> 为 as though 引导的方式状语从句，同样用过去完成时虚拟。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">倒装把 <span class="g-inversion" title="强调">On the ground, still locked</span> 推到句首，读者先看到「地上」和「仍然锁着」这个画面，然后才知道是什么东西——这是**先呈现再命名**的电影式手法,制造悬念。两个过去完成时（had been fastened / had slipped）建立了时间层次:叙述当下是「读报」,而这些动作发生在更早。as though 后用过去完成时表示**与事实相反的推测**(不可能滑脱),暗示荒诞。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">中国学生最常犯的错是把 as though 后的时态写错:as though the elephant slipped out 会变成对可能性的陈述,丢失「明知不可能」的虚拟含义。另外倒装句中主语后置,学生易误读 lay 为及物动词(「放置」),这里 lay 是 lie(躺、位于)的过去式。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思阅读中遇到过去完成时,要立刻意识到「这是背景信息」,可用于快速区分主线与插叙。写作 Task 1 描述流程图或历史变迁时,也需要用过去完成时交代「在某一时间点之前已完成」的状态。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>On the desk, still unopened, lay the letter that had been delivered two weeks earlier, as though no one had dared to read it.</li><li>In the corner, still humming, stood the machine that had been installed before the staff arrived, as though it had been waiting for them.</li><li>By the door, still locked, hung the coat that had been left behind in winter, as though its owner meant to return.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">On the platform, still glowing, hung the sign that had been lit for forty years, as though the station had never expected anyone to leave.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">倒装:地点状语前置 + 主语后置（locative inversion）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">On the ground, still locked, lay the steel shackle that had been fastened to the elephant&#x27;s hind leg</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-inversion" title="强调">On the ground, still locked</span> 为前置的地点状语与状态状语；谓语 lay；主语 the steel shackle；<span class="g-clause" title="从句">that had been fastened to the elephant&#x27;s hind leg</span> 为定语从句修饰 shackle。全句语序为「状语 + 谓语 + 主语」，是**完全倒装**。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">这是小说中最常用的**场景开场**技巧:把地点推到句首,相当于镜头先给一个空镜,再让物体入画。相比 The steel shackle lay on the ground, it was still locked,倒装版本更紧凑,且把「锁着」这个反常细节前置强调——因为整篇故事的核心谜团就是「锁完好而象不见了」。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">完全倒装要求谓语是**不及物动词**(lay, stand, hang, sit, come, go),且主语较长时最自然;若主语是代词则不能倒装(On the ground it lay 正确,On the ground lay it 错误)。学生常把 lay/lie/laid 三个词混用:lay(放置,及物)、lie(躺,不及物)、laid(lay 的过去式)。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 不需要这种文学倒装,但**托福阅读的文学选段**与**雅思 General Training 的记叙文**会用到。写作中描述场景时偶尔使用能显著提升画面感,但一段最多一次,否则显得做作。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>On the table, still smoking, sat the cup of tea that no one had touched.</li><li>In the doorway, still waiting, stood the dog that had followed him home.</li><li>At the window, still open, hung the curtain that the wind had lifted.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">In the corridor, still flickering, hung the light that the caretaker had meant to replace for months.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">as though 引导虚拟比较从句（subjunctive comparison）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">He was one of those people whose appearance is no longer influenced by their age after they pass a certain point in life.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句：He was <span class="g-inversion" title="强调">one of those people</span>；<span class="g-clause" title="从句">whose appearance is no longer influenced by their age after they pass a certain point in life</span> 为 whose 引导的定语从句修饰 people；从句内 <span class="g-subjunctive" title="虚拟语气">is no longer influenced by</span> 为被动语态；after they pass a certain point 为时间状语从句。注意定语从句中用**一般现在时**（is / pass），而主句用过去时（was）——表示这是**普遍真理式的描述**,不随时间改变。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">「one of those people who...」是英语中**把个体归入类型**的固定框架,作者用它来暗示这位饲养员属于某种可辨识的人物类型。定语从句改用现在时是关键技巧:它把描述从「那一刻的他」提升为「这类人的恒定特征」,读起来像格言,增加了叙述的权威感。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">中国学生常把 one of those people who 后的谓语写成单数(is),但关系词 who/whose 的先行词是 people(复数),谓语应用复数;不过此处 whose appearance is 中 is 的主语是 appearance(单数),所以是对的。真正的陷阱是**从句时态**:在过去的叙事中,描述永恒特征仍用现在时,学生常误写为 was。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作 Task 2 描述某一群体的普遍特征时,可用 X is one of those Y whose Z is... 。注意区分「具体事件」(用过去时)与「普遍特征」(用现在时),这种时态切换是高分标志。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>She was one of those teachers whose patience never seems to run out however difficult the class.</li><li>He was one of those writers whose reputation grows steadily after their death.</li><li>They were one of those families whose routines are fixed by the seasons rather than the calendar.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">It is one of those problems whose causes are obvious to everyone and whose solutions satisfy no one.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">现在分词 + 介词短语链作状语（participial chain）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Brushing away my toast crumbs, I studied every line of the article.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-nonfinite" title="非谓语">Brushing away my toast crumbs</span> 为现在分词短语作**时间/伴随状语**,逻辑主语是主句主语 I;主句:I studied every line of the article。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">这个分词短语看似只是交代一个动作,但它的作用是**让叙事保持连续**:读者不需要被告知「我读完了一段」,而是一次性接受了「拂去面包屑」与「研读每一行」两个动作的并行。这种紧凑感是文学叙事的核心节奏——用最少的分句承载最多的动作。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">分词状语的逻辑主语必须与主句主语一致。此处 brushing 的主语是 I,主句主语也是 I,正确。若写成 Brushing away my toast crumbs, the article was studied by me,就产生垂悬分词。另外 brushed(过去分词)表被动,此处是主动动作,必须用现在分词。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作中,用分词短语开头的句子能有效减少 I/we 开头的重复感。Task 2 论证时可用 Considering/Given 等分词结构。注意逻辑主语一致,这是考官判断句式掌控力的点。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>Clearing the desk of old papers, she began the report she had postponed for weeks.</li><li>Ignoring the noise from the street, he worked through the night without a break.</li><li>Folding the map carefully, they decided to take the longer route.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">Setting the alarm for five, she prepared everything the night before so that nothing could delay her departure.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">the more... the more 比较级平行结构（correlative comparatives）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The longer the elephant problem remained unresolved, the more interest the developer had to pay for nothing.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-inversion" title="强调">The longer</span> 引导比较级从句:the elephant problem remained unresolved(系表结构);<span class="g-inversion" title="强调">the more interest</span> 引导主句:the developer had to pay for nothing。两部分都用「the + 比较级」开头,构成**正比关系**。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">the more... the more... 结构把两个同时增长的量**绑定成因果关系**,语法上比 because 更优雅,读起来有一种不可阻挡的推进感。这里用它交代开发商的损失随时间累积,为后文「必须解决大象问题」提供经济动机——用一句紧凑的句子完成了一整段背景交代。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">两个 the 都是**副词/程度标记**,不可省略。学生常写成 The longer... the more interest... 时漏掉第二个 the,或把两个分句的语序搞混。注意结构是「the + 比较级 + 主语 + 谓语」,两个分句都要符合这个语序。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 论证连锁效应时极好用:The longer X continues, the more Y will cost。Task 1 描述两个指标的同步增长也可用。这是显示句式复杂度的高效结构。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The longer the delay continues, the more expensive the repairs become.</li><li>The more information we gather, the harder it becomes to reach a simple conclusion.</li><li>The less attention people pay to details, the greater the risk of serious error.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The more closely the coastline is studied, the less predictable its erosion appears to be.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">嵌入式感叹式插入语（parenthetical aside with em dashes）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The elephant endured these virtually meaningless (for the elephant, entirely meaningless) formalities with hardly a twitch, and it chomped on the bananas with a vacant stare.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句:The elephant endured these virtually meaningless formalities with hardly a twitch;括号内 <span class="g-inversion" title="强调">(for the elephant, entirely meaningless)</span> 为**插入语**,补充、强化前面的判断;and 连接第二分句:it chomped on the bananas with a vacant stare。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">括号插入语在此完成了两个功能:一是**递进强调**(virtually meaningless → entirely meaningless),二是**切换视角**——第一个判断是叙述者的,括号里的「对大象而言」则暗示从大象立场看,连「无意义」都谈不上,因为大象根本不懂仪式。这种括号旁白是村上标志性的幽默手法,用冷静的语气说出残酷的事实。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">括号插入语必须能**独立删去**而不破坏句子语法。此处删掉(for the elephant, entirely meaningless)后,The elephant endured these virtually meaningless formalities... 语法完整,正确。学生常把必要成分放进括号,导致删除后句子断裂。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作中插入语可用于补充说明,但**括号在正式学术写作中应慎用**,更稳妥的是破折号或逗号。口语 Part 3 中这种旁白式补充则很自然。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The committee approved the proposal (after three hours of debate that changed nothing) and adjourned for lunch.</li><li>She accepted the award (for which she had never applied) and thanked people she had never met.</li><li>The policy succeeded (if success means simply avoiding failure) and was quietly renewed.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The report was published (two years later than promised) and immediately superseded by a shorter one.</div></div></div>
+          <div class="badge-row"><span class="badge">括号插入语在正式学术写作中较为少见,考试写作建议改用破折号或逗号。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">not that... 让步补充（parenthetical concession）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">And so, after its companions were gone, the elephant stayed alone in the decaying zoo for nearly four months with nothing to do—not that it had had anything to do before.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句:<span class="g-clause" title="从句">after its companions were gone</span> 为时间状语从句;the elephant stayed alone in the decaying zoo for nearly four months with nothing to do;破折号后 <span class="g-inversion" title="强调">not that it had had anything to do before</span> 为**补充说明**,其中 not that 是「并不是说……」;从句用**过去完成时**(had had)表示「在那之前也一直没做过什么」。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">not that 引导的破折号补充,是叙述者**自我修正**的语气:刚说大象「四个月无事可做」,立刻补一句「其实它之前也没什么可做的」。这一句把同情心消解掉了,变成一种更冷峻的荒诞感——大象的一生本就是无事可做。这是村上式反讽的典型句法。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">not that 与 not because 不同:not that 用于**否定前文隐含的判断**(并不是说……),not because 用于说明原因不成立。学生常把两者混用。另外 had had 是「have 的过去完成时」,表示「在过去的那个过去已经有」,不是打字错误。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作中,not that 可用于补充让步,使论证更周全:...as the data shows—not that the data is complete。这种自我限定的语气能体现思辨的严谨。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The office had been quiet for weeks—not that anyone had expected it to be busy.</li><li>She had lived in the city for a decade—not that she had ever called it home.</li><li>The machine had been idle since spring—not that it had worked reliably before then.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The scheme was abandoned after two years—not that it had ever attracted the numbers it needed.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">介词短语前置 + 完全倒装（fronted locative + full inversion）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">In response, the mayor had this to say:</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v"><span class="g-inversion" title="强调">In response</span> 为介词短语作状语前置;主句 the mayor had this to say,宾语为 this,后接不定式 to say 作后置定语(literary idiomatic form);冒号引出下文的编号列表。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">「had this to say」是新闻与公文体中极常见的固定表达,比 the mayor said 更强调「接下来是他要讲的内容」,自然引出列表。这种**公文腔**与故事的荒诞内容形成反差——作者用官方文件的语气记录一件不可能之事,消解了荒诞感,反而让它更冷。整篇故事大量使用这种「清单 + 编号」的公文形式,是核心的文体策略。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">have this to say 是固定结构,不能改成 have this to say that... 或 have to say this。另外此处的冒号必须引出一个列表或解释,不能直接跟完整句子而不加说明。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 1 描述流程或官方程序时,可用 In response, X said the following。但需注意**这种公文体在考试写作中应谨慎使用**,过多的编号列表会被视为缺乏流畅论述。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>In reply, the council issued the following statement:</li><li>In response, the committee listed three objections:</li><li>To this the director had one thing to say:</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">In response, the ministry released the following figures for the previous quarter:</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">过去完成时 + 虚拟条件（past perfect with counterfactual）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">If it had been a spider monkey or a bat, they might have been able to get away with it, but the killing of an elephant would have been too hard to cover up, and if it ever came out afterward, the repercussions would have been tremendous.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">第一条件句:<span class="g-subjunctive" title="虚拟语气">If it had been a spider monkey or a bat</span>(过去完成时) + they <span class="g-subjunctive" title="虚拟语气">might have been able to get away with it</span>(would/might have done);转折 but 引出:<span class="g-subjunctive" title="虚拟语气">the killing of an elephant would have been too hard to cover up</span>;and 连接第二条件句:if it ever came out afterward + <span class="g-subjunctive" title="虚拟语气">the repercussions would have been tremendous</span>。注意第二个条件句用的是**混合虚拟**——if it ever came out(一般过去时,表示「万一将来事发」)+ would have been(过去将来完成,表示「在那之后本会……」)。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">这段话用**双重虚拟条件**推演「杀掉大象的后果」,语气完全是务实的成本收益分析——而讨论的对象是一头随时会死的老象。这种**用商业逻辑谈论生命**的错位,是整篇故事的道德底色。might have been able to 比 could have 更冗长、更书面,刻意制造了公文腔的距离感。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">这是雅思虚拟语气的高频考点,也是最容易出错的地方。规则是:与过去事实相反 → if + had done, would have done。学生常写成 if it was a spider monkey, they would get away with it(时态不足),或 if it had been..., they would be able(混合错误)。另外 get away with it 意为「做了坏事而不受惩罚」,不是「摆脱」。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 2 讨论反事实假设的标准句式:If X had been Y, the outcome would have been different。这是展示虚拟语气掌握度的最佳方式。注意主从句时态的严格对应。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>If the funding had been secured earlier, the project might have delivered results within the original deadline.</li><li>Had the warning been taken seriously, the damage would have been far less extensive.</li><li>If the policy had applied to smaller firms, the cost of compliance would have been prohibitive.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">If the data had been collected over a longer period, the seasonal effect would have been far easier to identify.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">同源宾语式「one of those people whose...」类型化描述</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">He was one of those people whose appearance is no longer influenced by their age after they pass a certain point in life.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">主句:He was one of those people;<span class="g-clause" title="从句">whose appearance is no longer influenced by their age after they pass a certain point in life</span> 为 whose 引导的定语从句,修饰 people;从句内部:appearance 为主语,is influenced 为被动谓语,after they pass a certain point 为时间状语从句。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">「one of those people whose...」是一个**类型化框架**,它把一个具体的人归入一类可识别的形象,因而省略了大量外貌描写,却让读者自动补足。定语从句用现在时(is / pass)而非过去时,把描述从「他当时的样貌」提升为「这类人的普遍特征」,使叙述带上格言式的权威感。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">注意 is 的单复数:whose 的先行词是 people(复数),但 is 的主语是 appearance(单数),所以用 is 是正确的——学生常因看到 people 而误用 are。另外 pass a certain point 不加 the,是固定搭配。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思写作描述群体特征时可用:X is one of those Y whose Z... 。关键在于区分「具体事件用过去时」与「普遍特征用现在时」,这种时态切换是高分标志。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>She was one of those teachers whose enthusiasm never seems to fade however routine the material.</li><li>They were one of those communities whose traditions survive regardless of how the town changes.</li><li>It was one of those buildings whose purpose is no longer obvious to anyone who passes it.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">He is one of those managers whose authority rests entirely on the trust of the people below him.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">with 复合结构作伴随状语（with + object + complement）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">It kept its blank gaze fixed on some indeterminate point in space, its ears and a few white hairs on its body waving gently in the breeze.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">第一分句:It kept its blank gaze <span class="g-nonfinite" title="非谓语">fixed on some indeterminate point in space</span>,keep + 宾语 + 过去分词作**宾补**(gaze 与 fix 是被动关系);第二分句为**独立主格结构**:its ears and a few white hairs on its body waving gently in the breeze,其中 waving 的逻辑主语是 its ears and hairs(与主句主语 it 不同,故构成独立主格)。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">先用 keep + 宾补定格「目光」这个静态,再用独立主格让「耳朵和几根白毛」在风中轻轻摇动——一静一动,画面立刻有了呼吸。**独立主格**是文学描写的重要工具,因为它允许一句话里容纳两个不同主语的并行动作,而不必拆成两个句子。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">独立主格与普通分词状语的**唯一区别**是逻辑主语不同:此处 waving 的主语是 ears/hairs,主句主语是 it,所以必须用独立主格(带自己的主语)。学生常省略 its ears 写成 waving gently,那就变成垂悬分词,读者会误以为「大象在挥手」。另外 keep sth fixed 中 fixed 是过去分词,不能用 fixing。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 1 描述图表或场景时,独立主格能让一个句子承载多个同时发生的变化,显著提升信息密度。Task 2 中较少使用。注意逻辑主语必须明确。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The building stood empty, its windows boarded and its roof slowly giving way to rain.</li><li>She waited by the gate, her hands deep in her pockets and her breath visible in the cold air.</li><li>The boat drifted with the current, its engine dead and its lights long since extinguished.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The market closed early, its stalls shuttered and its stallholders already counting the day&#x27;s takings.</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="grammar">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">现在完成进行时表持续状态（present perfect continuous for durative state）</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">They had been together for more than ten years, and you could sense their closeness in every gesture and look.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">成分拆解</div><div class="fld-v">第一分句:They <span class="g-subjunctive" title="虚拟语气">had been together for more than ten years</span>,用**过去完成时 + for + 时间段**表示「截至故事发生时刻已持续十年」;第二分句:you could sense their closeness in every gesture and look,用 could + 动词原形表示能力,you 为**泛指人称**(指任何人/叙述者自己)。</div></div><div class="fld"><div class="fld-k">为什么这样写</div><div class="fld-v">had been together for ten years 用过去完成时 + for 精确标记持续时间,一句话交代了深厚的共同经历,代替了大量背景叙述。第二句的 you 是**泛指用法**,把「我能感觉到」泛化为「任何人都会感觉到」,从而增强了判断的客观性——这是英语散文常见的技巧,让私人观察听起来像普遍真理。</div></div><div class="fld"><div class="fld-k">易错点</div><div class="fld-v">for + 时间段必须与**延续性动词**搭配:had been together 正确;若写成 had met for ten years 就错了(met 是瞬时动词)。另外泛指 you 在正式学术写作中应避免,改用 one 或被动语态,因为 you 显得口头化。</div></div><div class="fld"><div class="fld-k">备考建议</div><div class="fld-v">雅思 Task 1 描述时间跨度时,过去完成时 + for 是精确表达。Task 2 中泛指人称建议改用 it is evident that 等无人称结构,避免 you。</div></div><div class="fld"><div class="fld-k">举一反三</div><ul class="fld-v"><li>The two firms had been competing for nearly a decade, and the rivalry showed in every negotiation.</li><li>They had lived in the same house for thirty years, and the wear on the stairs told the whole story.</li><li>The scheme had been running for two years, and the results were visible in every neighbourhood.</li></ul></div><div class="fld"><div class="fld-k">高分例句</div><div class="fld-v">The programme had operated for a decade, and its influence could be traced in every subsequent reform.</div></div></div>
+          <div class="badge-row"><span class="badge">泛指 you 在正式学术写作中应替换为 one 或无人称结构。</span></div>
+        </div>
+      </div>
+    </article></section><section id="pattern" class="section sec-pattern"><h2>句型 · Patterns</h2><p class="lead">共 10 项，点击展开解析。</p>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">冷静语气叙述荒诞事件:公文腔与内容的错位</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">WHEN THE ELEPHANT disappeared from our town&#x27;s elephant house, I read about it in the newspaper.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">One day, a strange thing happened. The elephant in our town disappeared.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 strange 直接告诉读者「这事很奇怪」,反而削弱了效果。原文用**完全平实的陈述句**报道荒诞事件,连动词都是最普通的 read about it in the newspaper。这种「语气与内容错位」让读者自己感到不对劲,比直接说「奇怪」更有力——这是文学写作中「显示而非告知」(show, don&#x27;t tell)的典型应用。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">WHEN [荒诞事件] happened, I read about it in the newspaper.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>When the river changed course overnight, I heard about it from a neighbour.</li><li>When the factory closed without warning, I found out from the notice on the gate.</li><li>When the entire herd left the valley, I learned of it from a report on the radio.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作中不用于论证,但**描述类段落**(Task 1 地图变化、记叙文)可用这种平实笔法。口语 Part 2 讲故事时尤其有效:用平淡语气讲离奇经历。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">关键是把最反常的事实放进最普通的句式里,不要用 strange / unbelievable / shocking 这类标签词。让事实本身承担效果,读者会自己得出结论。这在写作中称为「克制叙述」。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">以具体细节代替概括:先呈现再命名</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The front page was filled with stories of SDI and the trade friction with America, after which I plowed through the national news, international politics, economics, letters to the editor, book reviews, real-estate ads, sports reports, and finally, the regional news.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The newspaper had many sections. I read all of them before I found the article.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 many sections 概括,读者毫无感觉。原文把**七个栏目名称逐一列出**(national news, international politics, economics, letters to the editor, book reviews, real-estate ads, sports reports),用冗长的罗列让读者**亲身体验**那种「翻报纸翻得不耐烦」的日常感。plowed through 这个动词尤其传神——「犁过去」暗示费力而机械。这是「用细节制造体验」而非「用概括传递信息」。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X was filled with [具名细节], after which I [动词] through [细节罗列], and finally [目标].</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The inbox was filled with routine notices, after which she worked through the invoices, the travel claims, the meeting minutes, the supplier queries, and finally, the one message that mattered.</li><li>The agenda was crowded with procedural items, after which we plowed through the budgets, the staffing review, the safety report, and finally, the proposal we had come to discuss.</li><li>The shelves were stocked with out-of-season goods, after which he searched through the canned food, the cleaning supplies, the pet food, and finally, the one aisle he needed.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 描述图表类别时可用并列罗列;Task 2 论证中适度使用可增加具体感。口语 Part 2 描述经历时最有效。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">罗列三到七项时,把**最重要的放最后**,并用 finally 标记。前面的项目越琐碎,最后的对比越强。注意罗列项之间语法必须平行(此处全是名词短语)。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">比喻收束场景:用具体物象定义抽象感受</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">It looked bigger than it needed to be, blank and empty like some huge, dehydrated beast from which the innards had been plucked.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">It looked very strange and empty without the elephant.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 strange / empty 两个抽象形容词,读者无法形成画面。原文用**一个延伸的比喻**把空笼舍比作「被掏空内脏的干瘪巨兽」——这个比喻本身有生命、有器官、有过程(plucked),把「空」这个静态概念变成了一个**带血的场景**。同时比喻还暗含讽刺:笼舍本是为活的巨兽而建,现在它自己成了巨兽的尸体。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">It looked [比较级] than it needed to be, [形容词] and [形容词] like some [具体物象] from which [具体动作] had been done.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The office looked larger than anyone remembered, bare and hollow like a shell from which the creature had long since withdrawn.</li><li>The stadium stood wider than it needed to be, silent and grey like a machine from which the power had been cut.</li><li>The classroom seemed bigger than before, clean and empty like a stage from which the actors had just departed.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 描述地图上建筑变化时可用;Task 2 中慎重使用,比喻过多会显得文学化。口语 Part 2 描述地点时非常有效。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">比喻要**延伸**(extended),即围绕一个具体物象展开多个细节(beast → dehydrated → innards → plucked),而不是简单说「像什么」。这样的比喻有画面、有过程、有余味。避免常见的 cliché 比喻。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">公文式清单消解荒诞:编号列表制造冷感</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">And so the various parties had met to deliberate on the matter, and they formulated an agreement on the disposition of the old elephant:</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">They had a meeting about the elephant and made a plan.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 had a meeting / made a plan,完全丢失了文体特征。原文刻意使用**公文体词汇**:parties(各方)、deliberate on(商议)、formulated an agreement(拟定协议)、disposition(处置)。随后用冒号引出编号列表。这种官僚语言用于讨论一头老象的命运,产生了强烈的**冷酷感**——一个生命被当作待处理的行政事项,这种错位正是故事的核心讽刺。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">And so the various parties had met to deliberate on the matter, and they formulated an agreement on [对象]:</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>And so the department met to review the matter, and produced a framework for the allocation of the remaining funds:</li><li>And so the committee convened to consider the question, and issued a set of criteria for the selection of the site:</li><li>And so the partners sat down to settle the dispute, and drafted a schedule for the division of the assets:</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 描述流程或政策程序;Task 2 引用法规条款时。**注意**:考试写作不宜模仿这种讽刺性公文体,但可借用其精确的正式词汇。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">这组词的语域标志非常明确:parties / deliberate / formulate / disposition 都是正式公文用语。学会辨认它们能帮你在阅读中快速判断文本性质(官方 vs 文学)。用于写作时要注意场合,过度使用会显得疏远。</div></div></div>
+          <div class="badge-row"><span class="badge">该句型含讽刺性文体模仿,考试写作中仅供识别,不建议模仿。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">叙述者自我修正:先用后否，制造反讽</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">The elephant stayed alone in the decaying zoo for nearly four months with nothing to do—not that it had had anything to do before.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The elephant was alone for four months with nothing to do. Actually, it never had anything to do.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 Actually 这个口语化词,且两句平铺。原文用破折号 + not that 的结构,把否定**折叠进同一句**,节奏更快,反讽更冷。关键是 had had anything to do before——过去完成时指出「在更早的过去也一直如此」,把同情彻底消解:不是「被冷落了四个月」,而是「它的一生本就无事可做」。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">X did/did not do Y—not that X had ever done otherwise.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>The building stood empty for most of the decade—not that it had ever been fully occupied.</li><li>She waited for an answer that never came—not that she had expected one.</li><li>The equipment sat unused in the corner—not that anyone had known how to operate it.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 论证中用于自我限定、避免绝对化;口语中表达反讽。学术写作建议改用 although / it should be noted that。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">not that 的作用是**收回刚刚给出的同情或强调**,使语气转为冷峻。它与 not because(原因不成立)不同:not that 否定的是**前文的隐含判断**。破折号是它的典型标记。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">以读报动作呈现心理:外部动作映射内部状态</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">I took my scrapbook down from the shelf, cut out the elephant article, and pasted it in. Then I washed the dishes and left for the office.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">I was very interested in the elephant. I collected all the news. Then I went to work.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版直接陈述心理(was very interested),读者被动接受信息。原文**完全不写心理**,只写四个连贯动作:took down → cut out → pasted → washed and left。读者从「剪报并粘贴」这个仪式性动作中自己推断出主人公的执着,而结尾的「洗碗、上班」又暗示了生活的照常进行——荒诞事件与日常秩序并置,产生强烈的张力。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">I [动作1], [动作2], and [动作3]. Then I [日常动作] and [日常动作].</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>He filed the report, closed the drawer, and switched off the lamp. Then he put on his coat and walked home.</li><li>She printed the letter, read it twice, and tore it into quarters. Then she made tea and sat down.</li><li>They packed the boxes, labelled each one, and stacked them by the door. Then they ate dinner and said nothing.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作中用于描述流程(Task 1)或叙事性段落。Task 2 论证不需要,但结论段偶尔可用具体动作收尾以增强印象。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">核心技巧是**删除所有心理形容词**,只留下可由外部观察的动作。读者会自行补足情感,而这种「自己发现的」情感比被告知的更牢固。注意最后两个动作要与前面的「异常」形成对比,通常用日常琐事收尾。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">用疑问句列举未解之谜:排比问句制造悬置感</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">There was a photo of policemen inspecting the empty elephant house.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The newspaper had a picture. It showed police looking at the empty house.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 has a picture / it showed,松散且缺乏视角。原文用 There was a photo of policemen inspecting...——「存在句 + 名词化事件(of + 动名词)」把整张照片的内容压缩成一个名词短语,语气客观如档案记录。inspecting 这个分词精确描述了动作,比 looking at 专业。这种「档案式客观」与后文不可能的事件形成张力。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">There was a photo of [主体] [动词-ing] [对象].</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>There was a photograph of officials measuring the flooded field.</li><li>There was a picture of workers dismantling the last of the machinery.</li><li>There was an image of volunteers clearing debris from the roadway.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 1 描述图表或照片内容时可直接套用。Task 2 引用视觉证据时也可用。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">There is/was + a photo/picture/image of + 主体 + 现在分词,是描述视觉材料的最高效框架。「of + 动名词」把动态事件名词化,适合客观陈述。注意 inspecting 的逻辑主语是 policemen。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">以否定罗列强化结论:排除法收束推理</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">Riddled as it was with such perplexities and labored circumlocutions, the newspaper article as a whole left but one possible conclusion: The elephant had not escaped. It had vanished.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">The article was confusing. But it showed the elephant did not escape. It disappeared.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 confusing 这个形容词和 But 这个生硬转折。原文用 <span class="g-inversion" title="强调">Riddled as it was with</span> 的**倒装让步句**(= Although it was riddled with),把冗长的让步压缩在句首;left but one possible conclusion 中 but 意为「只、仅」,是古雅的书面用法;结论用两个短句并列(had not escaped / had vanished),长短句对比造成决定性的一击。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">Riddled as it was with [问题], X left but one possible conclusion: A had not B. It had C.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>Contested as it was at every stage, the review left but one defensible conclusion: the policy had not failed. It had never been implemented.</li><li>Delayed as it was by repeated objections, the inquiry produced but one finding: the warnings had not been ignored. They had never been read.</li><li>Obscured as it was by technical language, the report supported but one reading: the risk had not risen. It had simply become visible.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 结论段收束论证;Task 1 解读数据后给出判断。正式书面语。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">「形容词/分词 + as + 主语 + be」是倒装让步结构(= Although...),比 Although 开头更紧凑有力。left but one conclusion 中 but = only,是高级书面用法。最后用两个短句并列形成对比,是最有效的收尾方式。</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">时间流逝的被动化:把时间比作他物</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">And so a number of unremarkable months went by, like a tired army marching past a window.</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">Several months passed. Nothing much happened.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用 passed / nothing much happened,平铺且无画面。原文用 went by 这个短语动词(比 passed 更有流逝感),再接一个**出人意料的比喻**:时间像「疲惫的军队走过窗前」。这个比喻同时传达了三层意思——数量众多(a number of months → army)、沉默疲惫(tired)、以及观察者只能被动旁观(marching past a window)。一个比喻写尽了时间、心境和视角。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">And so [时间段] went by, like [意外喻体] doing [动作].</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>And so another winter went by, like a long freight train passing in the dark.</li><li>And so the first year went by, like water finding its way through stone.</li><li>And so a decade went by, like a rumour that no one could quite confirm.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思写作中用于时间过渡(描述趋势或历史变化);口语 Part 2 讲述时间跨度时很有效。Task 2 论证中慎用,文学性过强。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">时间流逝的表达要避免 passed / went by alone。加一个**意外而具体的喻体**,并给喻体一个动作,比喻就活了。关键是喻体要与情感基调一致:这里 tired army 传达了疲惫与无力,与主人公的旁观者视角吻合。</div></div></div>
+          <div class="badge-row"><span class="badge">文学性较强,雅思 Task 2 论证中不宜使用。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="pattern">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">双重虚拟推演后果:if had done, would have done</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="sentence">If it had been a spider monkey or a bat, they might have been able to get away with it, but the killing of an elephant would have been too hard to cover up</div>
+          <div class="analysis"><div class="fld"><div class="fld-k">可替换的低级句型</div><div class="fld-v">A monkey would be easy to kill. But an elephant is too big.</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">低级版用一般现在时描述,完全没有虚拟语气,也没有成本推演。原文用**完整的第三条件句**(与过去事实相反)展开一场冷酷的推演:如果对象是猴子或蝙蝠,他们或许能蒙混过关;但大象太大,难以掩盖。措辞是纯粹的商业成本收益分析,而讨论的对象是生命——这种**语境错位**产生了强烈的道德寒意。</div></div><div class="fld"><div class="fld-k">结构骨架</div><div class="fld-v">If it had been [小对象], they might have been able to get away with it, but [大对象] would have been too hard to cover up.</div></div><div class="fld"><div class="fld-k">拓展高分例句</div><ul class="fld-v"><li>If the sum had been smaller, the auditors might have overlooked it, but a discrepancy of that size would have been impossible to hide.</li><li>If the site had been in a remote area, the damage might have gone unnoticed, but a spill that close to the reservoir would have been reported immediately.</li><li>If the delay had been a day or two, customers might have tolerated it, but a delay of six weeks would have destroyed the relationship.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论反事实假设、论证某做法为何不可行。正式书面语,是虚拟语气的高分展示点。</div></div><div class="fld"><div class="fld-k">迁移提示</div><div class="fld-v">结构固定:if + had done, might/would have done。注意 might have been able to 比 could have 更书面但更啰嗦,考试中 could have 更简洁。转折处用 but 引出关键差异,构成「排除法」论证。</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="word" class="section sec-word"><h2>单词 · Vocabulary</h2><p class="lead">共 20 项，点击展开解析。</p>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">vanish</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">vanish</span><span class="ipa">/ˈvænɪʃ/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈvænɪʃ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">消失,突然不见(常带神秘色彩)</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 disappear 相比,vanish 强调**突然、彻底且常带神秘性**,多用于无从解释的消失;disappear 是中性通用词,可以是逐渐的或可解释的。文学作品中描写离奇失踪必用 vanish,此篇标题即 The Elephant Vanishes。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">WHEN THE ELEPHANT disappeared from our town&#x27;s elephant house</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The keys seemed to have vanished from the drawer overnight.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自拉丁语 evanescere(消散),van- 与 vain(空的)同源——化为乌有。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">plow through</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">plow through</span><span class="ipa">/plaʊ θruː/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/plaʊ θruː/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">(费力地)读完全部;艰难推进</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 read 相比,plow through 强调**量大、费力、机械地读完**,含勉力而为的意味,是「犁过」的比喻;read 只是中性动作。与 skim 相反,skim 是快速略读,plow through 是逐字啃完。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">after which I plowed through the national news</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">She plowed through three hundred pages of evidence in a single weekend.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">plow(犁)+ through(穿过)——像犁地一样一路推过去。英式拼写为 plough。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">美式拼写 plow,英式拼写 plough。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">shackle</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">shackle</span><span class="ipa">/ˈʃækl/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈʃækl/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">镣铐,锁链;(复数)束缚</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 chain 相比,shackle 特指**锁在肢体上的金属环铐**,更具体且更强调束缚;chain 泛指链条,可以是连接用途。与 cuff 相比,cuff 指环状部分(shackle 包含 cuff),此篇两个词都出现了:cuff 是环,shackle 是含环与链的整体。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">lay the steel shackle that had been fastened to the elephant&#x27;s hind leg</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The prisoners wore shackles around their ankles.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">与 shake 同源,原指「连接之物」——把东西锁在一起。引申义常指自由受束缚。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">hind</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">hind</span><span class="ipa">/haɪnd/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/haɪnd/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">后部的(用于动物肢体)</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 back 相比,hind 是**动物解剖学专用词**,只用于四肢动物的后肢(hind leg / hind quarters);back 是通用词,也可用于人。注意 hind 只作定语,不能作表语。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">had been fastened to the elephant&#x27;s hind leg</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The horse injured a hind leg and was withdrawn from the race.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">古英语 hindan(从后面),与 behind 同源。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">仅用于动物,且只作定语。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">unanimous</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">unanimous</span><span class="ipa">/juˈnænɪməs/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/juˈnænɪməs/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">一致同意的;一致通过的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 agreed 相比,unanimous 强调**全体无一人反对**,是法律与新闻的精确用词;agreed 只表示「达成一致」,不排除有异议者被说服。与 consensus 相比,consensus 是名词且指「普遍意见」,未必全体一致。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">according to the unanimous testimony of the pupils</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The board reached a unanimous decision to postpone the launch.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">un-(一)+ anim(心)——同一条心。同源词 animate(使有生气)。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">feeble</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">feeble</span><span class="ipa">/ˈfiːbl/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈfiːbl/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">虚弱的,衰弱的;无力的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 weak 相比,feeble 强调**因年老或疾病而显得可怜无力**,带同情色彩,且程度更重;weak 更中性。与 frail 相比,frail 强调「体质脆弱、易受伤」,feeble 强调「力量衰竭」。此处形容老象,feeble 比 weak 更能唤起怜悯。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">not one of them was willing to take in a feeble old thing</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">He gave a feeble wave as the train pulled away.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">源自拉丁语 flebilis(可哭泣的),与「哭泣、悲叹」有关——因无力而令人悲叹。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">decaying</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">decaying</span><span class="ipa">/dɪˈkeɪɪŋ/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/dɪˈkeɪɪŋ/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">腐朽的,破败的;正在腐烂的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 old 相比,decaying 强调**正在朽坏的过程中**,是动态的衰败;old 只表示年头久。与 ruined 相比,ruined 指「已毁坏」的结果状态,decaying 强调持续进行的过程。此篇用 decaying zoo 而非 old zoo,突出了「正在死去」的画面。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the elephant stayed alone in the decaying zoo</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The decaying warehouse became a favourite subject for photographers.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">de-(向下)+ cay(落下)——向下坠落。同源词 decadence(衰落)。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">repercussion</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">repercussion</span><span class="ipa">/ˌriːpəˈkʌʃn/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌriːpəˈkʌʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">(间接的、长期的)恶果,影响</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 consequence 相比,repercussion 强调**间接且延迟显现的负面后果**,常用于政治、社会事件;consequence 更中性且可以是直接的。与 effect 相比,repercussion 几乎总是负面的,且暗示「反弹」的意味。注意常用复数 repercussions。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the repercussions would have been tremendous</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The decision had repercussions far beyond the region.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">re-(回)+ percuss(击打)——打回来,故为「回响、反弹」。同源词 percussion(打击乐)。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">常用复数形式。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">deliberate</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">deliberate</span><span class="ipa">/dɪˈlɪbəreɪt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/dɪˈlɪbəreɪt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">仔细商议,审议(动词)</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 discuss 相比,deliberate 强调**为作出正式决定而郑重商议**,常用于委员会、法庭等正式场合;discuss 更日常。注意发音陷阱:动词重音在第二音节 /dɪˈlɪbəreɪt/,形容词「故意的」重音在第一节 /dɪˈlɪbərət/。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the various parties had met to deliberate on the matter</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The panel deliberated for three days before issuing its verdict.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">de-(加强)+ libr(天平,与 libra 同源)——反复称量,故为慎重商议。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">动词与形容词发音不同:动词 /dɪˈlɪbəreɪt/,形容词 /dɪˈlɪbərət/。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">disposition</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">disposition</span><span class="ipa">/ˌdɪspəˈzɪʃn/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌdɪspəˈzɪʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">处置,安排(正式用语);(人的)性情</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 arrangement 相比,disposition 更正式,常用于法律与行政语境(资产的处置、人员的调配);arrangement 更通用。与 disposal 相比,at one&#x27;s disposal 表示「可供使用」,而 disposition 指「处置的决定」。此篇用 disposition of the old elephant,是刻意的官僚用语。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">they formulated an agreement on the disposition of the old elephant</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The disposition of the estate took nearly two years to settle.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">dis-(分开)+ posit(放置)——分开放置,故为安排、处置。同源词 position。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">正式用语,日常对话中罕见。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">11</span>
+        <span class="card-title">boil up</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">boil up</span><span class="ipa">/bɔɪl ʌp/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/bɔɪl ʌp/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">(情绪、事态)爆发,激化</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 appear 相比,boil up 形象地表现**情绪从内部逐渐积聚并突然爆发**,含沸水翻腾的比喻;appear 只表示出现。与 erupt 相比,erupt 更剧烈且多用于暴力事件,boil up 可指不满情绪的酝酿。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">a movement opposing the measure boiled up from within the ranks of the opposition party</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Discontent had been boiling up among staff for months before the strike.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">boil(煮沸)+ up(向上)——像沸水一样向上翻涌。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">12</span>
+        <span class="card-title">tenacity</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">tenacity</span><span class="ipa">/təˈnæsəti/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/təˈnæsəti/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">坚持,执拗;不放弃</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 persistence 相比,tenacity 语气更强,含**紧抓不放、近乎固执**的意味,常带一点贬义或令人佩服的复杂色彩;persistence 较中性,指持续努力。此篇用 clung with desperate tenacity 描写报纸抓住一个错误假设不放,带明显讽刺。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">a hypothesis to which the paper clung with desperate tenacity</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">Her tenacity in pursuing the story eventually uncovered the fraud.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">ten- 与拉丁语 tenere(抓住)同源——紧抓不放。同源词 retain、tenant。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">13</span>
+        <span class="card-title">circumlocution</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">circumlocution</span><span class="ipa">/ˌsɜːkəmləˈkjuːʃn/</span><span class="band">C2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌsɜːkəmləˈkjuːʃn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">迂回的说法,拐弯抹角的表达</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 ambiguity 相比,circumlocution 指**故意绕圈子、避免直说**,是表达方式的问题;ambiguity 指「意思含混」,是理解结果的问题。这是高阶词汇,文学评论与正式写作中偶见。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">Riddled as it was with such perplexities and labored circumlocutions</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The report&#x27;s circumlocutions made it impossible to tell who was responsible.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">circum-(环绕)+ locut(说)——绕着说。同源词 elocution(演说术)。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C2</div></div></div>
+          <div class="badge-row"><span class="badge">高阶词汇,雅思阅读中可能作为干扰词出现。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">14</span>
+        <span class="card-title">perplexity</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">perplexity</span><span class="ipa">/pəˈpleksəti/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/pəˈpleksəti/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">困惑,费解的事物</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 confusion 相比,perplexity 更书面且强调**因难以理解而产生的困扰**,常用于形容复杂事物的性质;confusion 更口语,也可指混乱状态。此篇用复数 perplexities 指「重重疑点」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">Riddled as it was with such perplexities</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The case was full of perplexities that no single theory could explain.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">per-(彻底)+ plex(编织)——缠成一团,故为困惑。同源词 complex。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">15</span>
+        <span class="card-title">fortresslike</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">fortresslike</span><span class="ipa">/ˈfɔːtrə slaɪk/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈfɔːtrə slaɪk/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">堡垒似的,固若金汤的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 strong 相比,fortresslike 是**复合形容词**,通过具体物象(堡垒)传达「防御工事级别」的坚固,画面感强;strong 只是抽象形容。构词法:noun + like 构成形容词,如 childlike、businesslike。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">There was no way the elephant could have escaped from this fortresslike enclosure.</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The embassy was a fortresslike compound with cameras on every wall.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">fortress(堡垒)+ -like(像……的),复合形容词构词法。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">16</span>
+        <span class="card-title">wooded</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">wooded</span><span class="ipa">/ˈwʊdɪd/</span><span class="band">B2</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈwʊdɪd/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">树木覆盖的,多林的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 forested 相比,两者接近,但 wooded 通常指**面积较小、树木散布**的地带,常用于郊区或公园;forested 指大面积的森林覆盖。与 woody 相比,woody 指「木质的、木头般的」,是完全不同的意思,易混淆。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">A wooded area was cleared</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">They built the house at the edge of a wooded valley.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">wood(树林)+ -ed(有……的)。注意与 woody(木质的)区分。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          <div class="badge-row"><span class="badge">注意勿与 woody(木质的)混淆。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">17</span>
+        <span class="card-title">gym</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">gym</span><span class="ipa">/dʒɪm/</span><span class="band">B1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/dʒɪm/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">体育馆,室内运动场(此指学校体育馆)</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 stadium 相比,gym 指**室内场馆**,常用于学校体育活动或健身;stadium 指室外大型体育场,用于比赛和观众席。与 gymnasium 相比,gymnasium 是完整形式,更正式,但含义相同。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">the elementary school&#x27;s aging gym was moved there as an elephant house</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The old gym was converted into a library when the new sports hall opened.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">gymnasium 的缩写,源自希腊语 gymnazein(裸体锻炼)——古希腊运动员赤身训练。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">18</span>
+        <span class="card-title">prefab</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">prefab</span><span class="ipa">/ˈpriːfæb/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈpriːfæb/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">预制房屋(预制板搭建的临时建筑)</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 cabin 相比,prefab 强调**工厂预制后现场组装**,通常廉价且临时的;cabin 指小木屋,强调材质和简陋。与 portable 相比,portable 强调「可移动」,prefab 强调「预制建造」。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">The keeper lived in a small prefab room attached to the elephant house</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The site office was a prefab hut that rattled in strong winds.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">prefabricated(预制的)的缩写。pre-(预先)+ fabricate(制造)。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">19</span>
+        <span class="card-title">reticent</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">reticent</span><span class="ipa">/ˈretɪsnt/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈretɪsnt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">沉默寡言的,不愿多说的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 silent 相比,reticent 强调**性格上不愿表达**,而非当下不说话;silent 只陈述「没出声」这一状态。与 reserved 相比,reserved 指「矜持、不外露」,偏中性甚至含褒义;reticent 更强调「不愿谈」这一倾向,有时含轻微的批评。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">Generally, he remained a reticent, lonely-looking old man.</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">He was reticent about his role in the negotiations.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">re-(反复)+ tac(沉默,与 tacit 同源)——一再沉默。同源词 tacit(心照不宣的)。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="word">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">20</span>
+        <span class="card-title">indeterminate</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">indeterminate</span><span class="ipa">/ˌɪndɪˈtɜːmɪnət/</span><span class="band">C1</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˌɪndɪˈtɜːmɪnət/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">不确定的,模糊的;无法明确判定的</div></div><div class="fld"><div class="fld-k">近义词辨析</div><div class="fld-v">与 uncertain 相比,indeterminate 更正式,强调**本身无法被确定**,而非「尚未确定」;uncertain 可指「还不知道」。与 vague 相比,vague 指表达不清,indeterminate 指对象本身没有明确界限。此处形容大象凝视的「某个不可确定的点」,极精确。</div></div><div class="fld"><div class="fld-k">原句搭配</div><div class="fld-v">It kept its blank gaze fixed on some indeterminate point in space</div></div><div class="fld"><div class="fld-k">记忆例句</div><div class="fld-v">The project continued for an indeterminate period with no clear endpoint.</div></div><div class="fld"><div class="fld-k">词根/联想</div><div class="fld-v">in-(否定)+ determinate(确定的)——无法界定的。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article></section><section id="phrase" class="section sec-phrase"><h2>短语 · Phrases</h2><p class="lead">共 10 项，点击展开解析。</p>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">1</span>
+        <span class="card-title">get away with</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">get away with</span><span class="gloss-inline">做了坏事而未受惩罚;侥幸逃脱</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɡet əˈweɪ wɪð/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">做了坏事而未受惩罚;侥幸逃脱</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">not be punished</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">not be punished 只陈述结果,get away with 强调**明知不该做却成功逃脱追责**,含道德评价与侥幸意味。它常用于暗示「因为没人发现」而非「因为正当」,非常适合讨论灰色地带。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 escape 相比,escape 指「逃离」具体场所或危险,get away with 专指「逃脱责任」。与 be let off 相比,be let off 是「被从轻发落」(有人裁决),get away with 是「根本没人追究」。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Small firms often get away with safety violations because inspections are so rare.</li><li>He got away with the error simply because no one checked the figures.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论监管缺失、执法不严;口语 Part 3 讨论责任。书面口语皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">2</span>
+        <span class="card-title">out of the question</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">out of the question</span><span class="gloss-inline">不可能的,根本不予考虑</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/aʊt əv ðə ˈkwestʃən/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">不可能的,根本不予考虑</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">习语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">impossible</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">impossible 只表示「做不到」,out of the question 表示**在讨论层面就被排除**,即「连考虑都不必」。它常用于表明某方案因道德或规则原因不可行,语气比 impossible 更强硬且更正式。注意与 out of question(不成问题,现已罕用)的区别。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 not an option 相比,not an option 更口语且可以指「不划算」;out of the question 更强,暗示「绝对不允许」。与 unthinkable 相比,unthinkable 强调因违背价值观而无法想象,out of the question 更侧重实际上的不可能。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Closing the school is out of the question while the alternative site remains unusable.</li><li>Raising tuition again is out of the question given current student debt levels.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 排除某方案;口语 Part 3 表达坚决立场。书面口语皆可,正式场合亦适用。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          <div class="badge-row"><span class="badge">注意与 out of question(不成问题)区分,后者现已罕用。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">3</span>
+        <span class="card-title">warm to</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">warm to</span><span class="gloss-inline">对……产生好感,开始喜欢</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/wɔːm tuː/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">对……产生好感,开始喜欢</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">like</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">like 是静态动词,只陈述喜好状态;warm to 是**过程动词**,表示好感**逐渐建立**。用 never really warmed to 表明孩子们尝试过但始终没能喜欢上他,比 didn&#x27;t like him 更细腻地传达了那种「努力了却无法亲近」的遗憾。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 take to 相比,take to 强调**初次见面即喜欢**,是瞬间的;warm to 强调逐渐升温的过程,需要时间。与 grow on 相比,grow on sb 是「越来越喜欢」,侧重对象主动产生影响;warm to 侧重主体自己的态度转变。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>The team took a while to warm to the new manager&#x27;s methods.</li><li>Investors have slowly warmed to the idea of longer-term, lower-yield bonds.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思口语 Part 2/3 描述人际或态度变化;写作中描述公众接受度变化。半正式与口语为主。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">4</span>
+        <span class="card-title">all in favor of</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">all in favor of</span><span class="gloss-inline">完全支持,全力赞成</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɔːl ɪn ˈfeɪvə ɒv/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">完全支持,全力赞成</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">固定搭配</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">supported</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">supported 只是陈述立场,all in favor of 中的 all 强调**毫无保留、完全支持**,语气更鲜明。这个短语也常见于正式会议表决(all in favor, say aye),带有某种「公开表态」的意味,此处用于一个人的私下立场,产生轻微的反差趣味。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 in support of 相比,后者更正式且中性,常用于书面报告;all in favor of 更口语化且带个人情感色彩。与 in favour of 相比,省略 all 后语气减弱,不强调「完全」。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Most residents are all in favor of the new park, though few want to pay for it.</li><li>She was all in favor of the reform until she saw the implementation costs.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 表达立场;口语 Part 3 表态。半正式与口语为主。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">5</span>
+        <span class="card-title">in swaying dresses</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">in swaying dresses</span><span class="gloss-inline">穿着飘动的裙子(描写性短语)</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɪn ˈsweɪɪŋ ˈdresɪz/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">穿着飘动的裙子(描写性短语)</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">介词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">wearing dresses</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">wearing dresses 只传达信息,swaying 这个分词赋予裙子**动态与声音感**,读者能看见裙摆摆动。这种「用一个分词让静态描写动起来」的手法是散文写作的核心技巧。括号里紧随的一句冷评(neither especially good-looking)又立刻消解了这份美感,是典型的村上式反讽。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 in flowing dresses 相比,flowing 强调布料下垂的质感,swaying 强调人在走动时的摆动,是动态的。与 in long dresses 相比,long 只描述长度,不含动感。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>A group of children in matching hats filed past the memorial.</li><li>She arrived in a coat still damp from the rain.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思口语 Part 2 描述人物或场合;写作中描述性段落。正式论证中不宜使用。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          <div class="badge-row"><span class="badge">文学描写性表达,学术写作中不适用。</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">6</span>
+        <span class="card-title">ill at ease</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">ill at ease</span><span class="gloss-inline">不自在,局促不安</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ɪl ət iːz/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">不自在,局促不安</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">习语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">uncomfortable</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">uncomfortable 可以指身体不适,含义宽泛;ill at ease 专指**心理上的不自在**,且带有一点优雅的克制感,常用于描述在社交场合中那种难以言明的不安。它比 nervous 更含蓄,不透露具体原因。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 uneasy 相比,uneasy 指「隐约不安」,可针对具体事情;ill at ease 更侧重**环境造成的局促感**,通常与人际场所有关。与 awkward 相比,awkward 可指「笨拙」,ill at ease 只描述感受,不评判表现。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>He seemed ill at ease among the guests, though he answered every question politely.</li><li>Many first-year students feel ill at ease until they find their own group.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思口语 Part 2 描述人物性格或场合感受;写作中描写人物状态。半正式与口语为主。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">7</span>
+        <span class="card-title">attend to</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">attend to</span><span class="gloss-inline">照料,处理,应对</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/əˈtend tuː/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">照料,处理,应对</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">take care of</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">take care of 较口语且笼统;attend to 更书面,强调**有条不紊地逐项处理需要照应的事**,常用于职务、病人、事务。这个短语带专业感与责任感,用于饲养员身上,暗示他是认真履行职责的。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 look after 相比,look after 更口语,多用于照看人或宠物;attend to 更正式,可用于事务(attend to a matter)。与 deal with 相比,deal with 侧重「应付问题」,常含困难意味;attend to 更中性甚至正面。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Nurses attend to dozens of patients during a single shift.</li><li>The minister said the department would attend to the complaints individually.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论公共服务或职责;口语描述工作。正式与半正式皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">B2</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">8</span>
+        <span class="card-title">live out</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">live out</span><span class="gloss-inline">度过(余生);活完(余年)——此处指让大象在被指定的地方走完生命最后阶段</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/lɪv aʊt/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">度过(余生);活完(余年)——此处指让大象在被指定的地方走完生命最后阶段</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">spend the rest of its life</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">spend 是中性动词,用完就完了;live out 强调**有始有终地走完生命最后阶段**,带一种庄重甚至宿命的意味。它常用于囚犯、流放者或动物——暗示这段生命是在被指定的地方被动度过的。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 spend 相比,spend 中性且可指任意时间段;live out 专指「活到尽头」,且隐含环境由他人决定。与 end one&#x27;s days 相比,end one&#x27;s days 更强调终结,常暗示凄凉;live out 相对中性,只陈述事实。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>After the war he lived out his remaining years in a village on the coast.</li><li>The animals were relocated to a sanctuary where they could live out their lives in peace.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思口语 Part 2 描述人物晚年或动物处境;写作中叙事段落。正式与半正式皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">9</span>
+        <span class="card-title">boil up from within</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">boil up from within</span><span class="gloss-inline">从内部酝酿并爆发</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/bɔɪl ʌp frɒm wɪˈðɪn/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">从内部酝酿并爆发</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">动词短语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">started inside</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">started inside 只是陈述位置;boil up from within 用**沸水翻腾**的比喻表现情绪从内部积聚、升温直至爆发的过程,同时 from within 强调这是**体制内部**的反对,而非外部压力,政治含义更准确。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 arise within 相比,arise 是中性书面词,只表示「产生」,无温度;boil up 带强烈的情绪与压力感。与 erupt from 相比,erupt 暗示突然而剧烈,boil up 暗示有一个酝酿过程。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>Anger boiled up from within the union&#x27;s own membership long before any public protest.</li><li>Frustration had been boiling up from within the department for years before the report was leaked.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论组织内部矛盾或社会运动;口语 Part 3 分析成因。正式与半正式皆可。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article>
+    <article class="card" data-kind="phrase">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-idx">10</span>
+        <span class="card-title">shrouded in mystery</span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="card-body">
+        <div class="card-inner">
+          <div class="word-head"><span class="word">shrouded in mystery</span><span class="gloss-inline">笼罩在神秘之中,真相不明</span></div>
+          <div class="analysis"><div class="fld"><div class="fld-k">音标</div><div class="fld-v">/ˈʃraʊdɪd ɪn ˈmɪstri/</div></div><div class="fld"><div class="fld-k">释义</div><div class="fld-v">笼罩在神秘之中,真相不明</div></div><div class="fld"><div class="fld-k">结构类型</div><div class="fld-v">习语</div></div><div class="fld"><div class="fld-k">可替换表达</div><div class="fld-v">very unclear</div></div><div class="fld"><div class="fld-k">升级点</div><div class="fld-v">very unclear 平淡且程度模糊;shrouded in mystery 用**裹尸布**的意象(shroud),暗示真相被完全遮盖且带不祥意味,是一个极具画面感且常用的新闻习语。它比 unclear 的分量重得多,常用于无解的案件或事件。</div></div><div class="fld"><div class="fld-k">同义短语辨析</div><div class="fld-v">与 unclear 相比,unclear 只是「不清楚」,程度轻,可用于任何信息;shrouded in mystery 暗示**刻意或神秘地被遮蔽**,且通常无人能解释。与 unknown 相比,unknown 只表示「未知」,不含神秘氛围。</div></div><div class="fld"><div class="fld-k">高分例句</div><ul class="fld-v"><li>The cause of the collapse remains shrouded in mystery five years on.</li><li>The company&#x27;s ownership structure is still shrouded in mystery.</li></ul></div><div class="fld"><div class="fld-k">适用场景</div><div class="fld-v">雅思 Task 2 讨论信息不透明或未解问题;Task 1 描述数据缺失。正式书面语与新闻体。</div></div><div class="fld"><div class="fld-k">难度</div><div class="fld-v">C1</div></div></div>
+          
+        </div>
+      </div>
+    </article></section>
+  
+    <section id="quiz" class="section sec-quiz">
+      <h2>小测 · Check yourself</h2>
+      <p class="lead">10 题，点击选项立即判定并给出解析。</p>
+      <div class="score" id="score"><span>得分</span> <b>0</b> <span>/ 10</span></div>
+      
+        <div class="quiz-q" data-q="1">
+          <div class="quiz-stem">1. &quot;On the ground, still locked, lay the steel shackle&quot; 中 lay 是什么词的过去式?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>lay(放置,及物)</button><button class="opt" data-correct="1"><span class="opt-k">B</span>lie(躺、位于,不及物)的过去式</button><button class="opt" data-correct="0"><span class="opt-k">C</span>lie(说谎)的过去式</button><button class="opt" data-correct="0"><span class="opt-k">D</span>launch 的缩写</button></div>
+          <div class="quiz-exp" hidden>此句为完全倒装,主语是 the steel shackle,谓语 lay 是 lie(躺、位于)的过去式。学生常误认为 lay 是「放置」,那样句子就缺宾语了。三个易混词:lay(放置,过去式 laid)、lie(躺,过去式 lay)、lie(说谎,过去式 lied)。</div>
+        </div>
+        <div class="quiz-q" data-q="2">
+          <div class="quiz-stem">2. &quot;as though the elephant had slipped out of it&quot; 中用过去完成时是因为?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>表示比过去更早</button><button class="opt" data-correct="1"><span class="opt-k">B</span>表示与事实相反的虚拟推测</button><button class="opt" data-correct="0"><span class="opt-k">C</span>表示将来完成</button><button class="opt" data-correct="0"><span class="opt-k">D</span>表示被动语态</button></div>
+          <div class="quiz-exp" hidden>as though 后接过去完成时表示「明知不可能」的虚拟推测——大象不可能滑脱钢环。若用一般过去时 slipped,则变成对可能性的陈述,丢失了荒诞感。</div>
+        </div>
+        <div class="quiz-q" data-q="3">
+          <div class="quiz-stem">3. &quot;The longer the elephant problem remained unresolved, the more interest the developer had to pay&quot; 属于什么结构?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>条件句</button><button class="opt" data-correct="1"><span class="opt-k">B</span>the + 比较级... the + 比较级 的正比结构</button><button class="opt" data-correct="0"><span class="opt-k">C</span>倒装句</button><button class="opt" data-correct="0"><span class="opt-k">D</span>强调句</button></div>
+          <div class="quiz-exp" hidden>这是「the + 比较级,the + 比较级」结构,表示两个量成正比。两个 the 都是程度标记,均不可省略,两个分句都要用「the + 比较级 + 主语 + 谓语」语序。</div>
+        </div>
+        <div class="quiz-q" data-q="4">
+          <div class="quiz-stem">4. &quot;If it had been a spider monkey or a bat, they might have been able to get away with it&quot; 属于哪种虚拟?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>与现在事实相反</button><button class="opt" data-correct="1"><span class="opt-k">B</span>与过去事实相反</button><button class="opt" data-correct="0"><span class="opt-k">C</span>与将来事实相反</button><button class="opt" data-correct="0"><span class="opt-k">D</span>不是虚拟语气</button></div>
+          <div class="quiz-exp" hidden>if + had done, would/might have done 是与过去事实相反的虚拟。注意 get away with 意为「做坏事而不受惩罚」,不是「摆脱」。</div>
+        </div>
+        <div class="quiz-q" data-q="5">
+          <div class="quiz-stem">5. &quot;its ears and a few white hairs on its body waving gently in the breeze&quot; 这个结构叫什么?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>普通分词状语</button><button class="opt" data-correct="1"><span class="opt-k">B</span>独立主格结构</button><button class="opt" data-correct="0"><span class="opt-k">C</span>定语从句</button><button class="opt" data-correct="0"><span class="opt-k">D</span>宾语补足语</button></div>
+          <div class="quiz-exp" hidden>waving 的逻辑主语是 ears and hairs,与主句主语 it(大象)不同,因此必须带自己的主语,构成独立主格。若写成 waving gently 就变成垂悬分词,读者会误以为大象在挥手。</div>
+        </div>
+        <div class="quiz-q" data-q="6">
+          <div class="quiz-stem">6. &quot;not that it had had anything to do before&quot; 中 not that 的作用是?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>表示原因不成立</button><button class="opt" data-correct="1"><span class="opt-k">B</span>否定前文隐含的判断,作自我修正</button><button class="opt" data-correct="0"><span class="opt-k">C</span>表示目的</button><button class="opt" data-correct="0"><span class="opt-k">D</span>引导宾语从句</button></div>
+          <div class="quiz-exp" hidden>not that 用于否定前文隐含的判断(并不是说……),不同于 not because(原因不成立)。此处它消解了「大象被冷落了四个月」的同情,暗示它一生本就无事可做,是典型的村上式反讽。</div>
+        </div>
+        <div class="quiz-q" data-q="7">
+          <div class="quiz-stem">7. &quot;He was one of those people whose appearance is no longer influenced by their age&quot; 中定语从句为何用现在时 is?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>时态错误,应用 was</button><button class="opt" data-correct="1"><span class="opt-k">B</span>表示这是该类人的普遍特征,不随时间改变</button><button class="opt" data-correct="0"><span class="opt-k">C</span>因为前面是 one</button><button class="opt" data-correct="0"><span class="opt-k">D</span>因为是引语</button></div>
+          <div class="quiz-exp" hidden>在过去的叙事中描述永恒特征仍用现在时,能把描述从「他当时的样貌」提升为「这类人的恒定特征」,带格言式的权威感。这是高分写作中区分「具体事件」与「普遍特征」的时态技巧。</div>
+        </div>
+        <div class="quiz-q" data-q="8">
+          <div class="quiz-stem">8. &quot;Riddled as it was with such perplexities&quot; 相当于?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>Because it was riddled with</button><button class="opt" data-correct="1"><span class="opt-k">B</span>Although it was riddled with</button><button class="opt" data-correct="0"><span class="opt-k">C</span>If it was riddled with</button><button class="opt" data-correct="0"><span class="opt-k">D</span>When it was riddled with</button></div>
+          <div class="quiz-exp" hidden>「形容词/分词 + as + 主语 + be」是倒装让步结构,等于 Although。它比 Although 开头更紧凑有力,是高级书面句式。</div>
+        </div>
+        <div class="quiz-q" data-q="9">
+          <div class="quiz-stem">9. &quot;left but one possible conclusion&quot; 中 but 的含义是?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>但是</button><button class="opt" data-correct="1"><span class="opt-k">B</span>只、仅(= only)</button><button class="opt" data-correct="0"><span class="opt-k">C</span>除了</button><button class="opt" data-correct="0"><span class="opt-k">D</span>而且</button></div>
+          <div class="quiz-exp" hidden>此处 but 是古雅的书面用法,意为「只、仅」,相当于 only。left but one possible conclusion 意为「只留下一个可能的结论」。这与作连词的 but(但是)完全不同。</div>
+        </div>
+        <div class="quiz-q" data-q="10">
+          <div class="quiz-stem">10. &quot;The reports were either pointless or off the mark&quot; 这句话的写作手法是?</div>
+          <div class="opts"><button class="opt" data-correct="0"><span class="opt-k">A</span>夸张</button><button class="opt" data-correct="1"><span class="opt-k">B</span>用否定罗列(要么无用要么不中要害)来强化结论</button><button class="opt" data-correct="0"><span class="opt-k">C</span>拟人</button><button class="opt" data-correct="0"><span class="opt-k">D</span>倒装</button></div>
+          <div class="quiz-exp" hidden>either... or... 在此把两种负面可能全部排除,构成否定罗列,从而强化「报道毫无价值」这一结论。这种「排除法」是论证和文学评述中常用的收束手法。</div>
+        </div>
+    </section>
+  <footer>
+    <div class="grad"></div>
+    readkiller · 生成于 sample run 3<br>
+    原句引用自原文；例句为备考迁移用例，非原文内容。
+  </footer>
+</div>
+<script>
+(function(){
+  var bar=document.getElementById('bar');
+  function prog(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(h>0?(window.scrollY/h*100):0)+'%';
+  }
+  addEventListener('scroll',prog,{passive:true});prog();
+
+  document.querySelectorAll('.card-head').forEach(function(head){
+    var card=head.closest('.card');
+    function toggle(){
+      var open=card.classList.toggle('open');
+      head.setAttribute('aria-expanded',open?'true':'false');
+    }
+    head.addEventListener('click',function(e){e.preventDefault();toggle();});
+    head.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}
+    });
+  });
+
+  var total=document.querySelectorAll('.quiz-q').length, score=0, done=0;
+  var out=document.getElementById('score');
+  document.querySelectorAll('.quiz-q').forEach(function(q){
+    var opts=q.querySelectorAll('.opt');
+    opts.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        if(q.dataset.answered)return;
+        q.dataset.answered='1';
+        var right=btn.dataset.correct==='1';
+        if(right)score++;
+        done++;
+        btn.classList.add(right?'right':'wrong');
+        if(!right)opts.forEach(function(o){if(o.dataset.correct==='1')o.classList.add('right');});
+        opts.forEach(function(o){o.disabled=true;});
+        var exp=q.querySelector('.quiz-exp'); if(exp)exp.hidden=false;
+        if(out)out.innerHTML='<span>得分</span> <b>'+score+'</b> <span>/ '+total+'</span>'+(done===total?' <span>— 完成！</span>':'');
+      });
+    });
+  });
+
+  // Nav: click jumps immediately, the target section flashes, and the pill highlights.
+  var links=[].slice.call(document.querySelectorAll('nav.pills a'));
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function activate(link){
+    links.forEach(function(a){a.classList.toggle('active',a===link);});
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var target=document.querySelector(a.getAttribute('href'));
+      if(!target)return;              // fall back to the default anchor jump
+      e.preventDefault();
+      activate(a);
+      target.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+      if(history.replaceState)history.replaceState(null,'',a.getAttribute('href'));
+      target.classList.remove('flash');
+      void target.offsetWidth;        // restart the animation if it is already running
+      target.classList.add('flash');
+      setTimeout(function(){target.classList.remove('flash');},1100);
+      // Move focus for keyboard users without stealing the visual scroll.
+      var h=target.querySelector('h2');
+      if(h){ if(!h.hasAttribute('tabindex'))h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); }
+    });
+  });
+
+  // Keep the pill in sync while the reader scrolls manually.
+  var sections=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  if('IntersectionObserver' in window && sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting)return;
+        var link=links.filter(function(a){return a.getAttribute('href')==='#'+e.target.id;})[0];
+        if(link)activate(link);
+      });
+    },{rootMargin:'-64px 0px -70% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+})();
+</script>
+</body>
+</html>
