@@ -1154,9 +1154,57 @@ on('#btnInstall', 'click', async () => {
 });
 
 /* =========================================================
+ * 启动画面（冷启动播放一次）
+ * ========================================================= */
+const SPLASH = {
+  el: null,
+  totalMs: 1750,   // 与 style.css 的 dollyIn 时长一致
+
+  /* 判断是否应该播放：
+     - 冷启动（新会话加载）→ 播放
+     - 从后台切回 → 不播（否则每次回消息都要等 1.75 秒）
+     - 页面内重绘 / 同步刷新 → 不播 */
+  shouldPlay() {
+    // 同一会话内已播过 → 不再播
+    if (sessionStorage.getItem('lifelog.splashPlayed') === '1') return false;
+    // 文档在后台被加载（预渲染等边缘情况）→ 不播，避免用户看不到却算作已播
+    if (document.visibilityState === 'hidden') return false;
+    return true;
+  },
+
+  play() {
+    this.el = $('#splash');
+    if (!this.el) return Promise.resolve();
+
+    if (!this.shouldPlay()) {
+      this.el.classList.add('is-done');
+      return Promise.resolve();
+    }
+
+    sessionStorage.setItem('lifelog.splashPlayed', '1');
+
+    // 主界面同时开始浮入（CSS 里 delay 900ms，与退场重叠，衔接更顺）
+    $('#app')?.classList.add('is-entering');
+
+    return new Promise((resolve) => {
+      // 到「对焦落定」后开始淡出整层
+      setTimeout(() => this.el.classList.add('is-leaving'), 1250);
+      // 动画结束，彻底移除，不留残余节点
+      setTimeout(() => {
+        this.el.classList.add('is-done');
+        resolve();
+      }, this.totalMs + 500);
+    });
+  },
+};
+
+/* =========================================================
  * 启动
  * ========================================================= */
 async function boot() {
+  // 启动画面与数据初始化并行：不让动画拖慢真实启动
+  const splashDone = SPLASH.play();
+
   // 先渲染本地数据，保证秒开（离线优先）
   try {
     render();
@@ -1202,6 +1250,10 @@ async function boot() {
       render();
     }
   });
+
+  // 确保启动画面至少完整播完，再彻底收掉（避免"闪一下就没了"）
+  await splashDone;
+  $('#app')?.classList.remove('is-entering');
 }
 
 boot();

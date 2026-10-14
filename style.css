@@ -1384,7 +1384,143 @@ img, video, canvas, svg { max-width: 100%; display: block; }
 }
 
 /* =====================================================================
- * 22. 减弱动效（必选）
+ * 23. 启动画面（摄影变焦）
+ *
+ * 视觉逻辑模仿镜头的「推近 → 对焦落定 → 退场」：
+ *   1. 文字起于远处：略小、带景深虚化、整体偏暗
+ *   2. 镜头穿向文字：放大到 1.0、虚化散尽、完全清晰
+ *   3. 短暂停顿（对焦锁定，让句子被读到）
+ *   4. 整体向上退，主界面自下方淡入 —— 表示「进入」
+ *
+ * 时序刻意分成四段：推近(620) → 停顿(480) → 退场(650)，总计约 1.75s。
+ * 只播放一次，不是循环动画。
+ * ===================================================================== */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  padding-top: calc(env(safe-area-inset-top) + var(--space-5));
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-5));
+  background: var(--bg-base);
+  /* 退场时整层淡出 */
+  transition: opacity 480ms var(--ease-out);
+}
+
+.splash.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 已播放过：直接隐藏，不占资源 */
+.splash.is-done {
+  display: none;
+}
+
+.splash-stage {
+  text-align: center;
+  max-width: 34ch;
+  /* 摄影变焦的主角：整个文字组作为一个平面被推近 */
+  transform-origin: 50% 50%;
+  will-change: transform, filter, opacity;
+  animation: dollyIn 1750ms var(--ease-out) both;
+}
+
+/* 四段式时间轴 */
+@keyframes dollyIn {
+  /* ① 远方起幅：小、虚、暗 —— 像隔着一段距离看 */
+  0% {
+    transform: scale(0.72);
+    filter: blur(6px);
+    opacity: 0;
+  }
+  /* ② 镜头开始推进，文字进入视野 */
+  10% {
+    transform: scale(0.78);
+    filter: blur(4.4px);
+    opacity: 0.55;
+  }
+  /* ③ 推近到焦点：虚化散尽、完全清晰 —— 这就是「对焦落定」 */
+  35% {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
+  /* ④ 停顿期：保持清晰不动，让句子被读到 */
+  62% {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
+  /* ⑤ 退场：轻微继续推近（镜头惯性）+ 上移淡出 */
+  100% {
+    transform: scale(1.06) translateY(-14px);
+    filter: blur(2px);
+    opacity: 0;
+  }
+}
+
+.splash-quote {
+  margin: 0;
+  font-size: var(--text-title);
+  line-height: 1.55;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--label-primary);
+  /* 中文引号做视觉重心，不加粗 —— 留白即是重点 */
+  text-wrap: balance;
+}
+
+/* 细分隔：给句子一点呼吸，不抢戏 */
+.splash-rule {
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin: var(--space-4) auto;
+  background: var(--separator);
+  transform-origin: 50% 50%;
+  animation: ruleReveal 1750ms var(--ease-out) both;
+}
+
+@keyframes ruleReveal {
+  0%, 20% { transform: scaleX(0); opacity: 0; }
+  40%     { transform: scaleX(1); opacity: 1; }
+  62%     { transform: scaleX(1); opacity: 1; }
+  100%    { transform: scaleX(1); opacity: 0; }
+}
+
+.splash-sub {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: var(--lh-caption);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--label-tertiary);
+  text-transform: uppercase;
+}
+
+/* 主界面：启动画面退场时，自下方轻轻浮入 —— 表示「进入」而非「切换」 */
+#app.is-entering {
+  animation: appEnter 760ms var(--ease-out) both;
+  animation-delay: 900ms;
+}
+
+@keyframes appEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =====================================================================
+ * 24. 减弱动效（必选）
  * ===================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1395,4 +1531,9 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   }
   .btn:active,
   .chip:active { transform: none; }
+
+  /* 启动画面：不做变焦，只做最短的淡出，避免不适 */
+  .splash-stage { animation: none; }
+  .splash-rule { animation: none; opacity: 1; transform: scaleX(1); }
+  #app.is-entering { animation: none; opacity: 1; transform: none; }
 }

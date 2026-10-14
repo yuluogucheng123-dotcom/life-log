@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#111827">
+<!-- 与启动层同色，避免 iOS 系统启动画面与我们的动画之间出现断层 -->
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="生活记录">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -13,6 +15,17 @@
 <title>生活记录</title>
 </head>
 <body>
+
+<!-- ============ 启动画面 ============
+     冷启动时播放一次：文案由远推近（摄影变焦），随后上退、主界面淡入。
+     内联样式保证在 style.css 加载前就已铺底，不会闪白。 -->
+<div id="splash" class="splash" aria-hidden="true">
+  <div class="splash-stage">
+    <p class="splash-quote">“何时成为理科高手”</p>
+    <span class="splash-rule"></span>
+    <p class="splash-sub">WHEN SHALL I MASTER SCIENCE</p>
+  </div>
+</div>
 
 <div id="app">
 
