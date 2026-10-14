@@ -421,6 +421,7 @@ function escapeHtml(s) {
 function render() {
   if (state.page === 'today') {
     renderDateStrip();
+    renderChips();        // 分类可能被增删，每次渲染都重建
     renderDayStats();
     renderDayList();
   } else {
@@ -432,7 +433,7 @@ function render() {
 function updateCountInfo() {
   const el = $('#countInfo');
   if (!el) return;
-  const n = state.entries.length;
+  const n = activeOnly(state.entries).length;
   el.textContent = n ? `共 ${n} 条记录` : '还没有任何记录';
 }
 
@@ -459,6 +460,12 @@ $$('#entryTabs .seg-btn').forEach((btn) => {
 $$('.chips').forEach((box) => {
   const form = box.closest('form');
   box.addEventListener('click', (ev) => {
+    // 点「＋」进入分类管理
+    if (ev.target.closest('.chip-add')) {
+      openCatSheet(box.dataset.chips);
+      return;
+    }
+    // 长按自定义分类可删除
     const chip = ev.target.closest('.chip');
     if (!chip) return;
     const wasActive = chip.classList.contains('active');
@@ -466,6 +473,125 @@ $$('.chips').forEach((box) => {
     if (!wasActive) chip.classList.add('active');
     if (form) form.dataset.category = wasActive ? '' : chip.dataset.val;
   });
+});
+
+/* =========================================================
+ * 分类渲染与管理
+ * ========================================================= */
+function renderChips() {
+  $$('.chips').forEach((box) => {
+    const kind = box.dataset.chips;
+    const cats = getCategories(kind);
+    const form = box.closest('form');
+    const selected = form ? form.dataset.category : '';
+
+    box.innerHTML = cats.map((c) =>
+      `<button type="button" class="chip${c === selected ? ' active' : ''}" data-val="${escapeHtml(c)}">${escapeHtml(c)}</button>`
+    ).join('') + `<button type="button" class="chip chip-add" title="添加分类" aria-label="添加分类">＋ 新分类</button>`;
+  });
+}
+
+/* ---- 分类管理弹层 ---- */
+let catSheetKind = 'expense';
+
+function openCatSheet(kind) {
+  catSheetKind = kind || 'expense';
+  $$('#catKindTabs .seg-btn').forEach((b) =>
+    b.classList.toggle('active', b.dataset.kind === catSheetKind));
+  const input = $('#newCatInput');
+  if (input) input.value = '';
+  setCatHint('最多 8 个字。添加后会在记录页显示。');
+  renderCatList();
+  $('#catSheet')?.classList.remove('hidden');
+}
+
+function closeCatSheet() {
+  $('#catSheet')?.classList.add('hidden');
+  renderChips();   // 关闭时刷新记录页的 chips
+}
+
+function setCatHint(msg, isErr) {
+  const el = $('#catHint');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = isErr ? 'var(--danger)' : '';
+}
+
+function renderCatList() {
+  const box = $('#catList');
+  if (!box) return;
+  const cats = getCategories(catSheetKind);
+  const cfg = KINDS[catSheetKind];
+
+  box.innerHTML = cats.map((c) => {
+    const builtin = cfg.categories.includes(c);
+    return `
+      <div class="cat-item">
+        <span class="cat-name">${escapeHtml(c)}</span>
+        ${builtin
+          ? `<span class="cat-tag">内置</span>`
+          : `<button class="cat-del" data-del-cat="${escapeHtml(c)}" title="删除">✕</button>`}
+      </div>`;
+  }).join('');
+}
+
+on('#catKindTabs', 'click', (ev) => {
+  const btn = ev.target.closest('.seg-btn');
+  if (!btn) return;
+  catSheetKind = btn.dataset.kind;
+  $$('#catKindTabs .seg-btn').forEach((b) => b.classList.toggle('active', b === btn));
+  setCatHint('最多 8 个字。添加后会在记录页显示。');
+  renderCatList();
+});
+
+on('#btnAddCat', 'click', addCategoryFromInput);
+on('#newCatInput', 'keydown', (ev) => {
+  if (ev.key === 'Enter') { ev.preventDefault(); addCategoryFromInput(); }
+});
+
+function addCategoryFromInput() {
+  const input = $('#newCatInput');
+  if (!input) return;
+  const res = addCustomCategory(catSheetKind, input.value);
+
+  if (!res.ok) { setCatHint(res.error, true); return; }
+
+  const name = input.value.trim();
+  setCatHint(`已添加「${name}」`);
+  input.value = '';
+  input.focus();
+  renderCatList();
+  renderChips();
+  render();               // 总结页的分类条也要跟着更新
+  syncCategories();       // 让另一台设备也能看到
+}
+
+/* 自定义分类变更后同步到云端 */
+function syncCategories() {
+  if (!SYNC.isSignedIn()) return;
+  SYNC.enqueue({ type: 'settings', row: settingsToRow(state.settings) });
+  SYNC.flush();
+}
+
+on('#catList', 'click', (ev) => {
+  const btn = ev.target.closest('[data-del-cat]');
+  if (!btn) return;
+  const name = btn.dataset.delCat;
+  if (!confirm(`删除分类「${name}」？\n\n已经记录过的账不会受影响，只是以后不再显示这个选项。`)) return;
+
+  const res = removeCustomCategory(catSheetKind, name);
+  if (!res.ok) { setCatHint(res.error, true); return; }
+
+  setCatHint(`已删除「${name}」`);
+  renderCatList();
+  renderChips();
+  render();
+  syncCategories();
+});
+
+on('#closeCat', 'click', closeCatSheet);
+on('#catSheet', 'click', (ev) => {
+  if (ev.target.id === 'catSheet') closeCatSheet();
 });
 
 /* ---- 表单提交 ---- */
@@ -482,10 +608,11 @@ $$('.entry-form').forEach((form) => {
       return;
     }
 
+    const cats = getCategories(kind);
     const entry = makeEntry(
       kind,
       amount,
-      form.dataset.category || cfg.categories[cfg.categories.length - 1],
+      form.dataset.category || cats[cats.length - 1] || '其他',
       form.elements.note.value,
       state.date
     );
@@ -673,6 +800,11 @@ on('#btnPaste', 'click', async () => {
   }
 });
 
+on('#btnManageCat', 'click', () => {
+  closeSettings();
+  openCatSheet('expense');
+});
+
 /* ---- 导出内容 ---- */
 function buildExportJson() {
   return JSON.stringify({
@@ -681,6 +813,7 @@ function buildExportJson() {
     exportedAt: new Date().toISOString(),
     device: navigator.platform || 'unknown',
     settings: state.settings,
+    customCategories: loadCustomCats(),   // 自定义分类也跟着走
     entries: state.entries,   // 含软删除标记，保证合并时不会"复活"已删数据
   }, null, 2);
 }
@@ -730,6 +863,19 @@ function mergeImport(text) {
         fitGoal: Number(s.fitGoal) || state.settings.fitGoal || 0,
       };
       saveSettings(state.settings);
+    }
+
+    // 合并自定义分类
+    if (data && data.customCategories && typeof data.customCategories === 'object') {
+      const cur = loadCustomCats();
+      for (const k of KIND_ORDER) {
+        const incoming = data.customCategories[k];
+        if (Array.isArray(incoming)) {
+          cur[k] = [...new Set([...(cur[k] || []), ...incoming.filter((c) => typeof c === 'string' && c.trim())])];
+        }
+      }
+      saveCustomCats(cur);
+      renderChips();
     }
 
     return { ok: true, added, skipped, updated };
@@ -865,6 +1011,13 @@ const SYNC_LABEL = {
 };
 
 function renderSyncStatus(payload) {
+  // 云端数据有变化（分类/记录）→ 重新读取本地并重绘
+  if (payload && payload.dataChanged) {
+    state.entries = loadEntries();
+    state.settings = loadSettings();
+    try { render(); } catch (e) { console.warn('同步后重绘失败', e); }
+  }
+
   // 同步出错时优先显示错误，避免用户被"待同步"误导
   const hasError = !!SYNC.lastError;
   const key = hasError ? 'error' : payload.status;
@@ -883,6 +1036,7 @@ function renderSyncStatus(payload) {
   setText('#accountInfo', describeAccount());
   updateAccountButtons();
 }
+
 function describeAccount() {
   if (!SYNC.client) return '尚未配置云端。当前数据只存在这台设备上。';
   if (!SYNC.isSignedIn()) return '未登录。登录后手机和电脑的数据会自动同步。';

@@ -6,12 +6,14 @@
 const STORAGE_KEY = 'lifelog.entries.v1';
 const SETTINGS_KEY = 'lifelog.settings.v1';
 const QUEUE_KEY = 'lifelog.syncqueue.v1';
+const CUSTOM_CATS_KEY = 'lifelog.categories.v1';
 
 /* 云端配置（部署前替换成你自己的项目地址与匿名密钥） */
 const SUPABASE_URL = window.SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
 
 /* ---------- 记录类型定义 ---------- */
+/* categories = 内置默认分类；用户自定义分类另存，见 getCategories() */
 const KINDS = {
   expense: {
     label: '支出',
@@ -43,6 +45,90 @@ const KINDS = {
 };
 
 const KIND_ORDER = ['expense', 'study', 'fitness'];
+
+/* ---------- 自定义分类 ---------- */
+/* 结构：{ expense: ['游戏', '宠物'], study: [...], fitness: [...] } */
+function loadCustomCats() {
+  const empty = { expense: [], study: [], fitness: [] };
+  try {
+    const raw = localStorage.getItem(CUSTOM_CATS_KEY);
+    if (!raw) return empty;
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj !== 'object') return empty;
+    for (const k of KIND_ORDER) {
+      if (!Array.isArray(obj[k])) obj[k] = [];
+    }
+    return obj;
+  } catch (e) {
+    return empty;
+  }
+}
+
+function saveCustomCats(cats) {
+  try {
+    localStorage.setItem(CUSTOM_CATS_KEY, JSON.stringify(cats));
+    return true;
+  } catch (e) {
+    console.error('保存分类失败', e);
+    return false;
+  }
+}
+
+/* 合并默认 + 自定义，去重；「其他」永远放最后 */
+function getCategories(kind) {
+  const cfg = KINDS[kind];
+  if (!cfg) return [];
+  const custom = loadCustomCats()[kind] || [];
+  const seen = new Set();
+  const out = [];
+
+  for (const c of [...cfg.categories, ...custom]) {
+    const name = String(c || '').trim();
+    if (!name || seen.has(name)) continue;
+    if (name === '其他') continue;   // 稍后单独追加
+    seen.add(name);
+    out.push(name);
+  }
+  // 「其他」作为兜底选项始终存在
+  if (cfg.categories.includes('其他')) out.push('其他');
+  return out;
+}
+
+/* 新增自定义分类；返回 { ok, error } */
+function addCustomCategory(kind, name) {
+  const clean = String(name || '').trim();
+  if (!clean) return { ok: false, error: '名称不能为空' };
+  if (clean.length > 8) return { ok: false, error: '名称最多 8 个字' };
+  if (/[<>"']/.test(clean)) return { ok: false, error: '名称不能包含特殊符号' };
+
+  const cfg = KINDS[kind];
+  if (!cfg) return { ok: false, error: '类型不存在' };
+  if (cfg.categories.includes(clean)) return { ok: false, error: '这是内置分类，已存在' };
+
+  const cats = loadCustomCats();
+  if ((cats[kind] || []).includes(clean)) return { ok: false, error: '已经添加过了' };
+
+  cats[kind] = [...(cats[kind] || []), clean];
+  saveCustomCats(cats);
+  return { ok: true };
+}
+
+/* 删除自定义分类；内置分类不可删 */
+function removeCustomCategory(kind, name) {
+  const cats = loadCustomCats();
+  const list = cats[kind] || [];
+  if (!list.includes(name)) return { ok: false, error: '只能删除自定义分类' };
+  cats[kind] = list.filter((c) => c !== name);
+  saveCustomCats(cats);
+  return { ok: true };
+}
+
+/* 某分类是否属于自定义（决定能否删除） */
+function isCustomCategory(kind, name) {
+  const cfg = KINDS[kind];
+  if (!cfg || cfg.categories.includes(name)) return false;
+  return (loadCustomCats()[kind] || []).includes(name);
+}
 
 /* ---------- 读写 ---------- */
 function loadEntries() {

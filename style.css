@@ -827,6 +827,64 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   }
 }
 
+/* ---------------- 分类管理 ---------------- */
+.add-cat-btn {
+  width: auto;
+  padding: 12px 18px;
+  flex-shrink: 0;
+}
+
+.chip-add {
+  background: transparent;
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 14px;
+  opacity: 0.85;
+}
+.chip-add:active {
+  background: rgba(79, 140, 255, 0.12);
+  opacity: 1;
+}
+
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.cat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  min-height: 44px;
+}
+.cat-name { flex: 1; font-size: 14.5px; }
+
+.cat-tag {
+  font-size: 10.5px;
+  color: var(--text-3);
+  background: var(--card-2);
+  padding: 3px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.cat-del {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 8px 4px 8px 10px;
+  flex-shrink: 0;
+}
+.cat-del:active { color: var(--danger); }
+
 /* ---------------- 宽屏（Windows 桌面） ---------------- */
 @media (min-width: 620px) {
   #main { padding: 20px 20px 100px; }

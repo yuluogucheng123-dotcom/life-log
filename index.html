@@ -85,16 +85,7 @@
             <input type="text" inputmode="decimal" name="amount" placeholder="金额" class="input amount-input" required>
             <span class="unit">元</span>
           </div>
-          <div class="chips" data-chips="expense">
-            <button type="button" class="chip" data-val="吃饭">吃饭</button>
-            <button type="button" class="chip" data-val="交通">交通</button>
-            <button type="button" class="chip" data-val="购物">购物</button>
-            <button type="button" class="chip" data-val="居住">居住</button>
-            <button type="button" class="chip" data-val="娱乐">娱乐</button>
-            <button type="button" class="chip" data-val="医疗">医疗</button>
-            <button type="button" class="chip" data-val="人情">人情</button>
-            <button type="button" class="chip" data-val="其他">其他</button>
-          </div>
+          <div class="chips" data-chips="expense"></div>
           <input type="text" name="note" placeholder="备注（可选）" class="input">
           <button type="submit" class="btn primary">记一笔支出</button>
         </form>
@@ -105,14 +96,7 @@
             <input type="text" inputmode="decimal" name="minutes" placeholder="时长" class="input amount-input" required>
             <span class="unit">分钟</span>
           </div>
-          <div class="chips" data-chips="study">
-            <button type="button" class="chip" data-val="英语">英语</button>
-            <button type="button" class="chip" data-val="编程">编程</button>
-            <button type="button" class="chip" data-val="阅读">阅读</button>
-            <button type="button" class="chip" data-val="网课">网课</button>
-            <button type="button" class="chip" data-val="刷题">刷题</button>
-            <button type="button" class="chip" data-val="其他">其他</button>
-          </div>
+          <div class="chips" data-chips="study"></div>
           <input type="text" name="note" placeholder="学了什么（可选）" class="input">
           <button type="submit" class="btn primary">记一笔学习</button>
         </form>
@@ -123,14 +107,7 @@
             <input type="text" inputmode="decimal" name="minutes" placeholder="时长" class="input amount-input" required>
             <span class="unit">分钟</span>
           </div>
-          <div class="chips" data-chips="fitness">
-            <button type="button" class="chip" data-val="跑步">跑步</button>
-            <button type="button" class="chip" data-val="力量">力量</button>
-            <button type="button" class="chip" data-val="游泳">游泳</button>
-            <button type="button" class="chip" data-val="骑车">骑车</button>
-            <button type="button" class="chip" data-val="球类">球类</button>
-            <button type="button" class="chip" data-val="拉伸">拉伸</button>
-          </div>
+          <div class="chips" data-chips="fitness"></div>
           <input type="text" name="note" placeholder="练了什么 / 强度（可选）" class="input">
           <button type="submit" class="btn primary">记一笔健身</button>
         </form>
@@ -229,6 +206,14 @@
       <hr>
 
       <div class="field">
+        <label>分类管理</label>
+        <p class="hint">给支出 / 学习 / 健身添加自己的分类，比如「游戏」「宠物」。</p>
+        <button id="btnManageCat" class="btn ghost">管理分类</button>
+      </div>
+
+      <hr>
+
+      <div class="field">
         <label>数据管理</label>
         <p class="hint" id="dataHint">数据只存在这台设备上，不会上传。换设备请用下方的导出 / 导入。</p>
         <div class="btn-row">
@@ -250,6 +235,39 @@
 </div>
 
 <div id="toast" class="toast hidden"></div>
+
+<!-- ============ 分类管理弹层 ============ -->
+<div id="catSheet" class="sheet-mask hidden">
+  <div class="sheet">
+    <div class="sheet-head">
+      <strong>管理分类</strong>
+      <button id="closeCat" class="icon-btn" aria-label="关闭">✕</button>
+    </div>
+
+    <div class="sheet-body">
+      <div class="seg" id="catKindTabs">
+        <button class="seg-btn active" data-kind="expense">💸 支出</button>
+        <button class="seg-btn" data-kind="study">📚 学习</button>
+        <button class="seg-btn" data-kind="fitness">🏃 健身</button>
+      </div>
+
+      <div class="field">
+        <label>添加新分类</label>
+        <div class="row">
+          <input type="text" id="newCatInput" class="input" placeholder="例如：游戏" maxlength="8">
+          <button id="btnAddCat" class="btn primary add-cat-btn">添加</button>
+        </div>
+        <p class="hint" id="catHint">最多 8 个字。添加后会在记录页显示。</p>
+      </div>
+
+      <div class="field">
+        <label>当前分类</label>
+        <div id="catList" class="cat-list"></div>
+        <p class="hint">标着「内置」的是默认分类，不能删除。删除自定义分类不会影响已记录的账。</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- 配置（必须在 data.js 之前） -->
 <script src="config.js"></script>

@@ -33,6 +33,7 @@ create table if not exists public.settings (
   budget      numeric     not null default 0,
   study_goal  numeric     not null default 0,
   fit_goal    numeric     not null default 0,
+  custom_cats text        not null default '{}',   -- 用户自定义分类（JSON）
   updated_at  timestamptz not null default now()
 );
 

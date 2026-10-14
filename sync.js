@@ -222,8 +222,22 @@ const SYNC = {
 
       const merged = [...map.values()];
       saveEntries(merged, { silent: true });
+
+      // 顺便拉取设置与自定义分类
+      try {
+        const st = await this.client
+          .from('settings')
+          .select('*')
+          .eq('user_id', this.user.id)
+          .maybeSingle();
+        if (!st.error && st.data) applySettingsRow(st.data);
+      } catch (e) {
+        console.warn('拉取设置失败', e);
+      }
+
       this.lastSyncAt = Date.now();
-      this.emit({ status: 'synced', merged: merged.length });
+      // 通知界面：数据已变化（含分类），让 UI 重新读取并渲染
+      this.emit({ status: 'synced', merged: merged.length, dataChanged: true });
       return true;
     } catch (e) {
       console.warn('拉取失败', e);
@@ -290,11 +304,48 @@ function rowToEntry(r) {
 }
 
 function settingsToRow(s) {
+  const cats = loadCustomCats();
   return {
     user_id: SYNC.user.id,
     budget: Number(s.budget) || 0,
     study_goal: Number(s.studyGoal) || 0,
     fit_goal: Number(s.fitGoal) || 0,
+    // 自定义分类跟随设置一起同步，避免"手机上加了电脑看不到"
+    custom_cats: JSON.stringify(cats),
     updated_at: new Date().toISOString(),
   };
+}
+
+/* 把云端设置写回本地 */
+function applySettingsRow(row) {
+  if (!row) return;
+
+  if (row.budget !== undefined || row.study_goal !== undefined || row.fit_goal !== undefined) {
+    const s = loadSettings();
+    s.budget = Number(row.budget) || 0;
+    s.studyGoal = Number(row.study_goal) || 0;
+    s.fitGoal = Number(row.fit_goal) || 0;
+    saveSettings(s);
+  }
+
+  if (row.custom_cats) {
+    try {
+      const cats = typeof row.custom_cats === 'string'
+        ? JSON.parse(row.custom_cats)
+        : row.custom_cats;
+      if (cats && typeof cats === 'object') {
+        const cur = loadCustomCats();
+        for (const k of KIND_ORDER) {
+          if (Array.isArray(cats[k])) {
+            // 合并去重，避免覆盖掉本地刚加的分类
+            const merged = [...new Set([...(cur[k] || []), ...cats[k]])];
+            cur[k] = merged;
+          }
+        }
+        saveCustomCats(cur);
+      }
+    } catch (e) {
+      console.warn('解析云端分类失败', e);
+    }
+  }
 }
