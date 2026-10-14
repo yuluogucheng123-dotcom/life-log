@@ -17,7 +17,10 @@
 :root {
   /* ---- 全局旋钮 ---- */
   --spacing-base: 8px;
-  --motion-intensity: 3;
+  /* 动效强度 5（默认 3 偏"急"）：
+     144ms 的过渡人眼几乎看不到，感觉是"啪"一下到位 —— 这就是僵硬的来源。
+     提到 5 后快/中/慢分别为 160/275/425ms，动作能被看清，手感更从容。 */
+  --motion-intensity: 5;
   --touch-target-min: 44px;
   --text-density: 4;
 
@@ -500,9 +503,16 @@ img, video, canvas, svg { max-width: 100%; display: block; }
               background var(--dur-fast) var(--ease-inout),
               opacity var(--dur-fast) var(--ease-inout);
 }
-.btn:active { transform: scale(0.975); }
+.btn:active { transform: scale(0.965); }
 /* 释放时用弹簧缓动收尾，快按也有完整反馈 */
 .btn:not(:active) { transition-timing-function: var(--ease-spring); }
+
+/* 主按钮的按压：用跟手曲线，按下去立刻有回应 */
+.btn.primary:active,
+#btnAddCat:active {
+  transition-duration: 90ms;
+  transition-timing-function: var(--ease-responsive);
+}
 
 .btn.primary {
   background: var(--accent);
@@ -1502,10 +1512,18 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   text-transform: uppercase;
 }
 
-/* 主界面：启动画面退场时，自下方轻轻浮入 —— 表示「进入」而非「切换」 */
+/* 主界面：启动画面退场时，自下方轻轻浮入 —— 表示「进入」而非「切换」
+ *
+ * 注意：这里刻意不用 fill-mode: both。
+ * fill-mode: both 会把终态（transform: none）永久挂在 #app 上，
+ * 而动画的 transform 优先级高于所有声明 —— 包括 !important，
+ * 结果就是按钮等子元素的一切 transform 全部失效（曾导致完成反馈不形变）。
+ * 用 forwards 到 opacity 即可，位移交给动画自身跑完自然回到 none。 */
 #app.is-entering {
-  animation: appEnter 760ms var(--ease-out) both;
-  animation-delay: 900ms;
+  animation: appEnter 760ms var(--ease-out) 900ms;
+  /* 动画结束后立刻解除，避免残留样式压制子元素 */
+  animation-fill-mode: backwards;
+  will-change: opacity, transform;
 }
 
 @keyframes appEnter {
@@ -1517,6 +1535,12 @@ img, video, canvas, svg { max-width: 100%; display: block; }
     opacity: 1;
     transform: none;
   }
+}
+
+/* 动画播完后由 JS 移除 .is-entering，并清掉 will-change */
+#app.is-entered {
+  animation: none;
+  will-change: auto;
 }
 
 /* =====================================================================
@@ -1548,6 +1572,18 @@ img, video, canvas, svg { max-width: 100%; display: block; }
     0.713, 0.737, 0.760, 0.781, 0.801, 0.819, 0.835, 0.850, 0.864, 0.877,
     0.888, 0.899, 0.908
   );                                        /* k=480 m=1 ζ=1 → 183ms */
+
+  /* ---- 跟手曲线：给「按压」用 ----
+     DHO 临界阻尼前 10% 只走 0.7%，按下去会感觉「黏」——
+     等一小段才动，正是僵硬感的来源。
+     这条曲线起手就到位，无过冲，收尾干净：
+       进度 10% → 位移 19.5%（对比 DHO 的 0.7%） */
+  --ease-responsive: linear(
+    0, 0.067, 0.132, 0.195, 0.255, 0.312, 0.367, 0.419, 0.469, 0.516,
+    0.561, 0.604, 0.644, 0.682, 0.718, 0.751, 0.782, 0.811, 0.838, 0.862,
+    0.884, 0.905, 0.923, 0.939, 0.953, 0.965, 0.975, 0.983, 0.990, 0.995,
+    0.998, 1, 1
+  );
 
   --ease-dho-snap: linear(
     0.000, 0.007, 0.027, 0.055, 0.090, 0.130, 0.173, 0.218, 0.264, 0.310,
@@ -1607,6 +1643,9 @@ img, video, canvas, svg { max-width: 100%; display: block; }
  *
  * 流程：点按 → 临界阻尼收缩成圆 → 100ms 后画对勾 → 粒子指数衰减散射
  * 预算：最终状态 ≤300ms（k=480 使静止时间降到 183ms，给延迟留出余量）
+ *
+ * 用类驱动而非内联样式：render() 重绘会清掉内联 transform，
+ * 只有类选择器能在重绘后依然生效。
  * ===================================================================== */
 .btn.primary,
 #btnAddCat {
@@ -1642,27 +1681,53 @@ img, video, canvas, svg { max-width: 100%; display: block; }
   stroke-dashoffset: var(--check-len, 32);
 }
 
-/* 完成态：按钮收缩成圆，文字淡出，对勾浮现 */
+/* 完成态：按钮收缩成圆、文字淡出、对勾浮现
+ *
+ * 用 scale 独立属性而不是 transform: scale()：
+ * scale 属于 CSS Transforms Level 2，与 transform 分开计算，
+ * 不会被同一元素上的其它 transform 声明或合成层状态影响，表现更稳。
+ * 两个都写，兼容旧引擎。 */
 .btn.is-complete {
   color: transparent;
   pointer-events: none;
+  border-radius: 9999px;
+  transform: scale(0.86);
+  scale: 0.86;
+  background: var(--status-success);
+  transition:
+    transform 320ms var(--ease-dho-complete),
+    scale 320ms var(--ease-dho-complete),
+    border-radius 320ms var(--ease-dho-complete),
+    background 240ms var(--ease-out);
 }
 
 .btn.is-complete .btn-label {
   opacity: 0;
-  transition: opacity 120ms var(--ease-out);
+  transform: scale(0.92);
+  scale: 0.92;
+  transition: opacity 160ms var(--ease-out), transform 200ms var(--ease-out), scale 200ms var(--ease-out);
 }
 
 .btn.is-complete .btn-check {
   opacity: 1;
+  transition: opacity 180ms var(--ease-out) 60ms;
 }
 
 .btn.is-complete .btn-check path {
-  animation: drawCheck 220ms var(--ease-out) 100ms both;
+  animation: drawCheck 320ms var(--ease-out) 140ms both;
 }
 
 @keyframes drawCheck {
   to { stroke-dashoffset: 0; }
+}
+
+/* 按钮自己的按压缩放：稍微慢一点，手感更实 */
+.btn.primary,
+#btnAddCat {
+  transition:
+    transform 260ms var(--ease-dho-complete),
+    background 220ms var(--ease-inout),
+    opacity 220ms var(--ease-inout);
 }
 
 /* 粒子散射画布 */

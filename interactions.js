@@ -218,27 +218,17 @@ function playComplete(btn) {
   if (!btn || btn.classList.contains('is-complete')) return;
   if (prefersReduced()) return;
 
+  // 全程用 CSS 类驱动，不写内联样式 ——
+  // render() 触发重绘时会清掉内联 transform，改用类才稳定生效。
   btn.classList.add('is-complete');
 
-  // 收缩成圆的形变：临界阻尼 ζ=1
-  const rect = btn.getBoundingClientRect();
-  const size = Math.min(rect.height, 48);
-  btn.style.transition = `border-radius 200ms var(--ease-dho-complete),
-                          transform 200ms var(--ease-dho-complete),
-                          background 200ms var(--ease-out)`;
-  btn.style.transform = `scale(${(size / rect.height).toFixed(3)})`;
-  btn.style.borderRadius = '9999px';
-
   // 粒子散射：等对勾画出来（100ms）之后再放，视觉上有先后
-  setTimeout(() => burstParticles(btn, 8, 260), 110);
+  setTimeout(() => burstParticles(btn, 8, 260), 120);
 
   // 复原：不阻断连续记账
   setTimeout(() => {
-    btn.style.transition = '';
-    btn.style.transform = '';
-    btn.style.borderRadius = '';
     btn.classList.remove('is-complete');
-  }, 1400);
+  }, 1500);
 }
 
 /* =====================================================================
@@ -247,13 +237,22 @@ function playComplete(btn) {
  * r 取到「最远角」的距离，否则圆盖不满屏
  * 扩散 r/400 px/ms，返回 r/300 px/ms
  * ===================================================================== */
-function circleReveal(overlayEl, x, y, { speedPxPerMs = 400 } = {}) {
+/**
+ * 圆形扩散转场。
+ *
+ * 速度是「px/ms」，所以时间 = r / speed，单位是 ms：
+ *     r = 938px, speed = r/400 → t = 938 / (938/400) = 400ms
+ * 之前误把 r/400 当成毫秒数直接用了，于是一帧铺满、转场看不见。
+ */
+function circleReveal(overlayEl, x, y, { speedPxPerMs = 2.35 } = {}) {
   const w = innerWidth;
   const h = innerHeight;
   // 四个角全部算一遍，取最远 —— 这是盖满屏幕的必要条件
   const corners = [[0, 0], [w, 0], [0, h], [w, h]];
   const r = Math.max(...corners.map(([cx, cy]) => Math.hypot(x - cx, y - cy)));
-  const durMs = Math.min(r / speedPxPerMs, 400);
+
+  // 时间 = 距离 / 速度（px ÷ px/ms = ms），并夹在合理区间
+  const durMs = Math.max(280, Math.min(r / speedPxPerMs, 460));
 
   const closed = `circle(0px at ${x}px ${y}px)`;
 
@@ -262,16 +261,21 @@ function circleReveal(overlayEl, x, y, { speedPxPerMs = 400 } = {}) {
   overlayEl.style.display = 'block';
 
   requestAnimationFrame(() => {
-    overlayEl.style.transition = `clip-path ${durMs}ms linear`;
+    overlayEl.style.transition = `clip-path ${durMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
     overlayEl.style.clipPath = `circle(${r}px at ${x}px ${y}px)`;
   });
 
   return {
+    duration: durMs,
     reverse: () => {
-      const durOut = Math.min(r / 300, 400);
-      overlayEl.style.transition = `clip-path ${durOut}ms linear`;
+      // 返回稍快，像"退回去"
+      const durOut = Math.round(durMs * 0.72);
+      overlayEl.style.transition = `clip-path ${durOut}ms cubic-bezier(0.4, 0, 0.2, 1)`;
       overlayEl.style.clipPath = closed;
-      setTimeout(() => { overlayEl.style.display = 'none'; overlayEl.style.opacity = '0'; }, durOut);
+      setTimeout(() => {
+        overlayEl.style.display = 'none';
+        overlayEl.style.opacity = '0';
+      }, durOut + 40);
     },
   };
 }
@@ -640,7 +644,46 @@ function createWheel(pickerEl, items) {
 }
 
 /* =====================================================================
- * 6. 挂载
+ * 7. 守卫：清理残留的入场动画
+ *
+ * #app.is-entering 上挂着 appEnter 动画，它的关键帧包含 transform。
+ * 动画的 transform 优先级高于一切声明（包括内联 !important），
+ * 只要它还在「running」或带 fill 残留，按钮等子元素的 transform 就会全部失效。
+ * 这里监听动画真正结束，立刻摘掉类，保证后续交互不受压制。
+ * ===================================================================== */
+function guardAppEnter() {
+  const app = $('#app');
+  if (!app) return;
+
+  const cleanup = () => {
+    app.classList.remove('is-entering');
+    app.classList.add('is-entered');
+  };
+
+  if (app.classList.contains('is-entering')) {
+    const anims = app.getAnimations ? app.getAnimations() : [];
+    const enterAnim = anims.find((a) => a.animationName === 'appEnter');
+
+    if (enterAnim) {
+      // 动画真正播完（或被取消）时清理
+      enterAnim.finished ? enterAnim.finished.then(cleanup).catch(cleanup) : null;
+    }
+
+    // 兜底：无论动画是否触发，1.9s 后一定清理（延迟 900 + 时长 760 + 余量）
+    setTimeout(cleanup, 1900);
+  }
+
+  // 极端兜底：页面隐藏/恢复时若仍残留，直接清掉
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      const a = app.getAnimations ? app.getAnimations() : [];
+      if (!a.some((x) => x.playState === 'running')) cleanup();
+    }
+  });
+}
+
+/* =====================================================================
+ * 8. 挂载
  * ===================================================================== */
 function initInteractions() {
   // 2.1 完成反馈按钮（三类表单都挂）
@@ -651,6 +694,9 @@ function initInteractions() {
 
   // 2.3 洞察卡展开
   attachInsightExpand();
+
+  // 清理入场动画残留，避免压制子元素 transform
+  guardAppEnter();
 }
 
 initInteractions();
